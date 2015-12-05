@@ -1,0 +1,11 @@
+{
+	"filesystemconfig":
+	{
+		"optionsfile" : "options.json",
+		"mapdir": "maps",
+		"clientdir": "client",
+		"serverdir": "server",
+		"clientnetconfigfile": "clientnetwork.json",
+		"servernetconfigfile": "servernetwork.json"
+	},
+}
