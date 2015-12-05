@@ -21,93 +21,72 @@ using Newtonsoft.Json.Linq;
 
 using EveryDaySpaceStation;
 using EveryDaySpaceStation.Utils;
+using EveryDaySpaceStation.Json;
 
 namespace EveryDaySpaceStation.Utils
 {
     public sealed class Config
     {
         #region Vars
-        private static string _configFile = "config.json";
-        private static bool _loaded = false;
-        private static object _lockObject = new object();
-        private static JObject _jsonObject = null;
-
-        private static Dictionary<System.Type, object> _loadedConfigs = new Dictionary<System.Type,object>();
+        private static Dictionary<string, object> _loadedConfigs = new Dictionary<string, object>();
         #endregion
 
         #region Public
-        //public static void Load
-
-        public static void Load(string config = "")
+        public static T GetConfig<T>()
         {
-            if (!string.IsNullOrEmpty(config))
+            object loadedConfig = null;
+            string key = typeof(T).Name.ToString().ToLower();
+            bool alreadyLoaded = _loadedConfigs.TryGetValue(key, out loadedConfig);
+
+            //That config is already loaded for that type, so return it
+            if (alreadyLoaded)
             {
-                _configFile = config;
+                return (T)loadedConfig;
             }
 
-            if (!File.Exists(_configFile))
+            //Else we have to load it
+            //If it's the main config, we need to handle that specially
+            if (typeof(T) == typeof(FileSystemConfig))
             {
-                string basePath = FileSystem.AppDataDirectory;
-                _configFile = Path.Combine(basePath, _configFile);
+                loadedConfig = LoadConfig<FileSystemConfig>("config.json");                
+            }
+            else
+            {
+                //It's another config, so we first have to make sure the main config FileSystemConfig "config.json" is loaded
+                FileSystemConfig fsc = GetConfig<FileSystemConfig>();
+                string fileName = string.Empty;
 
-                //Can't find the file
-                if (!File.Exists(_configFile))
+                switch (key)
                 {
-                    _jsonObject = new JObject();
-                    return;
+                    case "optionsconfig":
+                        fileName = fsc.OptionsFile;
+                        loadedConfig = LoadConfig<OptionsConfig>(fileName);
+                        break;
+
+                    case "servernetconfig":
+                        fileName = fsc.ServerNetConfigFile;
+                        loadedConfig = LoadConfig<ServerNetConfig>(fileName);
+                        break;
+
+                    case "clientnetconfig":
+                        fileName = fsc.ClientNetConfigFile;
+                        loadedConfig = LoadConfig<ClientNetConfig>(fileName);
+                        break;
                 }
             }
 
-            //Read all text from file and pass it to the Json object to parse
-            string rawJson = File.ReadAllText(_configFile);
-            _jsonObject = JObject.Parse(rawJson);
+            _loadedConfigs.Add(key, loadedConfig);
 
-            if (_jsonObject == null)
-            {
-                throw new System.Exception("bad config data");
-            }
+            return (T)loadedConfig;
         }
 
-        public static string GetString(string key)
+        //Clear the dictionary so that the next time a GetConfig<T>() is called, it'll reload it all
+        public static void ForceReload()
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new System.ArgumentNullException();
-            }
-
-            EnsureLoaded();
-
-            JToken token = null;
-            bool tokenFound = _jsonObject.TryGetValue(key, out token);
-            if (!tokenFound)
-            {
-                return string.Empty;
-            }
-
-            return token.ToString();
+            _loadedConfigs.Clear();
         }
 
-        public static int GetInt(string key)
-        {
-            string result = GetString(key);
-            int intResult;
-            bool intSuc = int.TryParse(result, out intResult);
-
-            if (!intSuc)
-            {
-                return 0;
-            }
-
-            return intResult;
-        }
-
-        //public static T Get<T>(string key)
-        //{
-        //    string json = GetString(key);
-        //    T result = JsonConvert.DeserializeObject<T>(json);
-        //    return result;
-        //}
-        public static T Get<T>(string fileNameWithExt)
+        private static T LoadConfig<T>(string fileNameWithExt)
         {
             string fileAndPath = Path.Combine(FileSystem.AppDataDirectory, fileNameWithExt);
 
@@ -118,48 +97,34 @@ namespace EveryDaySpaceStation.Utils
             }
 
             string rawJson = File.ReadAllText(fileAndPath);
-            T jsonObject = JsonConvert.DeserializeObject<T>(rawJson);
+            T classInstance = JsonConvert.DeserializeObject<T>(rawJson);
 
-            return jsonObject;
+            return classInstance;
         }
 
-        public static void SaveConfig<T>(T configToSave)
-        {
-            if(!File.Exists(_configFile))
-            {
-                string basePath = FileSystem.AppDataDirectory;
-                _configFile = Path.Combine(basePath, _configFile);
-            }
+        //TODO FIX THIS
+        //public static void SaveConfig<T>(T configToSave)
+        //{
+        //    if(!File.Exists(_configFile))
+        //    {
+        //        string basePath = FileSystem.AppDataDirectory;
+        //        _configFile = Path.Combine(basePath, _configFile);
+        //    }
 
-            using (FileStream fs = File.Open(_configFile, FileMode.OpenOrCreate))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    using (JsonWriter jw = new JsonTextWriter(sw))
-                    {
-                        jw.Formatting = Formatting.Indented;
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Serialize(jw, configToSave);
-                    }
-                }
-            }
-        }
+        //    using (FileStream fs = File.Open(_configFile, FileMode.OpenOrCreate))
+        //    {
+        //        using (StreamWriter sw = new StreamWriter(fs))
+        //        {
+        //            using (JsonWriter jw = new JsonTextWriter(sw))
+        //            {
+        //                jw.Formatting = Formatting.Indented;
+        //                JsonSerializer serializer = new JsonSerializer();
+        //                serializer.Serialize(jw, configToSave);
+        //            }
+        //        }
+        //    }
+        //}
         
         #endregion
-
-        private static void EnsureLoaded()
-        {
-            if (!_loaded) //quick optimization around locking once loaded
-            {
-                lock (_lockObject)
-                {
-                    if (!_loaded) //check for race condition since first check was outside lock
-                    {
-                        _loaded = true;
-                        Load();
-                    }
-                }
-            }
-        }
     }
 }

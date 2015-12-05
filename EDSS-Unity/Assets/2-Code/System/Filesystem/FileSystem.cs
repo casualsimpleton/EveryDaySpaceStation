@@ -38,8 +38,8 @@ namespace EveryDaySpaceStation
 
         static FileSystemConfig _fsConfig = null;
         static OptionsConfig _optionsConfig = null;
-        //static ServerNetConfig _serverNetConfig = null;
-        //static ClientNetConfig _clientNetConfig = null;
+        static ServerNetConfig _serverNetConfig = null;
+        static ClientNetConfig _clientNetConfig = null;
         #endregion
 
         #region Gets/Sets
@@ -55,28 +55,42 @@ namespace EveryDaySpaceStation
             get { return _hasGameStarted; }
             set { _hasGameStarted = value; }
         }
+
+        public static FileSystemConfig FileSystemconfig { get { return _fsConfig; } }
+        public static OptionsConfig Optionsconfig { get { return _optionsConfig; } }
+        public static ServerNetConfig ServerNetconfig { get { return _serverNetConfig; } }
+        public static ClientNetConfig ClientNetconfig { get { return _clientNetConfig; } }
         #endregion
 
         public static void Init()
         {
-            _fsConfig = Config.Get<FileSystemConfig>("filesystemconfig");
+            _fsConfig = Config.GetConfig<FileSystemConfig>();
 
-            //if(_fsConfig 
+            if (_fsConfig == null)
+            {
+                Debug.LogError("Unable to load config.json."); 
+                return;
+            }
 
-            //LoadConfigFiles();
+            LoadConfigFiles();
 
             //TODO Load this properly
             _mapDirectory = "maps";
 
             MapDataConfig testMap = LoadMap("testLevel1");
 
-            testMap.LevelData.LevelName = "HAHAHA TEST";
-
-            SaveMap(testMap, "fartlevel1");
-
             _initDone = true;
             _hasGameStarted = true;
         }
+
+        #region Config stuff
+        private static void LoadConfigFiles()
+        {
+            _optionsConfig = Config.GetConfig<OptionsConfig>();
+            _serverNetConfig = Config.GetConfig<ServerNetConfig>();
+            _clientNetConfig = Config.GetConfig<ClientNetConfig>();
+        }
+        #endregion
 
         #region Image Stuff
         static public Texture2D LoadImageFromFile(string fileName, TextureFormat imgFormat = TextureFormat.ARGB32)
@@ -156,9 +170,6 @@ namespace EveryDaySpaceStation
             string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
 
             string jsonText = JsonConvert.SerializeObject(mapData, Formatting.Indented);
-
-            JsonSerializerSettings jss = new JsonSerializerSettings();
-            //jss.
 
             using (FileStream fs = File.Open(fileAndPath, FileMode.Create))
             {

@@ -66,4 +66,6 @@ public class SceneBlock
     }
 
     #endregion
+
+    public static int FacesPerBlock = 6; //Number of faces per block. Probably will go up as additional default faces are added
 }

@@ -130,7 +130,7 @@ namespace EveryDaySpaceStation.Json
             using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
             {
                 JObject obj = JObject.FromObject(value, serializer);
-                JObject details = new JObject();
+                //JObject details = new JObject();
                                 
                 obj.WriteTo(writer);
             }

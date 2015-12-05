@@ -36,5 +36,41 @@ public class SceneLevelManager : MonoBehaviour
     }
     #endregion
 
+#region Vars
+    public int BlocksPerChuck { get; set; }
+    [SerializeField]
+    protected Transform _worldRootTransform;
+    [SerializeField]
+    protected SceneChunk[] _sceneChunks;
+#endregion
 
+    public void Init()
+    {
+        BlocksPerChuck = FileSystem.Optionsconfig.SceneChunkSize;
+
+        CreateMap();
+    }
+
+    public void CreateMap()
+    {
+        GameObject rootGO = new GameObject("WorldRoot");
+        _worldRootTransform = rootGO.transform;
+
+        _worldRootTransform.position = Vector3.zero;
+
+        _sceneChunks = new SceneChunk[1];
+
+        for (int i = 0; i < _sceneChunks.Length; i++)
+        {
+            GameObject newChunk = new GameObject();
+            newChunk.transform.parent = this.transform;
+            newChunk.transform.localPosition = Vector3.zero;
+
+            _sceneChunks[i] = newChunk.AddComponent<SceneChunk>();
+
+            Vector3 worldPos = new Vector3((i * SceneChunk.blockSize * BlocksPerChuck), 0f, 0f);
+
+            _sceneChunks[i].CreateChunk(worldPos, new Vec2Int(i, 0));
+        }
+    }
 }
