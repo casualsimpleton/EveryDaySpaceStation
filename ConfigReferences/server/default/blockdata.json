@@ -2,84 +2,84 @@
 	"blockdata" :
 	[
 		{
-			"uid" : 0
+			"uid" : 0,
 			"name" : "empty",
 			"strength" : -1,
 			"flags" :
 			[
-				{ "Empty" }, 
+				"Empty" 
 			],
-			"requirement" : 0,
+			"requirement" : 0
 		},
 		{
-			"uid" : 1
+			"uid" : 1,
 			"name" : "space",
 			"strength" : -1,
 			"flags" :
 			[
-				{ "Vacuum" }, 
+				"Vacuum" 
 			],
-			"requirement" : 0,
+			"requirement" : 0
 		},
 		{
-			"uid" : 2
+			"uid" : 2,
 			"name" : "scaffold",
 			"strength" : 1000,
 			"flags" :
 			[
-				{ "None" }, 
+				"None" 
 			],
-			"requirement" : 1,
+			"requirement" : 1
 		},
 		{
-			"uid" : 3
+			"uid" : 3,
 			"name" : "floor",
 			"strength" : 1000,
 			"flags" :
 			[
-				{ "None" }, 
+				"None" 
 			],
-			"requirement" : 2,
+			"requirement" : 2
 		},
 		{
-			"uid" : 4
+			"uid" : 4,
 			"name" : "wall",
 			"strength" : 1000,
 			"flags" :
 			[
-				{ "None" }, 
+				"None" 
 			],
-			"requirement" : 3,
+			"requirement" : 3
 		},
 		{
-			"uid" : 5
+			"uid" : 5,
 			"name" : "door",
 			"strength" : 100,
 			"flags" :
 			[
-				{ "None" }, 
+				"None" 
 			],
-			"requirement" : 3,
+			"requirement" : 3
 		},
 		{
-			"uid" : 6
+			"uid" : 6,
 			"name" : "grate",
 			"strength" : 1000,
 			"flags" :
 			[
-				{ "Porous" }, 
+				"Porous" 
 			],
-			"requirement" : 3,
+			"requirement" : 3
 		},
 		{
-			"uid" : 7
+			"uid" : 7,
 			"name" : "window",
 			"strength" : 1000,
 			"flags" :
 			[
-				{ "Transparent" }, 
+				"Transparent" 
 			],
-			"requirement" : 3,
-		},
+			"requirement" : 3
+		}
 	]
 }

@@ -22,19 +22,22 @@ namespace EveryDaySpaceStation.DataTypes
 {
     public class EDSSSprite : System.IDisposable
     {
+        public uint UID { get; private set; }
+        public string Name { get; private set; }
         public Vec2Int TopLeft { get; private set; }
         public Vec2Int WidthHeight { get; private set; }
         public EDSSSpriteSheet SpriteSheet { get; private set; }
+        public List<string> Flags { get; private set; }
 
         private Vector4 uvCoords = Vector4.zero;
         public Vector4 GetUVCoords()
         {
             if (uvCoords == Vector4.zero)
             {
-                float xPos = (float)TopLeft.x / (float)SpriteSheet.ArtFile.width;
-                float yPos = (float)TopLeft.y / (float)SpriteSheet.ArtFile.height;
-                float width = (float)WidthHeight.x / (float)SpriteSheet.ArtFile.width;
-                float height = (float)WidthHeight.y / (float)SpriteSheet.ArtFile.height;
+                float xPos = (float)TopLeft.x / (float)SpriteSheet.Texture.width;
+                float yPos = (float)TopLeft.y / (float)SpriteSheet.Texture.height;
+                float width = (float)WidthHeight.x / (float)SpriteSheet.Texture.width;
+                float height = (float)WidthHeight.y / (float)SpriteSheet.Texture.height;
 
                 uvCoords = new Vector4(xPos, yPos, width, height);
             }
@@ -42,8 +45,10 @@ namespace EveryDaySpaceStation.DataTypes
             return uvCoords;
         }
 
-        public void CreateSprite(Vec2Int topLeft, Vec2Int widthHeight, EDSSSpriteSheet spriteSheet)
+        public void CreateSprite(uint uid, Vec2Int topLeft, Vec2Int widthHeight, EDSSSpriteSheet spriteSheet, string name = "")
         {
+            UID = uid;
+            Name = name;
             TopLeft = topLeft;
             WidthHeight = widthHeight;
             SpriteSheet = spriteSheet;

@@ -24,6 +24,8 @@ using EveryDaySpaceStation.Utils;
 public class SceneBlock
 {
     #region Vars
+    public static int FacesPerBlock = 6; //Number of faces per block. Probably will go up as additional default faces are added
+
     /// <summary>
     /// World Position of tile
     /// </summary>
@@ -54,7 +56,18 @@ public class SceneBlock
     [SerializeField]
     int[] _facesFirstTriangleIndex;
 
-    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex)
+    [SerializeField]
+    SceneChunk _parentChunk;
+    #endregion
+
+    #region Gets/Sets
+    public Vec2Int WorldPos { get { return _worldPos; } }
+    public int WorldPosIndex { get { return _worldPosIndex; } }
+    public Vec2Int ChunkPos { get { return _chunkPos; } }
+    public int ChunkPosIndex { get { return _chunkPosIndex; } }
+    #endregion
+
+    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex, SceneChunk parentChunk)
     {
         _worldPos = worldPosition;
         _chunkPos = chunkPosition;
@@ -63,9 +76,18 @@ public class SceneBlock
         _chunkPosIndex = chunkPositionIndex;
 
         _facesFirstTriangleIndex = facesFirstIndex;
+
+        _parentChunk = parentChunk;
     }
 
-    #endregion
+    public void CollapseWalls()
+    {
+        //Collapse vertical walls and ceiling
+        for (int i = 0; i < 5; i++)
+        {
+            int faceIndex = _facesFirstTriangleIndex[i];
 
-    public static int FacesPerBlock = 6; //Number of faces per block. Probably will go up as additional default faces are added
+            _parentChunk.ModifyTriangles(faceIndex, faceIndex, faceIndex, faceIndex, faceIndex);
+        }
+    }
 }

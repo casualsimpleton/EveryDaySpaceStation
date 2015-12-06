@@ -65,6 +65,7 @@ namespace EveryDaySpaceStation.Utils
 
                     case "serverconfig":
                         fileName = fsc.ServerConfigFile;
+                        fileName = Path.Combine(fsc.ServerDir, fileName);
                         loadedConfig = LoadConfig<ServerConfig>(fileName);
                         break;
 

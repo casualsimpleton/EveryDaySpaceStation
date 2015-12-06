@@ -261,8 +261,53 @@ public class SceneChunk : MonoBehaviour
             #endregion
 
             _chunkBlocks[i] = new SceneBlock();
-            _chunkBlocks[i].Create(pos, pos, index, index, faceFirstTri);
+            _chunkBlocks[i].Create(pos, pos, index, index, faceFirstTri, this);
         }
+    }
+
+    public void UpdateBlock(MapData.MapTileData blockData)
+    {
+        SceneBlock block = null;
+
+        //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
+        //-CasualSimpleton
+        for (int i = 0; i < _chunkBlocks.Length; i++)
+        {
+            if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
+            {
+                block = _chunkBlocks[i];
+                break;
+            }
+        }
+
+        if (block == null)
+        {
+            Debug.LogWarning(string.Format("Can't find a sceneblock for maptile: {0}", blockData.TilePosition));
+            return;
+        }
+
+        if (blockData.BlockType.UID == 0)
+        {
+            block.CollapseWalls();
+        }
+    }
+
+    public void ModifyTriangles(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    {
+        _tri[triIndex + 1] = _tri[vertOneIndex];
+        _tri[triIndex + 2] = _tri[vertTwoIndex];
+
+        _tri[triIndex + 3] = _tri[vertThreeIndex];
+        _tri[triIndex + 4] = _tri[vertFourIndex];
+        _tri[triIndex + 5] = _tri[vertOneIndex];
+
+        UpdateMesh();
+    }
+
+    private void UpdateMesh()
+    {
+        _mesh.vertices = _verts;
+        _mesh.triangles = _tri;
     }
 
     void OnDrawGizmosSelected()

@@ -22,12 +22,15 @@ namespace EveryDaySpaceStation.DataTypes
 {
     public class EDSSSpriteSheet : System.IDisposable
     {
-        public Texture2D ArtFile { get; private set; }
+        public uint UID { get; private set; }
+        public Texture2D Texture { get; private set; }
         public List<EDSSSprite> Sprites { get; private set; }
 
-        public void CreateSpriteSheet(Texture2D art, List<EDSSSprite> existingSprites = null)
+        public void CreateSpriteSheet(uint uid, Texture2D art, List<EDSSSprite> existingSprites = null)
         {
-            ArtFile = art;
+            UID = uid;
+
+            Texture = art;
 
             Sprites = existingSprites;
         }
@@ -42,10 +45,15 @@ namespace EveryDaySpaceStation.DataTypes
             Sprites.Remove(sprite);
         }
 
-        public EDSSSprite CreateSprite(Vec2Int pos, Vec2Int widthHeight)
+        public EDSSSprite CreateSprite(uint uid, Vec2Int pos, Vec2Int widthHeight, string spriteName = "")
         {
             EDSSSprite newSprite = new EDSSSprite();
-            newSprite.CreateSprite(pos, widthHeight, this);
+            newSprite.CreateSprite(uid, pos, widthHeight, this, spriteName);
+
+            if (Sprites == null)
+            {
+                Sprites = new List<EDSSSprite>();
+            }
 
             Sprites.Add(newSprite);
 
@@ -72,14 +80,17 @@ namespace EveryDaySpaceStation.DataTypes
                     //Dispose here
                     for (int i = 0; i < Sprites.Count; i++)
                     {
-                        Sprites[i].Dispose();
+                        if (Sprites[i] != null)
+                        {
+                            Sprites[i].Dispose();
+                        }
                     }
 
                     Sprites.Clear();
                     Sprites = null;
 
-                    GameObject.Destroy(ArtFile);
-                    ArtFile = null;
+                    GameObject.Destroy(Texture);
+                    Texture = null;
                 }
             }
         }

@@ -73,13 +73,16 @@ namespace EveryDaySpaceStation.Json
         public int Y { get; set; }
 
         [JsonProperty("scaffold")]
-        public int Scaffold { get; set; }
+        public uint ScaffoldUID { get; set; }
 
         [JsonProperty("floor")]
-        public int Floor { get; set; }
+        public uint FloorUID { get; set; }
+
+        [JsonProperty("wall")]
+        public uint WallUID { get; set; }
 
         [JsonProperty("block")]
-        public int Block { get; set; }
+        public uint Block { get; set; }
 
         [JsonProperty("blocklight")]
         public int BlockLight { get; set; }
@@ -127,7 +130,7 @@ namespace EveryDaySpaceStation.Json
 
     #region Game Data Manifest
     [JsonConverter(typeof(GameManifestJsonConverter))]
-    public class GameManfiestJson
+    public class GameManfiest
     {
         [JsonProperty("art")]
         public string[] ArtFileNames { get; set; }
@@ -147,7 +150,7 @@ namespace EveryDaySpaceStation.Json
 
         public override bool CanConvert(System.Type objectType)
         {
-            return typeof(GameManfiestJson).IsAssignableFrom(objectType);
+            return typeof(GameManfiest).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
@@ -156,7 +159,7 @@ namespace EveryDaySpaceStation.Json
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new GameManfiestJson());
+                existingValue = (existingValue ?? new GameManfiest());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;
@@ -184,7 +187,7 @@ namespace EveryDaySpaceStation.Json
     public class GameBlockDataConfig
     {
         [JsonProperty("blockdata")]
-        public BlockDataJson[] LevelData { get; set; }
+        public BlockDataJson[] BlockData { get; set; }
     }
 
     public class BlockDataJson
@@ -278,6 +281,11 @@ namespace EveryDaySpaceStation.Json
 
         [JsonProperty("flags")]
         public string[] Flags { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Sprite: {0}, '{1}'. SheetName: '{2}' Pos: {3} Width: {4}", UID, SpriteName, SpriteSheetFileName, SpritePosition, SpriteWidthHeight);
+        }
     }
 
     public class SpriteDataJsonConverter : JsonConverter
@@ -288,16 +296,22 @@ namespace EveryDaySpaceStation.Json
 
         public override bool CanConvert(System.Type objectType)
         {
-            return typeof(GameBlockDataConfig).IsAssignableFrom(objectType);
+            return typeof(SpriteDataConfig).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject obj = JObject.Load(reader);
+            //obj.SelectToken("spritedata.uid").MoveTo(obj);
+            //obj.SelectToken("spritedata.name").MoveTo(obj);
+            //obj.SelectToken("spritedata.spritesheet").MoveTo(obj);
+            //obj.SelectToken("spritedata.spritepos").MoveTo(obj);
+            //obj.SelectToken("spritedata.spritewidthheight").MoveTo(obj);
+            //obj.SelectToken("spritedata.flags").MoveTo(obj);
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new GameBlockDataConfig());
+                existingValue = (existingValue ?? new SpriteDataConfig());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;
@@ -360,6 +374,7 @@ namespace EveryDaySpaceStation.Json
             obj.SelectToken("filesystemconfig.mapdir").MoveTo(obj);
             obj.SelectToken("filesystemconfig.clientdir").MoveTo(obj);
             obj.SelectToken("filesystemconfig.serverdir").MoveTo(obj);
+            obj.SelectToken("filesystemconfig.serverconfig").MoveTo(obj);
             obj.SelectToken("filesystemconfig.clientnetconfigfile").MoveTo(obj);
             obj.SelectToken("filesystemconfig.servernetconfigfile").MoveTo(obj);
             using (reader = obj.CreateReader())
@@ -387,6 +402,7 @@ namespace EveryDaySpaceStation.Json
                 obj["mapdir"].MoveTo(details);
                 obj["clientdir"].MoveTo(details);
                 obj["serverdir"].MoveTo(details);
+                obj["serverconfig"].MoveTo(details);
                 obj["clientnetconfigfile"].MoveTo(details);
                 obj["servernetconfigfile"].MoveTo(details);
 
@@ -485,7 +501,7 @@ namespace EveryDaySpaceStation.Json
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new OptionsConfig());
+                existingValue = (existingValue ?? new ServerConfig());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;

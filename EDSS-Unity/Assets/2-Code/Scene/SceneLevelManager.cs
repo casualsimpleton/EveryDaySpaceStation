@@ -42,6 +42,8 @@ public class SceneLevelManager : MonoBehaviour
     protected Transform _worldRootTransform;
     [SerializeField]
     protected SceneChunk[] _sceneChunks;
+    [SerializeField]
+    protected Vec2Int _chunkDim;
 #endregion
 
     public void Init()
@@ -58,9 +60,32 @@ public class SceneLevelManager : MonoBehaviour
 
         _worldRootTransform.position = Vector3.zero;
 
-        _sceneChunks = new SceneChunk[1];
+        //_sceneChunks = new SceneChunk[1];
 
-        for (int i = 0; i < _sceneChunks.Length; i++)
+        //for (int i = 0; i < _sceneChunks.Length; i++)
+        //{
+        //    GameObject newChunk = new GameObject();
+        //    newChunk.transform.parent = this.transform;
+        //    newChunk.transform.localPosition = Vector3.zero;
+
+        //    _sceneChunks[i] = newChunk.AddComponent<SceneChunk>();
+
+        //    Vector3 worldPos = new Vector3((i * SceneChunk.blockSize * BlocksPerChuck), 0f, 0f);
+
+        //    _sceneChunks[i].CreateChunk(worldPos, new Vec2Int(i, 0));
+        //}
+    }
+
+    public void PopulateMapTiles(MapData mapData)
+    {
+        _chunkDim = new Vec2Int();
+        _chunkDim.x = Mathf.CeilToInt((float)mapData._mapSize.x / (float)BlocksPerChuck);
+        _chunkDim.y = Mathf.CeilToInt((float)mapData._mapSize.y / (float)BlocksPerChuck);
+
+        _sceneChunks = new SceneChunk[_chunkDim.x * _chunkDim.y];
+
+        int len = _sceneChunks.Length;
+        for (int i = 0; i < len; i++)
         {
             GameObject newChunk = new GameObject();
             newChunk.transform.parent = this.transform;
@@ -70,7 +95,27 @@ public class SceneLevelManager : MonoBehaviour
 
             Vector3 worldPos = new Vector3((i * SceneChunk.blockSize * BlocksPerChuck), 0f, 0f);
 
-            _sceneChunks[i].CreateChunk(worldPos, new Vec2Int(i, 0));
+            int x, z;
+            z = (int)((float)i / (float)_chunkDim.x);
+            x = i - (z * _chunkDim.x);
+
+            _sceneChunks[i].CreateChunk(worldPos, new Vec2Int(x, z));
         }
+
+        len = mapData._mapTiles.Length;
+        for (int i = 0; i < len; i++)
+        {
+            int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, mapData._mapSize.x);
+            _sceneChunks[chunkIndex].UpdateBlock(mapData._mapTiles[i]);
+        }
+    }
+
+    protected int GetChunkIndex(Vec2Int tilePos, int width)
+    {
+        int chunkIndexX = Mathf.FloorToInt((float)tilePos.x / (float)BlocksPerChuck);
+        int chunkIndexY = Mathf.FloorToInt((float)tilePos.y / (float)BlocksPerChuck);
+
+        int chunkIndex = chunkIndexY * _chunkDim.x + chunkIndexX;
+        return chunkIndex;
     }
 }
