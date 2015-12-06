@@ -63,6 +63,11 @@ namespace EveryDaySpaceStation.Utils
                         loadedConfig = LoadConfig<OptionsConfig>(fileName);
                         break;
 
+                    case "serverconfig":
+                        fileName = fsc.ServerConfigFile;
+                        loadedConfig = LoadConfig<ServerConfig>(fileName);
+                        break;
+
                     case "servernetconfig":
                         fileName = fsc.ServerNetConfigFile;
                         loadedConfig = LoadConfig<ServerNetConfig>(fileName);

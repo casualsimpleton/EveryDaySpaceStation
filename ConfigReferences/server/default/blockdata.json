@@ -1,0 +1,85 @@
+{
+	"blockdata" :
+	[
+		{
+			"uid" : 0
+			"name" : "empty",
+			"strength" : -1,
+			"flags" :
+			[
+				{ "Empty" }, 
+			],
+			"requirement" : 0,
+		},
+		{
+			"uid" : 1
+			"name" : "space",
+			"strength" : -1,
+			"flags" :
+			[
+				{ "Vacuum" }, 
+			],
+			"requirement" : 0,
+		},
+		{
+			"uid" : 2
+			"name" : "scaffold",
+			"strength" : 1000,
+			"flags" :
+			[
+				{ "None" }, 
+			],
+			"requirement" : 1,
+		},
+		{
+			"uid" : 3
+			"name" : "floor",
+			"strength" : 1000,
+			"flags" :
+			[
+				{ "None" }, 
+			],
+			"requirement" : 2,
+		},
+		{
+			"uid" : 4
+			"name" : "wall",
+			"strength" : 1000,
+			"flags" :
+			[
+				{ "None" }, 
+			],
+			"requirement" : 3,
+		},
+		{
+			"uid" : 5
+			"name" : "door",
+			"strength" : 100,
+			"flags" :
+			[
+				{ "None" }, 
+			],
+			"requirement" : 3,
+		},
+		{
+			"uid" : 6
+			"name" : "grate",
+			"strength" : 1000,
+			"flags" :
+			[
+				{ "Porous" }, 
+			],
+			"requirement" : 3,
+		},
+		{
+			"uid" : 7
+			"name" : "window",
+			"strength" : 1000,
+			"flags" :
+			[
+				{ "Transparent" }, 
+			],
+			"requirement" : 3,
+		},
+	]
+}

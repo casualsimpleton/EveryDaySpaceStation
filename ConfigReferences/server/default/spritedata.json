@@ -1,0 +1,137 @@
+{
+	"spritedata" :
+	[
+		{
+			"uid" : 0
+			"name" : "empty",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 0, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "Empty" }, 
+			]
+		},
+		{
+			"uid" : 1
+			"name" : "red-grey-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 32, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 2
+			"name" : "glass-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 64, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 3
+			"name" : "wood-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 96, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 4
+			"name" : "whitetile-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 128 "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 5
+			"name" : "white-grey-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 160, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 6
+			"name" : "dark-grey-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 192, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 7
+			"name" : "reinforced-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 224, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 8
+			"name" : "deckplate-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 288, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},		
+		{
+			"uid" : 10
+			"name" : "electronic-1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 320, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 11
+			"name" : "uglycarpet1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 352, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+		{
+			"uid" : 12
+			"name" : "blue-white-floor1",
+			"spritesheet" : "ss1-1.png",
+			"spritepos" : { "x" : 384, "y" : 0 },
+			"spritewidthheight" : { "x" : 32, "y" : 32 },
+			"flags" :
+			[
+				{ "None" }, 
+			]
+		},
+	]
+}

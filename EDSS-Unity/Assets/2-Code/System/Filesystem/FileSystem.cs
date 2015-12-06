@@ -30,14 +30,16 @@ namespace EveryDaySpaceStation
         static bool _initDone;
         static bool _hasGameStarted;
 
-        static string _appDataDirectory = Application.persistentDataPath; //Where all the app data outside of Unity, is located, e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation
-        static string _clientDataDirectory = string.Empty; //Where the current client data is being stored, e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/client
-        static string _serverDataDirectory = string.Empty; //Where the current server data is being stored (if at all), e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/server
-        static string _clientGameDataDirectory = string.Empty; //Where the current game's client data is being stored, e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/client/bobsserver
-        static string _mapDirectory = string.Empty; //Where the maps are located (for editing or running a server), e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/maps
+        static string _appDataDirectory = Application.persistentDataPath; //Where all the app data outside of Unity, is located, e.g.: "C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation"
+        static string _clientDataDirectory = string.Empty; //Where the current client data is being stored, e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/"client"
+        static string _clientGameDataDirectory = string.Empty; //Where the current game's client data is being stored, e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/client/"bobsserver"
+        static string _serverDataDirectory = string.Empty; //Where the current server data is being stored (if at all), e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/"server"
+        static string _serverGameDataDirectory = string.Empty; //Where the current server gamemode is being stored (if at all), e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/server/"default"
+        static string _mapDirectory = string.Empty; //Where the maps are located (for editing or running a server), e.g.: C:/Users/<User>/AppData/LocalLow/EveryDaySpaceStation/EveryDaySpaceStation/"maps"
 
         static FileSystemConfig _fsConfig = null;
         static OptionsConfig _optionsConfig = null;
+        static ServerConfig _serverConfig = null;
         static ServerNetConfig _serverNetConfig = null;
         static ClientNetConfig _clientNetConfig = null;
         #endregion
@@ -89,6 +91,7 @@ namespace EveryDaySpaceStation
             _optionsConfig = Config.GetConfig<OptionsConfig>();
             _serverNetConfig = Config.GetConfig<ServerNetConfig>();
             _clientNetConfig = Config.GetConfig<ClientNetConfig>();
+            _serverConfig = Config.GetConfig<ServerConfig>();
         }
         #endregion
 

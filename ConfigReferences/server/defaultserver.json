@@ -1,0 +1,12 @@
+{
+	"serverconfig":
+	{
+		"servername" : "Exciting Everyday Space Station Server",
+		"module" : "default",
+		"maps" :
+		[
+			"testlevel1",
+		]
+		"defaultmaxroundtime" : 7200
+	}
+}

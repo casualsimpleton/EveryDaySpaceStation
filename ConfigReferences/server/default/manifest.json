@@ -1,0 +1,14 @@
+{
+	"art" :
+	[
+		"ss13-1.png",
+	],
+	"spritedata" :
+	[
+		"spritedata.json",
+	],
+	"blockdata" :
+	[
+		"blockdata.json",
+	]
+}
