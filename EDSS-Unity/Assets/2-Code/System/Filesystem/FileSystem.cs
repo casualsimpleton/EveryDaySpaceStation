@@ -293,7 +293,15 @@ namespace EveryDaySpaceStation
 
             sheet = new EDSSSpriteSheet();
             uint uid = GameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
-            sheet.CreateSpriteSheet(uid, texture, null);
+            uint matUID = GameManager.Singleton.Gamedata.GetNewMaterialUID();
+
+            //Create a new material and assign the texture
+            Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
+            newMat.name = string.Format("{0}-mat", texture.name);
+            newMat.SetTexture("_MainTex", texture); 
+            GameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
+
+            sheet.CreateSpriteSheet(uid, texture, newMat, null);
 
             GameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
 
@@ -331,6 +339,7 @@ namespace EveryDaySpaceStation
                     BlockDataJson blockData = blockConfig.BlockData[j];
 
                     GameData.GameBlockData newBlock = new GameData.GameBlockData(blockData.UID, blockData.Name, blockData.DefaultStrength, blockData.Flags, blockData.Requirement);
+                    newBlock.SetFaceParameters(blockData.FaceZForward, blockData.FaceXForward, blockData.FaceZBack, blockData.FaceXBack, blockData.FaceTop, blockData.FaceBottom);
 
                     GameManager.Singleton.Gamedata.AddGameBlock(newBlock.UID, newBlock);
 

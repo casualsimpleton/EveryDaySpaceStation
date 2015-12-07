@@ -166,7 +166,8 @@ PlayerSettings:
   psp2PackagedResourcesPath: 
   flashStrippingLevel: 2
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: DEBUGCLIENT
   metroPackageName: EDSS-Unity
   metroPackageLogo: 
   metroPackageLogo140: 

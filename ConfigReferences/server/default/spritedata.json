@@ -124,6 +124,22 @@
 		"name": "deckplate-floor1",
 		"spritesheet": "ss13-1.png",
 		"spritepos": {
+			"x": 256,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	}, 
+	{
+		"uid": 9,
+		"name": "grille1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
 			"x": 288,
 			"y": 0
 		},
@@ -134,7 +150,8 @@
 		"flags": [
 			"None"
 		]
-	}, {
+	},
+	{
 		"uid": 10,
 		"name": "electronic-1",
 		"spritesheet": "ss13-1.png",
@@ -179,5 +196,86 @@
 		"flags": [
 			"None"
 		]
-	}]
+	},
+	{
+		"uid": 13,
+		"name": "wall1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
+			"x": 32,
+			"y": 288
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	},
+	{
+		"uid": 14,
+		"name": "wall-left1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 288
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	},
+	{
+		"uid": 15,
+		"name": "wall-right1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 288
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	},
+	{
+		"uid": 16,
+		"name": "wall-center1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
+			"x": 96,
+			"y": 288
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	},
+	{
+		"uid": 17,
+		"name": "glass-wall1",
+		"spritesheet": "ss13-1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 288
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	}
+	]
 }

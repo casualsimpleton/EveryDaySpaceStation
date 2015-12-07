@@ -28,9 +28,18 @@ public sealed class MapData
         public bool BlocksLight { get; set; }
         public bool IsTransparent { get; set; }
         public GameData.GameBlockData BlockType { get; set; }
+
+        public uint?[] FaceSpritesUID { get; set; }
+
         public uint ScaffoldingUID { get; set; }
         public uint FloorSpriteUID { get; set; }
         public uint WallSpriteUID { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Pos: {0} Index: {1} BlocksLight: {2} IsTransparent: {3} ScaffoldingUID: {4} FloorSpriteUID: {5} WallSpriteUID: {6}",
+                TilePosition, TileIndex, BlocksLight, IsTransparent, BlockType, ScaffoldingUID, FloorSpriteUID, WallSpriteUID);
+        }
     }
     #endregion
 
@@ -72,6 +81,19 @@ public sealed class MapData
             GameManager.Singleton.Gamedata.GetGameBlock(tile.Block, out block);
 
             mapTile.BlockType = block;
+
+            mapTile.FaceSpritesUID = new uint?[(int)GameData.GameBlockData.BlockFaces.MAX];
+
+            for(int j = 0; j < mapTile.FaceSpritesUID.Length && j < tile.FaceSpriteUID.Length; j++)
+            {
+                mapTile.FaceSpritesUID[j] = 0;
+                if (tile.FaceSpriteUID[j] == null)
+                {
+                    continue;
+                }
+
+                mapTile.FaceSpritesUID[j] = tile.FaceSpriteUID[j];
+            }
 
             mapTile.ScaffoldingUID = tile.ScaffoldUID;
             mapTile.FloorSpriteUID = tile.FloorUID;

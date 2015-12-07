@@ -5,6 +5,12 @@
 			"uid" : 0,
 			"name" : "empty",
 			"strength" : -1,
+			"facez+" : 0,
+			"facex+" : 0,
+			"facez-" : 0,
+			"facex-" : 0,
+			"facetop" : 0,
+			"facebottom" : 0,			
 			"flags" :
 			[
 				"Empty" 
@@ -15,6 +21,12 @@
 			"uid" : 1,
 			"name" : "space",
 			"strength" : -1,
+			"facez+" : 0,
+			"facex+" : 0,
+			"facez-" : 0,
+			"facex-" : 0,
+			"facetop" : 0,
+			"facebottom" : 0,
 			"flags" :
 			[
 				"Vacuum" 
@@ -25,6 +37,12 @@
 			"uid" : 2,
 			"name" : "scaffold",
 			"strength" : 1000,
+			"facez+" : 0,
+			"facex+" : 0,
+			"facez-" : 0,
+			"facex-" : 0,
+			"facetop" : 0,
+			"facebottom" : 0,
 			"flags" :
 			[
 				"None" 
@@ -35,6 +53,12 @@
 			"uid" : 3,
 			"name" : "floor",
 			"strength" : 1000,
+			"facez+" : 0,
+			"facex+" : 0,
+			"facez-" : 0,
+			"facex-" : 0,
+			"facetop" : 0,
+			"facebottom" : 1,
 			"flags" :
 			[
 				"None" 
@@ -45,6 +69,12 @@
 			"uid" : 4,
 			"name" : "wall",
 			"strength" : 1000,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facetop" : 1,
+			"facebottom" : 1,
 			"flags" :
 			[
 				"None" 
@@ -55,6 +85,12 @@
 			"uid" : 5,
 			"name" : "door",
 			"strength" : 100,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facetop" : 1,
+			"facebottom" : 1,
 			"flags" :
 			[
 				"None" 
@@ -65,6 +101,12 @@
 			"uid" : 6,
 			"name" : "grate",
 			"strength" : 1000,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facetop" : 1,
+			"facebottom" : 1,
 			"flags" :
 			[
 				"Porous" 
@@ -75,6 +117,12 @@
 			"uid" : 7,
 			"name" : "window",
 			"strength" : 1000,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facetop" : 1,
+			"facebottom" : 1,
 			"flags" :
 			[
 				"Transparent" 

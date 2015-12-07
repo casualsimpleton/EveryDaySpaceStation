@@ -17,11 +17,42 @@ using EveryDaySpaceStation;
 using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 
+[System.Serializable]
 public sealed class GameData
 {
     #region Classes/Structs
     public class GameBlockData : System.IDisposable
     {
+        public struct FaceInfo
+        {
+            public enum FaceDirection : byte
+            {
+                Forward,
+                Inverted
+            }
+
+            public FaceDirection _faceDir; //Whether the face is point out or in
+            public bool _visible;
+
+            public override string ToString()
+            {
+                return string.Format("{0} {1}", _faceDir, _visible);
+            }
+        }
+
+        public enum BlockFaces : byte
+        {
+            FaceZForward,
+            FaceXForward,
+            FaceZBack,
+            FaceXBack,
+            FaceTop,
+            FaceBottom,
+
+            //..
+            MAX
+        }
+
         public uint UID { get; private set; }
         public string Name { get; private set; }
         public int DefaultStrength { get; private set; }
@@ -32,6 +63,8 @@ public sealed class GameData
         /// </summary>
         public uint RequirementUID { get; private set; }
 
+        public FaceInfo[] Faceinfo;
+
         public GameBlockData(uint uid, string name, int defaultStrength, string[] flags, uint requirementUID)
         {
             UID = uid;
@@ -39,6 +72,65 @@ public sealed class GameData
             DefaultStrength = defaultStrength;
             Flags = new List<string>(flags);
             RequirementUID = requirementUID;
+        }
+
+        public void SetFaceParameters(params int[] FaceValues)
+        {
+            int goalCount = (int)BlockFaces.MAX;
+            if (Faceinfo == null)
+            {
+                Faceinfo = new FaceInfo[goalCount];
+            }
+
+            if(FaceValues == null)
+            {
+                Debug.LogError(string.Format("Face parameters shouldn't be null. GameBlockData: {0}", ToString()));
+                return;
+            }
+
+            if (FaceValues.Length != goalCount)
+            {
+                Debug.LogWarning(string.Format("Number of inputted face parameters ({0}) does not match the desired amount {1} for GameBlockData: {2}", FaceValues.Length, goalCount, ToString()));
+            }
+
+            for (int i = 0; i < goalCount && i < FaceValues.Length; i++)
+            {
+                FaceInfo curFace = new FaceInfo();
+
+                //Not visible
+                if (FaceValues[i] == 0)
+                {
+                    curFace._faceDir = FaceInfo.FaceDirection.Forward;
+                    curFace._visible = false;
+                }
+                //Face present, but inverted
+                else if (FaceValues[i] == 2)
+                {
+                    curFace._faceDir = FaceInfo.FaceDirection.Inverted;
+                    curFace._visible = true;
+                }
+                //Catch all for now
+                else
+                {
+                    curFace._faceDir = FaceInfo.FaceDirection.Forward;
+                    curFace._visible = true;
+                }
+
+                Faceinfo[i] = curFace;
+            }
+        }
+
+        public override string ToString()
+        {
+            //Not the most efficient, but it works
+            string flagsTxt = "";
+
+            for(int i = 0; i < flagsTxt.Length; i++)
+            {
+                flagsTxt += string.Format("'{0}|'", flagsTxt[i]);
+            }
+
+            return string.Format("UID: {0} Name: {1} DefaultStrength: {2} RequirementUID: {3} Flags: {4}", UID, Name, DefaultStrength, RequirementUID, flagsTxt);
         }
 
         #region Dispose
@@ -74,16 +166,25 @@ public sealed class GameData
     #endregion
 
     #region Vars
+    [SerializeField]
     Dictionary<uint, EDSSSprite> _sprites;
+    [SerializeField]
     Dictionary<uint, EDSSSpriteSheet> _spriteSheets;
-    Dictionary<uint, GameBlockData> _gameBlockData;
+    [SerializeField]
+    Dictionary<uint,GameBlockData> _gameBlockData;
+    [SerializeField]
     Dictionary<string, Texture2D> _textures;
+    [SerializeField]
+    //Dictionary<uint, Material> _materials;
+    List<Material> _materials;
 
     private uint _spriteSheetUID = 1;
+    private uint _materialUID = 1;
     #endregion
 
     #region Gets/Sets
     public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
+    public uint GetNewMaterialUID() { return _materialUID++; }
     #endregion
 
     #region Constructors
@@ -93,6 +194,8 @@ public sealed class GameData
         _spriteSheets = new Dictionary<uint, EDSSSpriteSheet>();
         _gameBlockData = new Dictionary<uint, GameBlockData>();
         _textures = new Dictionary<string, Texture2D>();
+        //_materials = new Dictionary<uint, Material>();
+        _materials = new List<Material>();
     }
     #endregion
 
@@ -114,6 +217,12 @@ public sealed class GameData
     public void AddTexture(string name, Texture2D texture)
     {
         _textures.Add(name, texture);
+    }
+
+    public void AddMaterial(uint uid, Material material)
+    {
+        //_materials.Add(uid, material);
+        _materials.Add(material);
     }
 
     public bool GetSprite(uint uid, out EDSSSprite sprite)
@@ -162,6 +271,15 @@ public sealed class GameData
         return exists;
     }
 
+    public bool GetMaterial(uint uid, out Material material)
+    {
+        //bool exists = _materials.TryGetValue(uid, out material);
+        
+        //return exists;
+        material = null;
+        return false;
+    }
+
     public void Cleanup()
     {
         foreach (KeyValuePair<uint, EDSSSprite> sprite in _sprites)
@@ -184,14 +302,25 @@ public sealed class GameData
             GameObject.Destroy(texture.Value);
         }
 
+        //foreach (KeyValuePair<uint, Material> material in _materials)
+        //{
+        //    GameObject.Destroy(material.Value);
+        //}
+        for (int i = 0; i < _materials.Count; i++)
+        {
+            GameObject.Destroy(_materials[i]);
+        }
+
         _sprites.Clear();
         _spriteSheets.Clear();
         _gameBlockData.Clear();
         _textures.Clear();
+        _materials.Clear();
 
         _sprites = null;
         _spriteSheets = null;
         _gameBlockData = null;
         _textures = null;
+        _materials = null;
     }
 }

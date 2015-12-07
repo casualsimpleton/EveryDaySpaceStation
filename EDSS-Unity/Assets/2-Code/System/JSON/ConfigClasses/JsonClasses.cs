@@ -72,6 +72,9 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("y")]
         public int Y { get; set; }
 
+        [JsonProperty("facespritesuid")]
+        public uint?[] FaceSpriteUID { get; set; }
+
         [JsonProperty("scaffold")]
         public uint ScaffoldUID { get; set; }
 
@@ -174,7 +177,7 @@ namespace EveryDaySpaceStation.Json
             using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
             {
                 JObject obj = JObject.FromObject(value, serializer);
-                JObject details = new JObject();
+//                JObject details = new JObject();
 
                 obj.WriteTo(writer);
             }
@@ -200,6 +203,24 @@ namespace EveryDaySpaceStation.Json
 
         [JsonProperty("strength")]
         public int DefaultStrength { get; set; }
+
+        [JsonProperty("facez+")]
+        public int FaceZForward { get; set; }
+
+		[JsonProperty("facex+")]
+        public int FaceXForward { get; set; }
+
+		[JsonProperty("facez-")]
+        public int FaceZBack { get; set; }
+
+        [JsonProperty("facex-")]
+        public int FaceXBack { get; set; }
+
+		[JsonProperty("facetop")]
+        public int FaceTop { get; set; }
+
+		[JsonProperty("facebottom")]
+        public int FaceBottom { get; set; }
 
         [JsonProperty("flags")]
         public string[] Flags { get; set; }
@@ -240,7 +261,7 @@ namespace EveryDaySpaceStation.Json
             using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
             {
                 JObject obj = JObject.FromObject(value, serializer);
-                JObject details = new JObject();
+                //JObject details = new JObject();
 
                 obj.WriteTo(writer);
             }
@@ -326,7 +347,7 @@ namespace EveryDaySpaceStation.Json
             using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
             {
                 JObject obj = JObject.FromObject(value, serializer);
-                JObject details = new JObject();
+                //JObject details = new JObject();
 
                 obj.WriteTo(writer);
             }

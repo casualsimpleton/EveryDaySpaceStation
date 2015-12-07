@@ -20,6 +20,7 @@ using EveryDaySpaceStation.Utils;
 
 namespace EveryDaySpaceStation.DataTypes
 {
+    [System.Serializable]
     public class EDSSSprite : System.IDisposable
     {
         public uint UID { get; private set; }
@@ -35,7 +36,7 @@ namespace EveryDaySpaceStation.DataTypes
             if (uvCoords == Vector4.zero)
             {
                 float xPos = (float)TopLeft.x / (float)SpriteSheet.Texture.width;
-                float yPos = (float)TopLeft.y / (float)SpriteSheet.Texture.height;
+                float yPos = (float)(TopLeft.y + WidthHeight.y) / (float)SpriteSheet.Texture.height;
                 float width = (float)WidthHeight.x / (float)SpriteSheet.Texture.width;
                 float height = (float)WidthHeight.y / (float)SpriteSheet.Texture.height;
 

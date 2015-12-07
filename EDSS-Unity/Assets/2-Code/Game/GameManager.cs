@@ -41,9 +41,13 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Vars
+    [SerializeField]
     protected GameData _gameData;
-    protected float _timeSinceGameStarted;
+    [SerializeField]
     protected MapData _mapData;
+
+    protected float _timeSinceGameStarted;
+    
     #endregion
 
     #region Gets/Sets

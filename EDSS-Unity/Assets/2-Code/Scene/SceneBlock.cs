@@ -56,6 +56,13 @@ public class SceneBlock
     [SerializeField]
     int[] _facesFirstTriangleIndex;
 
+    /// <summary>
+    /// Keep a copy of the index of each vertex for the face. That way we don't have to re-compute it each time
+    /// Might not be necessary if blocks don't change too often and we find we're using too much memory
+    /// </summary>
+    [SerializeField]
+    int[] _vertFirstIndex;
+    
     [SerializeField]
     SceneChunk _parentChunk;
     #endregion
@@ -67,7 +74,7 @@ public class SceneBlock
     public int ChunkPosIndex { get { return _chunkPosIndex; } }
     #endregion
 
-    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex, SceneChunk parentChunk)
+    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex, int[] vertFirstIndex, SceneChunk parentChunk)
     {
         _worldPos = worldPosition;
         _chunkPos = chunkPosition;
@@ -76,11 +83,12 @@ public class SceneBlock
         _chunkPosIndex = chunkPositionIndex;
 
         _facesFirstTriangleIndex = facesFirstIndex;
+        _vertFirstIndex = vertFirstIndex;
 
         _parentChunk = parentChunk;
     }
 
-    public void CollapseWalls()
+    public void CollapseAllWalls()
     {
         //Collapse vertical walls and ceiling
         for (int i = 0; i < 5; i++)
@@ -89,5 +97,46 @@ public class SceneBlock
 
             _parentChunk.ModifyTriangles(faceIndex, faceIndex, faceIndex, faceIndex, faceIndex);
         }
+    }
+
+    public void UpdateFaces(MapData.MapTileData mapTileData)
+    {
+        GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
+
+        for (int i = 0; i < faceInfo.Length; i++)
+        {
+            int faceIndex = _facesFirstTriangleIndex[i];
+
+            //Is the face even visible? If false, then we'll just collapse it and be done
+            if (!faceInfo[i]._visible)
+            {
+                //We feed in all the same index and thus make the face basically be non existent
+                _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
+            }
+            else //Face is visible, let's figure out which direction
+            {
+                //Faces outwards from center of box
+                if (faceInfo[i]._faceDir == GameData.GameBlockData.FaceInfo.FaceDirection.Forward)
+                {
+                    _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i], _vertFirstIndex[i] + 1, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 3);
+                }
+                else //Inverted faces
+                {
+                    _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 1, _vertFirstIndex[i], _vertFirstIndex[i] + 3);
+                }
+
+                //Now find the EDSSSprite info
+                EDSSSprite sprite = null;
+                bool foundSprite = GameManager.Singleton.Gamedata.GetSprite((uint)mapTileData.FaceSpritesUID[i], out sprite);
+
+                _parentChunk.AssignMaterial(sprite);
+
+                //UVs can use the same vert index since they match in count
+                _parentChunk.ModifyUVNoUpdate(_vertFirstIndex[i], sprite.GetUVCoords());
+            }
+        }
+
+        _parentChunk.UpdateMesh();
+        _parentChunk.UpdateUV();
     }
 }

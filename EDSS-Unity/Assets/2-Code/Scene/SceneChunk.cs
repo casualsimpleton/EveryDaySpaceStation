@@ -128,10 +128,12 @@ public class SceneChunk : MonoBehaviour
             //TODO this currently assumes only one total chunk
             Vec2Int pos = new Vec2Int(x, z);
             int index = Helpers.IndexFromVec2Int(pos, SceneLevelManager.Singleton.BlocksPerChuck);
+            int[] vertFirstIndex = new int[SceneBlock.FacesPerBlock];
 
             #region Verts, Norms, UVs and Triangles
             //Forward Face - Z+ - Clockwise LOOKING AT face - normal point Z+
             //Vert 0
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZForward] = vertIndex;
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, blockSize, zz * blockSize);
             //Vert 1
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, 0f, zz * blockSize);
@@ -152,6 +154,7 @@ public class SceneChunk : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 1f);
 
             //Right Face - X+ - Clockwise LOOKING AT face - normal point X+
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXForward] = vertIndex;
             _verts[vertIndex++] = new Vector3(xx * blockSize, blockSize, zz * blockSize);
             _verts[vertIndex++] = new Vector3(xx * blockSize, 0f, zz * blockSize);
             _verts[vertIndex++] = new Vector3(xx * blockSize, 0f, (z * blockSize) + 0f);
@@ -169,6 +172,7 @@ public class SceneChunk : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 1f);
 
             //Back Face - Z- - Clockwise LOOKING at face - normal pointing Z-
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZBack] = vertIndex;
             _verts[vertIndex++] = new Vector3(xx * blockSize, blockSize, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3(xx * blockSize, 0f, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, 0f, (z * blockSize) + 0f);
@@ -186,6 +190,7 @@ public class SceneChunk : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 1f);
 
             //Left Face - X- - Clockwise LOOKING at face - normal pointing X-
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXBack] = vertIndex;
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, blockSize, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, 0f, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, 0f, zz * blockSize);
@@ -203,6 +208,7 @@ public class SceneChunk : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 1f);
 
             //Top Face - Y+ - since this will be seen from a top down view (for the time being)
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceTop] = vertIndex;
             _verts[vertIndex++] = new Vector3(xx * blockSize, blockSize, zz * blockSize);
             _verts[vertIndex++] = new Vector3(xx * blockSize, blockSize, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, blockSize, (z * blockSize) + 0f);
@@ -220,6 +226,7 @@ public class SceneChunk : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 1f);
 
             //Bottom Face - Y+ - Since this is the floor, it needs to point up as well
+            vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceBottom] = vertIndex;
             _verts[vertIndex++] = new Vector3(xx * blockSize, 0f, zz * blockSize);
             _verts[vertIndex++] = new Vector3(xx * blockSize, 0f, (z * blockSize) + 0f);
             _verts[vertIndex++] = new Vector3((x * blockSize) + 0f, 0f, (z * blockSize) + 0f);
@@ -261,7 +268,7 @@ public class SceneChunk : MonoBehaviour
             #endregion
 
             _chunkBlocks[i] = new SceneBlock();
-            _chunkBlocks[i].Create(pos, pos, index, index, faceFirstTri, this);
+            _chunkBlocks[i].Create(pos, pos, index, index, faceFirstTri, vertFirstIndex, this);
         }
     }
 
@@ -286,29 +293,96 @@ public class SceneChunk : MonoBehaviour
             return;
         }
 
-        if (blockData.BlockType.UID == 0)
-        {
-            block.CollapseWalls();
-        }
+        block.UpdateFaces(blockData);
     }
 
+    #region Triangle and Face Modification
     public void ModifyTriangles(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
     {
-        _tri[triIndex + 1] = _tri[vertOneIndex];
-        _tri[triIndex + 2] = _tri[vertTwoIndex];
-
-        _tri[triIndex + 3] = _tri[vertThreeIndex];
-        _tri[triIndex + 4] = _tri[vertFourIndex];
-        _tri[triIndex + 5] = _tri[vertOneIndex];
+        ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
 
         UpdateMesh();
     }
 
-    private void UpdateMesh()
+    /// <summary>
+    /// Same functionality as ModifyTriangles but doesn't update the mesh. Useful if modifying large number of faces at once
+    /// </summary>
+    public void ModifyTrianglesNoUpdate(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    {
+        _tri[triIndex] = vertOneIndex;
+        _tri[triIndex + 1] = vertTwoIndex;
+        _tri[triIndex + 2] = vertThreeIndex;
+
+        _tri[triIndex + 3] = vertThreeIndex;
+        _tri[triIndex + 4] = vertFourIndex;
+        _tri[triIndex + 5] = vertOneIndex;
+
+#if DEBUGCLIENT
+        if (_tri[triIndex] > _verts.Length || 
+            _tri[triIndex + 1] > _verts.Length ||
+            _tri[triIndex + 2] > _verts.Length ||
+            _tri[triIndex + 3] > _verts.Length ||
+            _tri[triIndex + 4] > _verts.Length ||
+            _tri[triIndex + 5] > _verts.Length)
+        {
+            Debug.LogError("Triangle refers to out of bounds vert");
+        }
+#endif
+    }
+    #endregion
+
+    #region Texturing and Materials
+    public void ModifyUV(int uvIndex, Vector4 uv)
+    {
+        ModifyUV(uvIndex, uv);
+
+        UpdateUV();
+    }
+
+    public void ModifyUVNoUpdate(int uvIndex, Vector4 uv)
+    {
+        _uv[uvIndex] = new Vector2(uv.x + uv.z, uv.y);
+        _uv[uvIndex + 1] = new Vector2(uv.x + uv.z, uv.y - uv.w);
+        _uv[uvIndex + 2] = new Vector2(uv.x, uv.y - uv.w);
+        _uv[uvIndex + 3] = new Vector2(uv.x, uv.y);
+
+#if DEBUGCLIENT
+        if (uvIndex < 0 || uvIndex > _uv.Length - 1)
+        {
+            Debug.LogError(string.Format("UV index {0} is out of bounds", uvIndex));
+        }
+#endif
+    }
+    #endregion
+    /// <summary>
+    /// Updates the mesh's assigned verts and triangles. This has some cost associated with it, so doing it too often can cause performance issues
+    /// </summary>
+    public void UpdateMesh()
     {
         _mesh.vertices = _verts;
         _mesh.triangles = _tri;
     }
+
+    /// <summary>
+    /// Updates the mesh's assigned uvs. This has some cost associated with it, so doing it too often can cause performance issues
+    /// </summary>
+    public void UpdateUV()
+    {
+        _mesh.uv = _uv;
+    }
+
+    #region Materials
+    public void AssignMaterial(EDSSSprite sprite)
+    {
+        //TODO Currently can only do one material per chunk
+        //if (_meshRenderer.material != null && _meshRenderer.material != sprite.SpriteSheet.Material)
+        //{
+        //    return;
+        //}
+
+        _meshRenderer.material = sprite.SpriteSheet.Material;
+    }
+    #endregion
 
     void OnDrawGizmosSelected()
     {

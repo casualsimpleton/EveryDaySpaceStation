@@ -20,17 +20,21 @@ using EveryDaySpaceStation.Utils;
 
 namespace EveryDaySpaceStation.DataTypes
 {
+    [System.Serializable]
     public class EDSSSpriteSheet : System.IDisposable
     {
         public uint UID { get; private set; }
         public Texture2D Texture { get; private set; }
         public List<EDSSSprite> Sprites { get; private set; }
+        public Material Material { get; private set; }
 
-        public void CreateSpriteSheet(uint uid, Texture2D art, List<EDSSSprite> existingSprites = null)
+        public void CreateSpriteSheet(uint uid, Texture2D art, Material mat, List<EDSSSprite> existingSprites = null)
         {
             UID = uid;
 
             Texture = art;
+
+            Material = mat;
 
             Sprites = existingSprites;
         }
