@@ -103,6 +103,12 @@ public class SceneBlock
     {
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
 
+        //Going to assign a random color
+        float f = (float)mapTileData.TilePosition.x / 16f;
+        byte v = (byte)(255 * f);
+
+        Color32 c = new Color32(v, v, v, v);
+
         for (int i = 0; i < faceInfo.Length; i++)
         {
             int faceIndex = _facesFirstTriangleIndex[i];
@@ -134,9 +140,12 @@ public class SceneBlock
                 //UVs can use the same vert index since they match in count
                 _parentChunk.ModifyUVNoUpdate(_vertFirstIndex[i], sprite.GetUVCoords());
             }
+
+            _parentChunk.ModifyColor(_vertFirstIndex[i], c);
         }
 
         _parentChunk.UpdateMesh();
         _parentChunk.UpdateUV();
+        _parentChunk.UpdateColors();
     }
 }

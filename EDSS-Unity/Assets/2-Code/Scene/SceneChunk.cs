@@ -64,6 +64,9 @@ public class SceneChunk : MonoBehaviour
     Vector2[] _uv;
 
     [SerializeField]
+    Color32[] _colors;
+
+    [SerializeField]
     int[] _tri;
     #endregion
 
@@ -82,6 +85,7 @@ public class SceneChunk : MonoBehaviour
         _normals = new Vector3[_verts.Length];
         _uv = new Vector2[_verts.Length];
         _tri = new int[SceneLevelManager.Singleton.BlocksPerChuck * SceneLevelManager.Singleton.BlocksPerChuck * SceneBlock.FacesPerBlock * 6];
+        _colors = new Color32[_verts.Length];
 
         _mesh = new Mesh();
         _mesh.name = string.Format("Chunk-{0}-Mesh", _chunkPos);
@@ -99,6 +103,7 @@ public class SceneChunk : MonoBehaviour
         _mesh.normals = _normals;
         _mesh.uv = _uv;
         _mesh.triangles = _tri;
+        _mesh.colors32 = _colors;
 
         _mesh.RecalculateBounds();
     }
@@ -118,6 +123,7 @@ public class SceneChunk : MonoBehaviour
         int vertIndex = 0;
         int normIndex = 0;
         int uvIndex = 0;
+        int colorIndex = 0;
         for (int i = 0; i < len; i++)
         {
             z = i / SceneLevelManager.Singleton.BlocksPerChuck;
@@ -147,11 +153,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(0f, 0f, 1f);
             _normals[normIndex++] = new Vector3(0f, 0f, 1f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
 
             //Right Face - X+ - Clockwise LOOKING AT face - normal point X+
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXForward] = vertIndex;
@@ -165,11 +175,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(1f, 0f, 0f);
             _normals[normIndex++] = new Vector3(1f, 0f, 0f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
 
             //Back Face - Z- - Clockwise LOOKING at face - normal pointing Z-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZBack] = vertIndex;
@@ -183,11 +197,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(0f, 0f, -1f);
             _normals[normIndex++] = new Vector3(0f, 0f, -1f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
 
             //Left Face - X- - Clockwise LOOKING at face - normal pointing X-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXBack] = vertIndex;
@@ -201,11 +219,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(1f, 0f, 0f);
             _normals[normIndex++] = new Vector3(1f, 0f, 0f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
 
             //Top Face - Y+ - since this will be seen from a top down view (for the time being)
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceTop] = vertIndex;
@@ -219,11 +241,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(0f, 1f, 0f);
             _normals[normIndex++] = new Vector3(0f, 1f, 0f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
 
             //Bottom Face - Y+ - Since this is the floor, it needs to point up as well
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceBottom] = vertIndex;
@@ -237,11 +263,15 @@ public class SceneChunk : MonoBehaviour
             _normals[normIndex++] = new Vector3(0f, -1f, 0f);
             _normals[normIndex++] = new Vector3(0f, -1f, 0f);
 
-            //TODO - Fix this
             _uv[uvIndex++] = new Vector2(1f, 1f);
             _uv[uvIndex++] = new Vector2(1f, 0);
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
+
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = Color.white;
             #endregion
 
             #region Triangle Order
@@ -329,6 +359,15 @@ public class SceneChunk : MonoBehaviour
         }
 #endif
     }
+
+    /// <summary>
+    /// Updates the mesh's assigned verts and triangles. This has some cost associated with it, so doing it too often can cause performance issues
+    /// </summary>
+    public void UpdateMesh()
+    {
+        _mesh.vertices = _verts;
+        _mesh.triangles = _tri;
+    }
     #endregion
 
     #region Texturing and Materials
@@ -353,15 +392,6 @@ public class SceneChunk : MonoBehaviour
         }
 #endif
     }
-    #endregion
-    /// <summary>
-    /// Updates the mesh's assigned verts and triangles. This has some cost associated with it, so doing it too often can cause performance issues
-    /// </summary>
-    public void UpdateMesh()
-    {
-        _mesh.vertices = _verts;
-        _mesh.triangles = _tri;
-    }
 
     /// <summary>
     /// Updates the mesh's assigned uvs. This has some cost associated with it, so doing it too often can cause performance issues
@@ -371,7 +401,6 @@ public class SceneChunk : MonoBehaviour
         _mesh.uv = _uv;
     }
 
-    #region Materials
     public void AssignMaterial(EDSSSprite sprite)
     {
         //TODO Currently can only do one material per chunk
@@ -382,6 +411,34 @@ public class SceneChunk : MonoBehaviour
 
         _meshRenderer.material = sprite.SpriteSheet.Material;
     }
+    #endregion
+
+    #region Colors
+    public void ModifyColor(int colorIndex, Color32 newColor)
+    {
+        ModifyColorNoUpdate(colorIndex, newColor);
+
+        UpdateColors();
+    }
+
+    public void ModifyColorNoUpdate(int colorIndex, Color32 newColor)
+    {
+        _colors[colorIndex] = newColor;
+        _colors[colorIndex + 1] = newColor;
+        _colors[colorIndex + 2] = newColor;
+        _colors[colorIndex + 3] = newColor;
+    }
+
+    public void UpdateColors()
+    {
+        _mesh.colors32 = _colors;
+    }
+    #endregion
+
+    
+
+    #region Materials
+    
     #endregion
 
     void OnDrawGizmosSelected()
