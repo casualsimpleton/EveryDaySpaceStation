@@ -53,14 +53,22 @@ public class GameManager : MonoBehaviour
     #region Gets/Sets
     public GameData Gamedata { get { return _gameData; } }
     public MapData Mapdata { get { return _mapData; } }
+
+    System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
     #endregion
 
     public void Start()
     {
+        _timer.Start();
         _gameData = new GameData();
         FileSystem.Init();
+        PoolManager.Singleton.Init();
         SceneLevelManager.Singleton.Init();
+        PoolManager.Singleton.LateInit();
         SceneLevelManager.Singleton.PopulateMapTiles(_mapData);
+        _timer.Stop();
+
+        Debug.Log(string.Format("Load dur: {0}ms", _timer.ElapsedMilliseconds));
 
         _timeSinceGameStarted = 0f;
     }

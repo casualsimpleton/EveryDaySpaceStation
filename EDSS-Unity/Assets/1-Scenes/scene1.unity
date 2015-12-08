@@ -172,6 +172,7 @@ GameObject:
   - 4: {fileID: 1211951418}
   - 114: {fileID: 1211951417}
   - 114: {fileID: 1211951419}
+  - 114: {fileID: 1211951420}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -191,8 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af82e3f14d6bae64aafbaefecaebec92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameData:
-    _materials: []
 --- !u!4 &1211951418
 Transform:
   m_ObjectHideFlags: 0
@@ -222,6 +221,17 @@ MonoBehaviour:
   _chunkDim:
     x: 0
     y: 0
+--- !u!114 &1211951420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1211951416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 640057e4904b5464a8adca1c3f602d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1896083839
 GameObject:
   m_ObjectHideFlags: 0

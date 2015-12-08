@@ -24,13 +24,15 @@ namespace EveryDaySpaceStation.DataTypes
     public class EDSSSpriteSheet : System.IDisposable
     {
         public uint UID { get; private set; }
+        public uint MaterialUID { get; private set; }
         public Texture2D Texture { get; private set; }
         public List<EDSSSprite> Sprites { get; private set; }
         public Material Material { get; private set; }
 
-        public void CreateSpriteSheet(uint uid, Texture2D art, Material mat, List<EDSSSprite> existingSprites = null)
+        public void CreateSpriteSheet(uint uid, uint materialUID, Texture2D art, Material mat, List<EDSSSprite> existingSprites = null)
         {
             UID = uid;
+            MaterialUID = materialUID;
 
             Texture = art;
 

@@ -301,7 +301,7 @@ namespace EveryDaySpaceStation
             newMat.SetTexture("_MainTex", texture); 
             GameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
 
-            sheet.CreateSpriteSheet(uid, texture, newMat, null);
+            sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
 
             GameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
 

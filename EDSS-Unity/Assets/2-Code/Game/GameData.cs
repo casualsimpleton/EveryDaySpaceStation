@@ -175,8 +175,7 @@ public sealed class GameData
     [SerializeField]
     Dictionary<string, Texture2D> _textures;
     [SerializeField]
-    //Dictionary<uint, Material> _materials;
-    List<Material> _materials;
+    Dictionary<uint, Material> _materials;
 
     private uint _spriteSheetUID = 1;
     private uint _materialUID = 1;
@@ -194,8 +193,7 @@ public sealed class GameData
         _spriteSheets = new Dictionary<uint, EDSSSpriteSheet>();
         _gameBlockData = new Dictionary<uint, GameBlockData>();
         _textures = new Dictionary<string, Texture2D>();
-        //_materials = new Dictionary<uint, Material>();
-        _materials = new List<Material>();
+        _materials = new Dictionary<uint, Material>();
     }
     #endregion
 
@@ -221,8 +219,7 @@ public sealed class GameData
 
     public void AddMaterial(uint uid, Material material)
     {
-        //_materials.Add(uid, material);
-        _materials.Add(material);
+        _materials.Add(uid, material);
     }
 
     public bool GetSprite(uint uid, out EDSSSprite sprite)
@@ -273,11 +270,9 @@ public sealed class GameData
 
     public bool GetMaterial(uint uid, out Material material)
     {
-        //bool exists = _materials.TryGetValue(uid, out material);
+        bool exists = _materials.TryGetValue(uid, out material);
         
-        //return exists;
-        material = null;
-        return false;
+        return exists;
     }
 
     public void Cleanup()
@@ -302,13 +297,9 @@ public sealed class GameData
             GameObject.Destroy(texture.Value);
         }
 
-        //foreach (KeyValuePair<uint, Material> material in _materials)
-        //{
-        //    GameObject.Destroy(material.Value);
-        //}
-        for (int i = 0; i < _materials.Count; i++)
+        foreach (KeyValuePair<uint, Material> material in _materials)
         {
-            GameObject.Destroy(_materials[i]);
+            GameObject.Destroy(material.Value);
         }
 
         _sprites.Clear();

@@ -277,5 +277,22 @@
 			"None"
 		]
 	}
+	,
+	{
+		"uid": 18,
+		"name": "test1",
+		"spritesheet": "test1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"None"
+		]
+	}
 	]
 }

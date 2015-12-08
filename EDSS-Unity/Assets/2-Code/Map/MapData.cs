@@ -57,6 +57,7 @@ public sealed class MapData
     /// </summary>
     public bool LoadMap(MapDataConfig mapConfig)
     {
+
         MapName = mapConfig.LevelData.LevelName;
         DisplayName = mapConfig.LevelData.DisplayName;
         MapVersion = mapConfig.LevelData.MapVersion;

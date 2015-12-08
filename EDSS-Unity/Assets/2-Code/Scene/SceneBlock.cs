@@ -65,6 +65,13 @@ public class SceneBlock
     
     [SerializeField]
     SceneChunk _parentChunk;
+
+    /// <summary>
+    /// Because the parent SceneChunk might have multiple materials in association, each block will have to know its material so when it goes to the chunk for change, 
+    /// the chunk can quickly know which SceneChunkRenderer to modify
+    /// </summary>
+    [SerializeField]
+    uint _associatedRendererUID;
     #endregion
 
     #region Gets/Sets
@@ -72,6 +79,11 @@ public class SceneBlock
     public int WorldPosIndex { get { return _worldPosIndex; } }
     public Vec2Int ChunkPos { get { return _chunkPos; } }
     public int ChunkPosIndex { get { return _chunkPosIndex; } }
+    public uint AssociatedRendererUID
+    {
+        get { return _associatedRendererUID; }
+        set { _associatedRendererUID = value; }
+    }
     #endregion
 
     public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex, int[] vertFirstIndex, SceneChunk parentChunk)
@@ -88,14 +100,17 @@ public class SceneBlock
         _parentChunk = parentChunk;
     }
 
-    public void CollapseAllWalls()
+    /// <summary>
+    /// Call this when you need to collapse the whole block
+    /// </summary>
+    public void CollapseBlock()
     {
         //Collapse vertical walls and ceiling
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
             int faceIndex = _facesFirstTriangleIndex[i];
 
-            _parentChunk.ModifyTriangles(faceIndex, faceIndex, faceIndex, faceIndex, faceIndex);
+            _parentChunk.ModifyTriangles(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
         }
     }
 
@@ -111,41 +126,48 @@ public class SceneBlock
 
         for (int i = 0; i < faceInfo.Length; i++)
         {
+            //First find the EDSSSprite info
+            EDSSSprite sprite = null;
+            bool foundSprite = GameManager.Singleton.Gamedata.GetSprite((uint)mapTileData.FaceSpritesUID[i], out sprite);
+
+            if (!foundSprite)
+            {
+                Debug.LogError(string.Format("Can't find sprite with UID: {0}", (uint)mapTileData.FaceSpritesUID[i]));
+            }
+
+            _associatedRendererUID = sprite.SpriteSheet.MaterialUID;
+
             int faceIndex = _facesFirstTriangleIndex[i];
 
             //Is the face even visible? If false, then we'll just collapse it and be done
             if (!faceInfo[i]._visible)
             {
                 //We feed in all the same index and thus make the face basically be non existent
-                _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
+                _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
             }
             else //Face is visible, let's figure out which direction
             {
                 //Faces outwards from center of box
                 if (faceInfo[i]._faceDir == GameData.GameBlockData.FaceInfo.FaceDirection.Forward)
                 {
-                    _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i], _vertFirstIndex[i] + 1, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 3);
+                    _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i] + 1, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 3);
                 }
                 else //Inverted faces
                 {
-                    _parentChunk.ModifyTrianglesNoUpdate(faceIndex, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 1, _vertFirstIndex[i], _vertFirstIndex[i] + 3);
+                    _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 1, _vertFirstIndex[i], _vertFirstIndex[i] + 3);
                 }
 
-                //Now find the EDSSSprite info
-                EDSSSprite sprite = null;
-                bool foundSprite = GameManager.Singleton.Gamedata.GetSprite((uint)mapTileData.FaceSpritesUID[i], out sprite);
-
-                _parentChunk.AssignMaterial(sprite);
+                //_parentChunk.AssignMaterial(sprite);
 
                 //UVs can use the same vert index since they match in count
-                _parentChunk.ModifyUVNoUpdate(_vertFirstIndex[i], sprite.GetUVCoords());
+                _parentChunk.ModifyUVNoUpdate(_associatedRendererUID, _vertFirstIndex[i], sprite.GetUVCoords());
             }
 
-            _parentChunk.ModifyColor(_vertFirstIndex[i], c);
+            _parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
         }
 
-        _parentChunk.UpdateMesh();
-        _parentChunk.UpdateUV();
-        _parentChunk.UpdateColors();
+        _parentChunk.UpdateMesh(_associatedRendererUID);
+        _parentChunk.UpdateUV(_associatedRendererUID);
+        _parentChunk.UpdateColors(_associatedRendererUID);
     }
 }
