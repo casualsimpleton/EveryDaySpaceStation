@@ -122,11 +122,11 @@ public class SceneLevelManager : MonoBehaviour
 
             _sceneChunks[i] = newChunk.AddComponent<SceneChunk>();
 
-            Vector3 worldPos = new Vector3((i * SceneChunk.blockSize * BlocksPerChuck), 0f, 0f);
-
             int x, z;
             z = (int)((float)i / (float)_chunkDim.x);
             x = i - (z * _chunkDim.x);
+
+            Vector3 worldPos = new Vector3((x * SceneChunk.blockSize * BlocksPerChuck), 0f, (z * SceneChunk.blockSize * BlocksPerChuck));
 
             _sceneChunks[i].CreateChunk(worldPos, new Vec2Int(x, z));
         }

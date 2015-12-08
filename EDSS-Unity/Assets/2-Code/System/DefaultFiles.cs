@@ -40,6 +40,7 @@ public class DefaultFiles : MonoBehaviour
     #endregion
 
     public Texture2D defaultTexture;
+    public Texture2D colorTint;
     public Material defaultMaterial;
     public Shader defaultShader;
 }

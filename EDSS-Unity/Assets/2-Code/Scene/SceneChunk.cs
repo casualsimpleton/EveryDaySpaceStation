@@ -239,7 +239,7 @@ public class SceneChunk : MonoBehaviour
             scr = PoolManager.Singleton.RequestSceneChunkRenderer();
             scr.UpdateMaterial(mat, scrUID);
 
-            scr._transform.parent = _transform;
+            scr.AssignToChunk(this);
             scr.gameObject.SetActive(true);
 
             scr.UpdateMaterial(mat, scrUID);
