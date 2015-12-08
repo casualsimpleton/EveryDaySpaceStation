@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
     protected MapData _mapData;
 
     protected float _timeSinceGameStarted;
+
+    public EDSSFirstPersonControls playerControl;
     
     #endregion
 

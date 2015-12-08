@@ -365,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af82e3f14d6bae64aafbaefecaebec92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerControl: {fileID: 1320898806}
 --- !u!4 &1211951418
 Transform:
   m_ObjectHideFlags: 0
@@ -394,6 +395,7 @@ MonoBehaviour:
   _chunkDim:
     x: 0
     y: 0
+  _enableLights: 1
 --- !u!1 &1320898803
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,6 +514,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11467426, guid: 0da677aa8272bad4b96e0c7fb32d3c93, type: 2}
+      propertyPath: playerControl
+      value: 
+      objectReference: {fileID: 1320898806}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0da677aa8272bad4b96e0c7fb32d3c93, type: 2}
   m_RootGameObject: {fileID: 1211951416}

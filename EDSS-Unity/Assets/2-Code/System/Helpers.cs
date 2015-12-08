@@ -107,5 +107,77 @@ namespace EveryDaySpaceStation.Utils
             return input;
         }
         #endregion
+
+        #region Lights
+        public static void FillLineWithLight(int startX, int endX, int y, Color32 centerColor, ref MapData mapData, int centerX, int centerY, float fallOff = 0.2f)
+        {
+            for (int i = startX; i < endX; i++)
+            {
+                //Check for bounds
+                if (i < 0 || i > mapData._mapSize.x - 1 || y < 0 || y > mapData._mapSize.y - 1)
+                {
+                    continue;
+                }
+
+                Color32 newColor = new Color32(centerColor.r, centerColor.g, centerColor.b, centerColor.a);
+                int xDiff = centerX - i;
+                int yDiff = centerY - y;
+                float dist = Mathf.Sqrt((xDiff * xDiff) + (yDiff * yDiff));
+                newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
+                newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
+                newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
+                int index = IndexFromVec2Int(i, y, mapData._mapSize.x);
+                mapData._mapTiles[index].LightColor = newColor;
+            }
+        }
+
+        //http://stackoverflow.com/questions/10878209/midpoint-circle-algorithm-for-filled-circles
+        public static void FillCircleAreaWithLight(int centerX, int centerY, int radius, Color32 centerColor, ref MapData mapData)
+        {
+            radius = (int)(255f / 50f);
+            int x = radius;
+            int y = 0;
+            int radiusError = 1 - x;
+
+            while (x >= y)
+            {
+                //Use symmetry to draw the two horizontal lines at this Y with a special case to draw
+                // only one line at the centerY where y == 0;
+                int startX = -x + centerX;
+                int endX = x + centerX;
+                FillLineWithLight(startX, endX, y + centerY, centerColor, ref mapData, centerX, centerY);
+
+                if (y != 0)
+                {
+                    FillLineWithLight(startX, endX, -y + centerY, centerColor, ref mapData, centerX, centerY);
+                }
+
+                //move Y one line
+                y++;
+
+                //calculate or maintain new x
+                if (radiusError < 0)
+                {
+                    radiusError += 2 * y + 1;
+                }
+                else
+                {
+                    // we're about to move x over one, this means we completed a column of X values, use
+                    // symmetry to draw those complete columns as horizontal lines at the top and bottom of the circle
+                    // beyond the diagonal of the main loop
+                    if (x >= y)
+                    {
+                        startX = -y + 1 + centerX;
+                        endX = y - 1 + centerX;
+                        FillLineWithLight(startX, endX, x + centerY, centerColor, ref mapData, centerX, centerY);
+                        FillLineWithLight(startX, endX, -x + centerY, centerColor, ref mapData, centerX, centerY);
+                    }
+                    x--;
+                    radiusError += 2 * (y - x + 1);
+                }
+            }
+
+        }
+        #endregion
     }
 }

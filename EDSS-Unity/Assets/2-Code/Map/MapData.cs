@@ -28,6 +28,7 @@ public sealed class MapData
         public bool BlocksLight { get; set; }
         public bool IsTransparent { get; set; }
         public GameData.GameBlockData BlockType { get; set; }
+        public Color32 LightColor { get; set; }
 
         public uint?[] FaceSpritesUID { get; set; }
 
@@ -76,6 +77,7 @@ public sealed class MapData
             mapTile.TilePosition = new Vec2Int(tile.X, tile.Y);
             mapTile.TileIndex = Helpers.IndexFromVec2Int(mapTile.TilePosition, _mapSize.x);
             mapTile.BlocksLight = (tile.BlockLight > 0 ? true : false);
+            mapTile.LightColor = new Color32(1, 1, 1, 255);
             
             //Look up the block type
             GameData.GameBlockData block = null;

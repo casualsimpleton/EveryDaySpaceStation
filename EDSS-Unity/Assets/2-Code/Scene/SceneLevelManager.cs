@@ -44,13 +44,42 @@ public class SceneLevelManager : MonoBehaviour
     protected SceneChunk[] _sceneChunks;
     [SerializeField]
     protected Vec2Int _chunkDim;
+
+
+
+    [SerializeField]
+    protected bool _enableLights = true;
+    protected List<TileLight> _visibleLights;
+    protected float _lightUpdateTimer;
+    protected float _lightUpdateDelta = 1f / 10f;
+    protected SquareBounds _visibleLightBounds;
+
+    public void AddLight(TileLight light)
+    {
+        _visibleLights.Add(light);
+    }
+
 #endregion
+
+    #region Gets/Sets
+    public Vec2Int ChunkDim { get { return _chunkDim; } }
+    #endregion
 
     public void Init()
     {
         BlocksPerChuck = FileSystem.Optionsconfig.SceneChunkSize;
+        _visibleLights = new List<TileLight>();
+        _visibleLightBounds = new SquareBounds(new Vec2Int(0, 0), GameManager.Singleton.Mapdata._mapSize);
 
         CreateMap();
+
+        //TEMP
+        TileLight light = new TileLight(new Color32(255, 255, 255, 255), 2);
+        light.TilePos = new Vec2Int(3, 3);
+        light.TileIndex = Helpers.IndexFromVec2Int(light.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        _visibleLights.Add(light);
+
+        GameManager.Singleton.playerControl.SpawnTileLight();
     }
 
     public void CreateMap()
@@ -105,9 +134,10 @@ public class SceneLevelManager : MonoBehaviour
         len = mapData._mapTiles.Length;
         for (int i = 0; i < len; i++)
         {
-            int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, mapData._mapSize.x);
+            int localTileIndex;
+            int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, mapData._mapSize.x, out localTileIndex);
             //_sceneChunks[chunkIndex].UpdateBlock(mapData._mapTiles[i]);
-            _sceneChunks[chunkIndex].FirstUpdateBlock(mapData._mapTiles[i]);
+            _sceneChunks[chunkIndex].FirstUpdateBlock(mapData._mapTiles[i], localTileIndex);
         }
 
         for (int i = 0; i < _sceneChunks.Length; i++)
@@ -116,12 +146,76 @@ public class SceneLevelManager : MonoBehaviour
         }
     }
 
-    protected int GetChunkIndex(Vec2Int tilePos, int width)
+    protected int GetChunkIndex(Vec2Int tilePos, int width, out int chuckLocalTileIndex)
     {
         int chunkIndexX = Mathf.FloorToInt((float)tilePos.x / (float)BlocksPerChuck);
         int chunkIndexY = Mathf.FloorToInt((float)tilePos.y / (float)BlocksPerChuck);
 
+        int tX = tilePos.x - chunkIndexX * BlocksPerChuck;
+        int tY = tilePos.y - chunkIndexY * BlocksPerChuck;
+
+        chuckLocalTileIndex = tY * BlocksPerChuck + tX;
+
         int chunkIndex = chunkIndexY * _chunkDim.x + chunkIndexX;
         return chunkIndex;
+    }
+
+    public void Update()
+    {
+        if (_enableLights)
+        {
+            UpdateTileLights();
+        }
+    }
+
+    void UpdateTileLights()
+    {
+        if (_lightUpdateTimer > Time.time)
+        {
+            return;
+        }
+
+        MapData mapData = GameManager.Singleton.Mapdata;
+
+        //First reset all lights in visible area
+        for (int x = 0; x < _visibleLightBounds.MaxPoint.x; x++)
+        {
+            for (int y = 0; y < _visibleLightBounds.MaxPoint.y; y++)
+            {
+                int index = Helpers.IndexFromVec2Int(x, y, _visibleLightBounds.MaxPoint.x);
+                mapData._mapTiles[index].LightColor = new Color32(1, 1, 1, 255);
+            }
+        }
+
+        //Now go through each light, and find the tile it's on
+        int count = _visibleLights.Count;
+        for (int i = 0; i < count; i++)
+        {
+            TileLight light = _visibleLights[i];
+
+            //If the light is mobile, we need to update its position
+            if (light.IsMobile)
+            {
+                light.UpdatePosition(GameManager.Singleton.playerControl.transform.position);
+            }
+
+            Helpers.FillCircleAreaWithLight(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData);
+        }
+
+        //Now update the colors on the meshes
+        count = mapData._mapTiles.Length;
+        for (int i = 0; i < count; i++)
+        {
+            int localTileIndex;
+            int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, GameManager.Singleton.Mapdata._mapSize.x, out localTileIndex);
+            _sceneChunks[chunkIndex].UpdateBlockLight(mapData._mapTiles[i], localTileIndex);
+        }
+
+        for (int i = 0; i < _sceneChunks.Length; i++)
+        {
+            _sceneChunks[i].UpdateAllMeshColors();
+        }
+
+        _lightUpdateTimer = Time.time + _lightUpdateDelta;
     }
 }

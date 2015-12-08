@@ -34,6 +34,8 @@ public class EDSSFirstPersonControls : MonoBehaviour
     [SerializeField]
     float _runSpeed = 4f;
 
+    TileLight _playerLight;
+
     void Start()
     {
         _transform = this.gameObject.transform;
@@ -64,5 +66,13 @@ public class EDSSFirstPersonControls : MonoBehaviour
         //}
         
         _charController.Move(moveDir);
+    }
+
+    public void SpawnTileLight()
+    {
+        _playerLight = new TileLight(new Color32(255, 255, 255, 255), 5);
+
+        SceneLevelManager.Singleton.AddLight(_playerLight);
+        _playerLight.IsMobile = true;
     }
 }

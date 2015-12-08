@@ -125,6 +125,7 @@ public class SceneChunkRenderer : MonoBehaviour
         int x, z;
         int xx, zz;
 
+        Color32 initColor = new Color32(1, 1, 1, 255);
         int len = SceneLevelManager.Singleton.BlocksPerChuck * SceneLevelManager.Singleton.BlocksPerChuck;
         int vertIndex = 0;
         int normIndex = 0;
@@ -163,10 +164,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
 
             //Right Face - X+ - Clockwise LOOKING AT face - normal point X+
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXForward] = vertIndex;
@@ -185,10 +186,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
 
             //Back Face - Z- - Clockwise LOOKING at face - normal pointing Z-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZBack] = vertIndex;
@@ -207,10 +208,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
 
             //Left Face - X- - Clockwise LOOKING at face - normal pointing X-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXBack] = vertIndex;
@@ -229,10 +230,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
 
             //Top Face - Y+ - since this will be seen from a top down view (for the time being)
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceTop] = vertIndex;
@@ -251,10 +252,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
 
             //Bottom Face - Y+ - Since this is the floor, it needs to point up as well
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceBottom] = vertIndex;
@@ -273,10 +274,10 @@ public class SceneChunkRenderer : MonoBehaviour
             _uv[uvIndex++] = new Vector2(0, 0);
             _uv[uvIndex++] = new Vector2(0, 1f);
 
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
-            _colors[colorIndex++] = Color.white;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
+            _colors[colorIndex++] = initColor;
             #endregion
 
             #region Triangle Order

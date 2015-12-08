@@ -118,24 +118,51 @@ public class SceneChunk : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Call whenever updating a block with new info (like a window has been smashed or a wall built)
-    /// </summary>
-    /// <param name="blockData"></param>
-    public void UpdateBlock(MapData.MapTileData blockData)
+    public void UpdateBlockLight(MapData.MapTileData blockData, int localTileIndex)
     {
         SceneBlock block = null;
 
         //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
         //-CasualSimpleton
-        for (int i = 0; i < _chunkBlocks.Length; i++)
+        //for (int i = 0; i < _chunkBlocks.Length; i++)
+        //{
+        //    if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
+        //    {
+        //        block = _chunkBlocks[i];
+        //        break;
+        //    }
+        //}
+        block = _chunkBlocks[localTileIndex];
+
+        if (block == null)
         {
-            if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
-            {
-                block = _chunkBlocks[i];
-                break;
-            }
+            Debug.LogWarning(string.Format("Can't find a sceneblock for maptile: {0}", blockData.TilePosition));
+            return;
         }
+
+        block.UpdateLights(blockData);
+    }
+
+
+    /// <summary>
+    /// Call whenever updating a block with new info (like a window has been smashed or a wall built)
+    /// </summary>
+    /// <param name="blockData"></param>
+    public void UpdateBlock(MapData.MapTileData blockData, int localTileIndex)
+    {
+        SceneBlock block = null;
+
+        //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
+        //-CasualSimpleton
+        //for (int i = 0; i < _chunkBlocks.Length; i++)
+        //{
+        //    if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
+        //    {
+        //        block = _chunkBlocks[i];
+        //        break;
+        //    }
+        //}
+        block = _chunkBlocks[localTileIndex];
 
         if (block == null)
         {
@@ -150,20 +177,21 @@ public class SceneChunk : MonoBehaviour
     /// Call when starting up the map, this streamlines a few things, like ensuring the meshcollider is only refreshed once at the end
     /// </summary>
     /// <param name="blockData"></param>
-    public void FirstUpdateBlock(MapData.MapTileData blockData)
+    public void FirstUpdateBlock(MapData.MapTileData blockData, int localTileIndex)
     {
         SceneBlock block = null;
 
-        //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
-        //-CasualSimpleton
-        for (int i = 0; i < _chunkBlocks.Length; i++)
-        {
-            if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
-            {
-                block = _chunkBlocks[i];
-                break;
-            }
-        }
+        ////TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
+        ////-CasualSimpleton
+        //for (int i = 0; i < _chunkBlocks.Length; i++)
+        //{
+        //    if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
+        //    {
+        //        block = _chunkBlocks[i];
+        //        break;
+        //    }
+        //}
+        block = _chunkBlocks[localTileIndex];
 
         if (block == null)
         {
@@ -179,6 +207,14 @@ public class SceneChunk : MonoBehaviour
         foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
         {
             scr.Value.UpdateMesh(false);
+        }
+    }
+
+    public void UpdateAllMeshColors()
+    {
+        foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        {
+            scr.Value.UpdateColors();
         }
     }
 

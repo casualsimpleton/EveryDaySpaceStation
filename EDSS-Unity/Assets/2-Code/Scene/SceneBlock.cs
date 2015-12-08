@@ -114,15 +114,24 @@ public class SceneBlock
         }
     }
 
+    public void UpdateLights(MapData.MapTileData mapTileData)
+    {
+        GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
+        for (int i = 0; i < faceInfo.Length; i++)
+        {
+            _parentChunk.ModifyColorNoUpdate(_associatedRendererUID, _vertFirstIndex[i], mapTileData.LightColor);
+        }
+    }
+
     public void UpdateFaces(MapData.MapTileData mapTileData, bool isFirstTime = false)
     {
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
 
         //Going to assign a random color
-        float f = (float)mapTileData.TilePosition.x / 16f;
-        byte v = (byte)(255 * f);
+        //float f = (float)mapTileData.TilePosition.x / 16f;
+        //byte v = (byte)(255 * f);
 
-        Color32 c = new Color32(v, v, v, v);
+        //Color32 c = new Color32(v, v, v, v);
 
         for (int i = 0; i < faceInfo.Length; i++)
         {
@@ -163,7 +172,7 @@ public class SceneBlock
                 _parentChunk.ModifyUVNoUpdate(_associatedRendererUID, _vertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
             }
 
-            _parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
+            //_parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
         }
 
         _parentChunk.UpdateMesh(_associatedRendererUID, isFirstTime);
