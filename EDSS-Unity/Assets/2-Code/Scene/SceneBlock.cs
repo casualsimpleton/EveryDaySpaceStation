@@ -114,7 +114,7 @@ public class SceneBlock
         }
     }
 
-    public void UpdateFaces(MapData.MapTileData mapTileData)
+    public void UpdateFaces(MapData.MapTileData mapTileData, bool isFirstTime = false)
     {
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
 
@@ -160,13 +160,13 @@ public class SceneBlock
                 //_parentChunk.AssignMaterial(sprite);
 
                 //UVs can use the same vert index since they match in count
-                _parentChunk.ModifyUVNoUpdate(_associatedRendererUID, _vertFirstIndex[i], sprite.GetUVCoords());
+                _parentChunk.ModifyUVNoUpdate(_associatedRendererUID, _vertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
             }
 
             _parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
         }
 
-        _parentChunk.UpdateMesh(_associatedRendererUID);
+        _parentChunk.UpdateMesh(_associatedRendererUID, isFirstTime);
         _parentChunk.UpdateUV(_associatedRendererUID);
         _parentChunk.UpdateColors(_associatedRendererUID);
     }

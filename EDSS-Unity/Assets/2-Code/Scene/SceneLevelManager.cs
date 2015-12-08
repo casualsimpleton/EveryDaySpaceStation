@@ -106,7 +106,13 @@ public class SceneLevelManager : MonoBehaviour
         for (int i = 0; i < len; i++)
         {
             int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, mapData._mapSize.x);
-            _sceneChunks[chunkIndex].UpdateBlock(mapData._mapTiles[i]);
+            //_sceneChunks[chunkIndex].UpdateBlock(mapData._mapTiles[i]);
+            _sceneChunks[chunkIndex].FirstUpdateBlock(mapData._mapTiles[i]);
+        }
+
+        for (int i = 0; i < _sceneChunks.Length; i++)
+        {
+            _sceneChunks[i].UpdateAllMeshColliders();
         }
     }
 

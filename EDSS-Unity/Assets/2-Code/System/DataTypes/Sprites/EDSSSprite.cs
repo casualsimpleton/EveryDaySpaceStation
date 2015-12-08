@@ -29,6 +29,7 @@ namespace EveryDaySpaceStation.DataTypes
         public Vec2Int WidthHeight { get; private set; }
         public EDSSSpriteSheet SpriteSheet { get; private set; }
         public List<string> Flags { get; private set; }
+        public Vector2 uvOffset { get; private set; } //This should be 25% of one pixel of the sprite sheet. This is so when anti alias is turned on, were aren't right on the seem between sprites
 
         private Vector4 uvCoords = Vector4.zero;
         public Vector4 GetUVCoords()
@@ -53,6 +54,8 @@ namespace EveryDaySpaceStation.DataTypes
             TopLeft = topLeft;
             WidthHeight = widthHeight;
             SpriteSheet = spriteSheet;
+
+            uvOffset = new Vector2(1f / spriteSheet.Texture.width * 1.0f, 1f / spriteSheet.Texture.height * 1.0f);
         }
 
         #region Dispose

@@ -118,6 +118,10 @@ public class SceneChunk : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Call whenever updating a block with new info (like a window has been smashed or a wall built)
+    /// </summary>
+    /// <param name="blockData"></param>
     public void UpdateBlock(MapData.MapTileData blockData)
     {
         SceneBlock block = null;
@@ -139,7 +143,43 @@ public class SceneChunk : MonoBehaviour
             return;
         }
 
-        block.UpdateFaces(blockData);
+        block.UpdateFaces(blockData, false);
+    }
+
+    /// <summary>
+    /// Call when starting up the map, this streamlines a few things, like ensuring the meshcollider is only refreshed once at the end
+    /// </summary>
+    /// <param name="blockData"></param>
+    public void FirstUpdateBlock(MapData.MapTileData blockData)
+    {
+        SceneBlock block = null;
+
+        //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
+        //-CasualSimpleton
+        for (int i = 0; i < _chunkBlocks.Length; i++)
+        {
+            if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
+            {
+                block = _chunkBlocks[i];
+                break;
+            }
+        }
+
+        if (block == null)
+        {
+            Debug.LogWarning(string.Format("Can't find a sceneblock for maptile: {0}", blockData.TilePosition));
+            return;
+        }
+
+        block.UpdateFaces(blockData, true);
+    }
+
+    public void UpdateAllMeshColliders()
+    {
+        foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        {
+            scr.Value.UpdateMesh(false);
+        }
     }
 
     #region SceneChunkRenderer Wrangling
@@ -183,7 +223,7 @@ public class SceneChunk : MonoBehaviour
         SceneChunkRenderer scr = GetSceneChunkRenderer(rendererUID);
 
         scr.ModifyTriangles(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
-        scr.UpdateMesh();
+        scr.UpdateMesh(true);
     }
 
     public void ModifyTrianglesNoUpdate(uint rendererUID, int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
@@ -202,11 +242,11 @@ public class SceneChunk : MonoBehaviour
         scr.UpdateUV();
     }
 
-    public void ModifyUVNoUpdate(uint rendererUID, int uvIndex, Vector4 uv)
+    public void ModifyUVNoUpdate(uint rendererUID, int uvIndex, Vector4 uv, Vector2 uvOffset)
     {
         SceneChunkRenderer scr = GetSceneChunkRenderer(rendererUID);
 
-        scr.ModifyUVNoUpdate(uvIndex, uv);
+        scr.ModifyUVNoUpdate(uvIndex, uv, uvOffset);
     }
 
     public void ModifyColor(uint rendererUID, int colorIndex, Color32 newColor)
@@ -225,11 +265,11 @@ public class SceneChunk : MonoBehaviour
         scr.ModifyColorNoUpdate(colorIndex, newColor);
     }
 
-    public void UpdateMesh(uint rendererUID)
+    public void UpdateMesh(uint rendererUID, bool isFirstTime = false)
     {
         SceneChunkRenderer scr = GetSceneChunkRenderer(rendererUID);
 
-        scr.UpdateMesh();
+        scr.UpdateMesh(isFirstTime);
     }
 
     public void UpdateUV(uint rendererUID)

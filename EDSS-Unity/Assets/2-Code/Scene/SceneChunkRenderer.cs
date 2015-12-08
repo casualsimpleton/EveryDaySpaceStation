@@ -61,6 +61,9 @@ public class SceneChunkRenderer : MonoBehaviour
 
     [SerializeField]
     int[] _tri;
+
+    [SerializeField]
+    MeshCollider _meshCollider;
     #endregion
 
     /// <summary>
@@ -99,6 +102,9 @@ public class SceneChunkRenderer : MonoBehaviour
         _mesh.uv = _uv;
         _mesh.triangles = _tri;
         _mesh.colors32 = _colors;
+
+        _meshCollider = this.gameObject.AddComponent<MeshCollider>();
+        _meshCollider.sharedMesh = _mesh;
 
         _mesh.RecalculateBounds();
     }
@@ -306,7 +312,7 @@ public class SceneChunkRenderer : MonoBehaviour
     {
         ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
 
-        UpdateMesh();
+        UpdateMesh(true);
     }
 
     /// <summary>
@@ -338,10 +344,17 @@ public class SceneChunkRenderer : MonoBehaviour
     /// <summary>
     /// Updates the mesh's assigned verts and triangles. This has some cost associated with it, so doing it too often can cause performance issues
     /// </summary>
-    public void UpdateMesh()
+    public void UpdateMesh(bool isFirstTime)
     {
         _mesh.vertices = _verts;
         _mesh.triangles = _tri;
+
+        if (!isFirstTime)
+        {
+            _meshCollider.enabled = false;
+            _meshCollider.sharedMesh = _mesh;
+            _meshCollider.enabled = true;
+        }        
     }
     #endregion
 
@@ -353,12 +366,12 @@ public class SceneChunkRenderer : MonoBehaviour
         UpdateUV();
     }
 
-    public void ModifyUVNoUpdate(int uvIndex, Vector4 uv)
+    public void ModifyUVNoUpdate(int uvIndex, Vector4 uv, Vector2 uvOffset)
     {
-        _uv[uvIndex] = new Vector2(uv.x + uv.z, uv.y);
-        _uv[uvIndex + 1] = new Vector2(uv.x + uv.z, uv.y - uv.w);
-        _uv[uvIndex + 2] = new Vector2(uv.x, uv.y - uv.w);
-        _uv[uvIndex + 3] = new Vector2(uv.x, uv.y);
+        _uv[uvIndex] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uvOffset.y);
+        _uv[uvIndex + 1] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uv.w + uvOffset.y);
+        _uv[uvIndex + 2] = new Vector2(uv.x + uvOffset.x, uv.y - uv.w + uvOffset.y);
+        _uv[uvIndex + 3] = new Vector2(uv.x + uvOffset.x, uv.y - uvOffset.y);
 
 #if DEBUGCLIENT
         if (uvIndex < 0 || uvIndex > _uv.Length - 1)
