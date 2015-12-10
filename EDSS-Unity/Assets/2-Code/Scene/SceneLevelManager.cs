@@ -246,7 +246,7 @@ public class SceneLevelManager : MonoBehaviour
         {
             int localTileIndex;
             int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, GameManager.Singleton.Mapdata._mapSize.x, out localTileIndex);
-            _sceneChunks[chunkIndex].UpdateBlockLight(mapData._mapTiles[i], localTileIndex);
+            _sceneChunks[chunkIndex].UpdateBlockLightWithNeighborsWalls(mapData._mapTiles[i], localTileIndex);
         }
 
         for (int i = 0; i < _sceneChunks.Length; i++)
@@ -255,5 +255,19 @@ public class SceneLevelManager : MonoBehaviour
         }
 
         _lightUpdateTimer = Time.time + _lightUpdateDelta;
+    }
+
+    public void UpdateNeighborChunkWallLight(int neighborWorldTileIndex, Vec2Int neighborWorldTilePos, GameData.GameBlockData.BlockFaces face, Color32 color)
+    {
+        if (neighborWorldTileIndex < 0 || neighborWorldTileIndex > GameManager.Singleton.Mapdata._mapTiles.Length - 1)
+        {
+            //Debug.LogWarning(string.Format("Trying to set neighbor tile index on something OOB: {0},{1}", neighborWorldTilePos.x, neighborWorldTilePos.y));
+            return;
+        }
+
+        int localTileIndex;
+        int chunkIndex = GetChunkIndex(GameManager.Singleton.Mapdata._mapTiles[neighborWorldTileIndex].TilePosition, GameManager.Singleton.Mapdata._mapSize.x, out localTileIndex);
+
+        _sceneChunks[chunkIndex].UpdateBlockWithLightFromNeighborChunk(localTileIndex, face, color);
     }
 }

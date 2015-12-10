@@ -114,24 +114,15 @@ public class SceneChunk : MonoBehaviour
             #endregion
 
             _chunkBlocks[i] = new SceneBlock();
-            _chunkBlocks[i].Create(pos, pos, index, index, faceFirstTri, vertFirstIndex, this);
+            Vec2Int worldPos = new Vec2Int(pos.x + (SceneLevelManager.Singleton.BlocksPerChuck * _chunkPos.x), pos.y + (SceneLevelManager.Singleton.BlocksPerChuck * _chunkPos.y));
+            int worldIndex = Helpers.IndexFromVec2Int(worldPos, GameManager.Singleton.Mapdata._mapSize.x);
+            _chunkBlocks[i].Create(worldPos, pos, worldIndex, index, faceFirstTri, vertFirstIndex, this);
         }
     }
 
     public void UpdateBlockLight(MapData.MapTileData blockData, int localTileIndex)
     {
         SceneBlock block = null;
-
-        //TODO This should be calculatable and not required for a search. But too tired to figure it out at the moment
-        //-CasualSimpleton
-        //for (int i = 0; i < _chunkBlocks.Length; i++)
-        //{
-        //    if (_chunkBlocks[i].WorldPos == blockData.TilePosition)
-        //    {
-        //        block = _chunkBlocks[i];
-        //        break;
-        //    }
-        //}
         block = _chunkBlocks[localTileIndex];
 
         if (block == null)
@@ -141,6 +132,113 @@ public class SceneChunk : MonoBehaviour
         }
 
         block.UpdateLights(blockData);
+    }
+
+    public void UpdateBlockLightWithNeighborsWalls(MapData.MapTileData blockData, int localTileIndex)
+    {
+        SceneBlock block = null;
+        block = _chunkBlocks[localTileIndex];
+
+        if (block == null)
+        {
+            Debug.LogWarning(string.Format("Can't find a sceneblock for maptile: {0}", blockData.TilePosition));
+            return;
+        }
+
+        if (blockData.BlocksLight)
+        {
+            return;
+        }
+
+        block.UpdateLights(blockData);
+
+        #region Neighbors
+        Vec2Int blockPos = block.WorldPos;
+
+        //Now check neighbors
+        //Top neighbor, we'd be altering their "Z-" or "down face" when looking from above
+        //int topNeighborIndex = localTileIndex + SceneLevelManager.Singleton.BlocksPerChuck;
+        //Vec2Int topNeighborPos = Helpers.Vec2IntFromIndex(topNeighborIndex, SceneLevelManager.Singleton.BlocksPerChuck);
+        Vec2Int topNeighborPos = new Vec2Int(blockPos.x, blockPos.y + 1);
+
+        //This neighbor is actually in another chunk
+        if (topNeighborPos.x < 0 || topNeighborPos.x > SceneLevelManager.Singleton.BlocksPerChuck - 1 || topNeighborPos.y < 0 || topNeighborPos.y > SceneLevelManager.Singleton.BlocksPerChuck - 1)
+        {
+            SceneLevelManager.Singleton.UpdateNeighborChunkWallLight(block.WorldPosIndex + GameManager.Singleton.Mapdata._mapSize.x, new Vec2Int(block.WorldPos.x, block.WorldPos.y + 1), GameData.GameBlockData.BlockFaces.FaceZBack, blockData.LightColor);
+        }
+        else
+        {
+            int topNeighborIndex = Helpers.IndexFromVec2Int(topNeighborPos, SceneLevelManager.Singleton.BlocksPerChuck);
+            SceneBlock topBlock = _chunkBlocks[topNeighborIndex];
+            topBlock.UpdateSpecificFaceLights(GameData.GameBlockData.BlockFaces.FaceZBack, blockData.LightColor);
+        }
+
+        //Right neighbor, we'd be altering their "X-" or "left face" when looking from above
+        //int rightNeighborIndex = localTileIndex + 1;
+        //Vec2Int rightNeighborPos = Helpers.Vec2IntFromIndex(rightNeighborIndex, SceneLevelManager.Singleton.BlocksPerChuck);
+        Vec2Int rightNeighborPos = new Vec2Int(blockPos.x + 1, blockPos.y);
+
+        //This neighbor is actually in another chunk
+        if (rightNeighborPos.x < 0 || rightNeighborPos.x > SceneLevelManager.Singleton.BlocksPerChuck - 1 || rightNeighborPos.y < 0 || rightNeighborPos.y > SceneLevelManager.Singleton.BlocksPerChuck - 1)
+        {
+            SceneLevelManager.Singleton.UpdateNeighborChunkWallLight(block.WorldPosIndex + 1, new Vec2Int(block.WorldPos.x + 1, block.WorldPos.y), GameData.GameBlockData.BlockFaces.FaceXBack, blockData.LightColor);
+        }
+        else
+        {
+
+            int rightNeighborIndex = Helpers.IndexFromVec2Int(rightNeighborPos, SceneLevelManager.Singleton.BlocksPerChuck);
+
+            SceneBlock rightBlock = _chunkBlocks[rightNeighborIndex];
+            rightBlock.UpdateSpecificFaceLights(GameData.GameBlockData.BlockFaces.FaceXBack, blockData.LightColor);
+        }
+
+        //Down neighbor, we'd be altering their "Z+" or "up face" when looking from above
+        //int downNeighborIndex = localTileIndex - SceneLevelManager.Singleton.BlocksPerChuck;
+        //Vec2Int downNeighborPos = Helpers.Vec2IntFromIndex(downNeighborIndex, SceneLevelManager.Singleton.BlocksPerChuck);
+        Vec2Int downNeighborPos = new Vec2Int(blockPos.x, blockPos.y - 1);
+
+        //This neighbor is actually in another chunk
+        if (downNeighborPos.x < 0 || downNeighborPos.x > SceneLevelManager.Singleton.BlocksPerChuck - 1 || downNeighborPos.y < 0 || downNeighborPos.y > SceneLevelManager.Singleton.BlocksPerChuck - 1)
+        {
+            SceneLevelManager.Singleton.UpdateNeighborChunkWallLight(block.WorldPosIndex - GameManager.Singleton.Mapdata._mapSize.x, new Vec2Int(block.WorldPos.x, block.WorldPos.y - 1), GameData.GameBlockData.BlockFaces.FaceZForward, blockData.LightColor);
+        }
+        else
+        {
+
+            int downNeighborIndex = Helpers.IndexFromVec2Int(downNeighborPos, SceneLevelManager.Singleton.BlocksPerChuck);
+
+            SceneBlock downBlock = _chunkBlocks[downNeighborIndex];
+            downBlock.UpdateSpecificFaceLights(GameData.GameBlockData.BlockFaces.FaceZForward, blockData.LightColor);
+        }
+
+        //Left neighbor, we'd be altering their "X+" or "right face" when looking from above
+        //int leftNeighborIndex = localTileIndex - 1;
+        //Vec2Int leftNeighborPos = Helpers.Vec2IntFromIndex(leftNeighborIndex, SceneLevelManager.Singleton.BlocksPerChuck);
+        Vec2Int leftNeighborPos = new Vec2Int(blockPos.x - 1, blockPos.y);
+
+        //This neighbor is actually in another chunk
+        if (leftNeighborPos.x < 0 || leftNeighborPos.x > SceneLevelManager.Singleton.BlocksPerChuck - 1 || leftNeighborPos.y < 0 || leftNeighborPos.y > SceneLevelManager.Singleton.BlocksPerChuck - 1)
+        {
+            SceneLevelManager.Singleton.UpdateNeighborChunkWallLight(block.WorldPosIndex - 1, new Vec2Int(block.WorldPos.x + 1, block.WorldPos.y), GameData.GameBlockData.BlockFaces.FaceXForward, blockData.LightColor);
+            return;
+        }
+        else
+        {
+
+            int leftNeighborIndex = Helpers.IndexFromVec2Int(leftNeighborPos, SceneLevelManager.Singleton.BlocksPerChuck);
+
+            SceneBlock leftBlock = _chunkBlocks[leftNeighborIndex];
+            leftBlock.UpdateSpecificFaceLights(GameData.GameBlockData.BlockFaces.FaceXForward, blockData.LightColor);
+        }
+        #endregion
+    }
+
+    public void UpdateBlockWithLightFromNeighborChunk(int localTileIndex, GameData.GameBlockData.BlockFaces face, Color32 color)
+    {
+        SceneBlock block = null;
+        block = _chunkBlocks[localTileIndex];
+
+        block.UpdateSpecificFaceLights(face, color);
     }
 
 

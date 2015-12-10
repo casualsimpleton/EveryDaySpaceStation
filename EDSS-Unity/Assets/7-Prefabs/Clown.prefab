@@ -1,49 +1,44 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &197324
+--- !u!1 &174992
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 497324}
-  - 114: {fileID: 11497324}
+  - 4: {fileID: 474992}
+  - 114: {fileID: 11474992}
   m_Layer: 0
-  m_Name: DefaultFiles
+  m_Name: Clown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &497324
+--- !u!4 &474992
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 197324}
+  m_GameObject: {fileID: 174992}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: .5, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11497324
+--- !u!114 &11474992
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 197324}
+  m_GameObject: {fileID: 174992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79fc98bce9b68494aa086b2c3da54050, type: 3}
+  m_Script: {fileID: 11500000, guid: 03fcd701a9c602b469f43227174cf8cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultTexture: {fileID: 2800000, guid: f1c25c9526b60bb41a7cb30404da3a70, type: 3}
-  colorTint: {fileID: 2800000, guid: b217e062aa8e2274badd1017aa17d8e0, type: 3}
-  defaultMaterial: {fileID: 2100000, guid: f1970d69313145040b1401ea14ca9a61, type: 2}
-  defaultShader: {fileID: 4800000, guid: 3890e88820ac58245803a027e2029a0b, type: 3}
-  billboardShader: {fileID: 4800000, guid: 1974557fb55d353428f218ae8ee6ebb3, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -53,6 +48,6 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 197324}
+  m_RootGameObject: {fileID: 174992}
   m_IsPrefabParent: 1
   m_IsExploded: 1

@@ -17,337 +17,341 @@ using EveryDaySpaceStation;
 using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 
-[System.Serializable]
-public sealed class GameData
+
+namespace EveryDaySpaceStation
 {
-    #region Classes/Structs
-    public class GameBlockData : System.IDisposable
+    [System.Serializable]
+    public sealed class GameData
     {
-        public struct FaceInfo
+        #region Classes/Structs
+        public class GameBlockData : System.IDisposable
         {
-            public enum FaceDirection : byte
+            public struct FaceInfo
             {
-                Forward,
-                Inverted
+                public enum FaceDirection : byte
+                {
+                    Forward,
+                    Inverted
+                }
+
+                public FaceDirection _faceDir; //Whether the face is point out or in
+                public bool _visible;
+
+                public override string ToString()
+                {
+                    return string.Format("{0} {1}", _faceDir, _visible);
+                }
             }
 
-            public FaceDirection _faceDir; //Whether the face is point out or in
-            public bool _visible;
+            public enum BlockFaces : byte
+            {
+                FaceZForward,
+                FaceXForward,
+                FaceZBack,
+                FaceXBack,
+                FaceTop,
+                FaceBottom,
+
+                //..
+                MAX
+            }
+
+            public uint UID { get; private set; }
+            public string Name { get; private set; }
+            public int DefaultStrength { get; private set; }
+            public List<string> Flags { get; private set; }
+            public bool BlocksLight { get; private set; }
+            public bool IsVacuum { get; private set; }
+            public bool IsPorous { get; private set; }
+            public bool IsEmpty { get; private set; }
+            /// <summary>
+            /// The UID for the type of block that must be present in order for this block to be placed. Not required for mapping, 
+            /// but will be used during run-time for dynamic building
+            /// </summary>
+            public uint RequirementUID { get; private set; }
+
+            public FaceInfo[] Faceinfo;
+
+            public GameBlockData(uint uid, string name, int defaultStrength, string[] flags, uint requirementUID)
+            {
+                UID = uid;
+                Name = name;
+                DefaultStrength = defaultStrength;
+                Flags = new List<string>(flags);
+                RequirementUID = requirementUID;
+
+                ParseFlags();
+            }
+
+            public void SetFaceParameters(params int[] FaceValues)
+            {
+                int goalCount = (int)BlockFaces.MAX;
+                if (Faceinfo == null)
+                {
+                    Faceinfo = new FaceInfo[goalCount];
+                }
+
+                if (FaceValues == null)
+                {
+                    Debug.LogError(string.Format("Face parameters shouldn't be null. GameBlockData: {0}", ToString()));
+                    return;
+                }
+
+                if (FaceValues.Length != goalCount)
+                {
+                    Debug.LogWarning(string.Format("Number of inputted face parameters ({0}) does not match the desired amount {1} for GameBlockData: {2}", FaceValues.Length, goalCount, ToString()));
+                }
+
+                for (int i = 0; i < goalCount && i < FaceValues.Length; i++)
+                {
+                    FaceInfo curFace = new FaceInfo();
+
+                    //Not visible
+                    if (FaceValues[i] == 0)
+                    {
+                        curFace._faceDir = FaceInfo.FaceDirection.Forward;
+                        curFace._visible = false;
+                    }
+                    //Face present, but inverted
+                    else if (FaceValues[i] == 2)
+                    {
+                        curFace._faceDir = FaceInfo.FaceDirection.Inverted;
+                        curFace._visible = true;
+                    }
+                    //Catch all for now
+                    else
+                    {
+                        curFace._faceDir = FaceInfo.FaceDirection.Forward;
+                        curFace._visible = true;
+                    }
+
+                    Faceinfo[i] = curFace;
+                }
+            }
+
+            private void ParseFlags()
+            {
+                if (Flags == null)
+                    return;
+
+                for (int i = 0; i < Flags.Count; i++)
+                {
+                    switch (Flags[i].ToLower())
+                    {
+                        case "emtpty":
+                            IsEmpty = true;
+                            continue;
+                        case "vacuum":
+                            IsVacuum = true;
+                            continue;
+                        case "blockslight":
+                            BlocksLight = true;
+                            continue;
+                        case "door":
+                            //TODO
+                            continue;
+                        case "porous":
+                            continue;
+                        case "transparent":
+                            BlocksLight = false;
+                            continue;
+                    }
+                }
+            }
 
             public override string ToString()
             {
-                return string.Format("{0} {1}", _faceDir, _visible);
-            }
-        }
+                //Not the most efficient, but it works
+                string flagsTxt = "";
 
-        public enum BlockFaces : byte
-        {
-            FaceZForward,
-            FaceXForward,
-            FaceZBack,
-            FaceXBack,
-            FaceTop,
-            FaceBottom,
-
-            //..
-            MAX
-        }
-
-        public uint UID { get; private set; }
-        public string Name { get; private set; }
-        public int DefaultStrength { get; private set; }
-        public List<string> Flags { get; private set; }
-        public bool BlocksLight { get; private set; }
-        public bool IsVacuum { get; private set; }
-        public bool IsPorous { get; private set; }
-        public bool IsEmpty { get; private set; }
-        /// <summary>
-        /// The UID for the type of block that must be present in order for this block to be placed. Not required for mapping, 
-        /// but will be used during run-time for dynamic building
-        /// </summary>
-        public uint RequirementUID { get; private set; }
-
-        public FaceInfo[] Faceinfo;
-
-        public GameBlockData(uint uid, string name, int defaultStrength, string[] flags, uint requirementUID)
-        {
-            UID = uid;
-            Name = name;
-            DefaultStrength = defaultStrength;
-            Flags = new List<string>(flags);
-            RequirementUID = requirementUID;
-
-            ParseFlags();
-        }
-
-        public void SetFaceParameters(params int[] FaceValues)
-        {
-            int goalCount = (int)BlockFaces.MAX;
-            if (Faceinfo == null)
-            {
-                Faceinfo = new FaceInfo[goalCount];
-            }
-
-            if(FaceValues == null)
-            {
-                Debug.LogError(string.Format("Face parameters shouldn't be null. GameBlockData: {0}", ToString()));
-                return;
-            }
-
-            if (FaceValues.Length != goalCount)
-            {
-                Debug.LogWarning(string.Format("Number of inputted face parameters ({0}) does not match the desired amount {1} for GameBlockData: {2}", FaceValues.Length, goalCount, ToString()));
-            }
-
-            for (int i = 0; i < goalCount && i < FaceValues.Length; i++)
-            {
-                FaceInfo curFace = new FaceInfo();
-
-                //Not visible
-                if (FaceValues[i] == 0)
+                for (int i = 0; i < flagsTxt.Length; i++)
                 {
-                    curFace._faceDir = FaceInfo.FaceDirection.Forward;
-                    curFace._visible = false;
-                }
-                //Face present, but inverted
-                else if (FaceValues[i] == 2)
-                {
-                    curFace._faceDir = FaceInfo.FaceDirection.Inverted;
-                    curFace._visible = true;
-                }
-                //Catch all for now
-                else
-                {
-                    curFace._faceDir = FaceInfo.FaceDirection.Forward;
-                    curFace._visible = true;
+                    flagsTxt += string.Format("'{0}|'", flagsTxt[i]);
                 }
 
-                Faceinfo[i] = curFace;
+                return string.Format("UID: {0} Name: {1} DefaultStrength: {2} RequirementUID: {3} Flags: {4}", UID, Name, DefaultStrength, RequirementUID, flagsTxt);
             }
-        }
 
-        private void ParseFlags()
-        {
-            if (Flags == null)
-                return;
+            #region Dispose
+            ///////////
+            //IDisposable Overrides
+            protected bool _isDisposed = false;
 
-            for (int i = 0; i < Flags.Count; i++)
+            public virtual void Dispose()
             {
-                switch (Flags[i].ToLower())
+                Dispose(true);
+                System.GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!_isDisposed)
                 {
-                    case "emtpty":
-                        IsEmpty = true;
-                        continue;
-                    case "vacuum":
-                        IsVacuum = true;
-                        continue;
-                    case "blockslight":
-                        BlocksLight = true;
-                        continue;
-                    case "door":
-                        //TODO
-                        continue;
-                    case "porous":
-                        continue;
-                    case "transparent":
-                        BlocksLight = false;
-                        continue;
+                    if (disposing)
+                    {
+                        //Dispose here
+                        Flags.Clear();
+                        Flags = null;
+                    }
                 }
             }
-        }
 
-        public override string ToString()
-        {
-            //Not the most efficient, but it works
-            string flagsTxt = "";
-
-            for(int i = 0; i < flagsTxt.Length; i++)
+            ~GameBlockData()
             {
-                flagsTxt += string.Format("'{0}|'", flagsTxt[i]);
+                Dispose(false);
             }
-
-            return string.Format("UID: {0} Name: {1} DefaultStrength: {2} RequirementUID: {3} Flags: {4}", UID, Name, DefaultStrength, RequirementUID, flagsTxt);
-        }
-
-        #region Dispose
-        ///////////
-        //IDisposable Overrides
-        protected bool _isDisposed = false;
-
-        public virtual void Dispose()
-        {
-            Dispose(true);
-            System.GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    //Dispose here
-                    Flags.Clear();
-                    Flags = null;
-                }
-            }
-        }
-
-        ~GameBlockData()
-        {
-            Dispose(false);
+            #endregion
         }
         #endregion
-    }
-    #endregion
 
-    #region Vars
-    [SerializeField]
-    Dictionary<uint, EDSSSprite> _sprites;
-    [SerializeField]
-    Dictionary<uint, EDSSSpriteSheet> _spriteSheets;
-    [SerializeField]
-    Dictionary<uint,GameBlockData> _gameBlockData;
-    [SerializeField]
-    Dictionary<string, Texture2D> _textures;
-    [SerializeField]
-    Dictionary<uint, Material> _materials;
+        #region Vars
+        [SerializeField]
+        Dictionary<uint, EDSSSprite> _sprites;
+        [SerializeField]
+        Dictionary<uint, EDSSSpriteSheet> _spriteSheets;
+        [SerializeField]
+        Dictionary<uint, GameBlockData> _gameBlockData;
+        [SerializeField]
+        Dictionary<string, Texture2D> _textures;
+        [SerializeField]
+        Dictionary<uint, Material> _materials;
 
-    private uint _spriteSheetUID = 1;
-    private uint _materialUID = 1;
-    #endregion
+        private uint _spriteSheetUID = 1;
+        private uint _materialUID = 1;
+        #endregion
 
-    #region Gets/Sets
-    public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
-    public uint GetNewMaterialUID() { return _materialUID++; }
-    #endregion
+        #region Gets/Sets
+        public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
+        public uint GetNewMaterialUID() { return _materialUID++; }
+        #endregion
 
-    #region Constructors
-    public GameData()
-    {
-        _sprites = new Dictionary<uint, EDSSSprite>();
-        _spriteSheets = new Dictionary<uint, EDSSSpriteSheet>();
-        _gameBlockData = new Dictionary<uint, GameBlockData>();
-        _textures = new Dictionary<string, Texture2D>();
-        _materials = new Dictionary<uint, Material>();
-    }
-    #endregion
-
-    public void AddSprite(uint uid, EDSSSprite sprite)
-    {
-        _sprites.Add(uid, sprite);
-    }
-
-    public void AddSpriteSheet(uint uid, EDSSSpriteSheet spriteSheet)
-    {
-        _spriteSheets.Add(uid, spriteSheet);
-    }
-
-    public void AddGameBlock(uint uid, GameBlockData blockData)
-    {
-        _gameBlockData.Add(uid, blockData);
-    }
-
-    public void AddTexture(string name, Texture2D texture)
-    {
-        _textures.Add(name, texture);
-    }
-
-    public void AddMaterial(uint uid, Material material)
-    {
-        _materials.Add(uid, material);
-    }
-
-    public bool GetSprite(uint uid, out EDSSSprite sprite)
-    {
-        bool exists = _sprites.TryGetValue(uid, out sprite);
-
-        return exists;
-    }
-
-    public bool GetSpriteSheet(uint uid, out EDSSSpriteSheet spriteSheet)
-    {
-        bool exists = _spriteSheets.TryGetValue(uid, out spriteSheet);
-
-        return exists;
-    }
-
-    /// <summary>
-    /// Look for a EDSSSpriteSheet by texture name, since we might not have the UID yet. NOTE - Going to be slower that searching by UID
-    /// </summary>
-    public bool GetSpriteSheet(string name, out EDSSSpriteSheet spriteSheet)
-    {
-        spriteSheet = null;
-        foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _spriteSheets)
+        #region Constructors
+        public GameData()
         {
-            if (sheet.Value.Texture.name.CompareTo(name) == 0)
+            _sprites = new Dictionary<uint, EDSSSprite>();
+            _spriteSheets = new Dictionary<uint, EDSSSpriteSheet>();
+            _gameBlockData = new Dictionary<uint, GameBlockData>();
+            _textures = new Dictionary<string, Texture2D>();
+            _materials = new Dictionary<uint, Material>();
+        }
+        #endregion
+
+        public void AddSprite(uint uid, EDSSSprite sprite)
+        {
+            _sprites.Add(uid, sprite);
+        }
+
+        public void AddSpriteSheet(uint uid, EDSSSpriteSheet spriteSheet)
+        {
+            _spriteSheets.Add(uid, spriteSheet);
+        }
+
+        public void AddGameBlock(uint uid, GameBlockData blockData)
+        {
+            _gameBlockData.Add(uid, blockData);
+        }
+
+        public void AddTexture(string name, Texture2D texture)
+        {
+            _textures.Add(name, texture);
+        }
+
+        public void AddMaterial(uint uid, Material material)
+        {
+            _materials.Add(uid, material);
+        }
+
+        public bool GetSprite(uint uid, out EDSSSprite sprite)
+        {
+            bool exists = _sprites.TryGetValue(uid, out sprite);
+
+            return exists;
+        }
+
+        public bool GetSpriteSheet(uint uid, out EDSSSpriteSheet spriteSheet)
+        {
+            bool exists = _spriteSheets.TryGetValue(uid, out spriteSheet);
+
+            return exists;
+        }
+
+        /// <summary>
+        /// Look for a EDSSSpriteSheet by texture name, since we might not have the UID yet. NOTE - Going to be slower that searching by UID
+        /// </summary>
+        public bool GetSpriteSheet(string name, out EDSSSpriteSheet spriteSheet)
+        {
+            spriteSheet = null;
+            foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _spriteSheets)
             {
-                spriteSheet = sheet.Value;
-                return true;
+                if (sheet.Value.Material.name.CompareTo(name) == 0)
+                {
+                    spriteSheet = sheet.Value;
+                    return true;
+                }
             }
+
+            return false;
         }
 
-        return false;
-    }
-
-    public bool GetGameBlock(uint uid, out GameBlockData blockData)
-    {
-        bool exists = _gameBlockData.TryGetValue(uid, out blockData);
-
-        return exists;
-    }
-
-    public bool GetTexture(string name, out Texture2D texture)
-    {
-        bool exists = _textures.TryGetValue(name, out texture);
-
-        return exists;
-    }
-
-    public bool GetMaterial(uint uid, out Material material)
-    {
-        bool exists = _materials.TryGetValue(uid, out material);
-        
-        return exists;
-    }
-
-    public void Cleanup()
-    {
-        foreach (KeyValuePair<uint, EDSSSprite> sprite in _sprites)
+        public bool GetGameBlock(uint uid, out GameBlockData blockData)
         {
-            sprite.Value.Dispose();
+            bool exists = _gameBlockData.TryGetValue(uid, out blockData);
+
+            return exists;
         }
 
-        foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _spriteSheets)
+        public bool GetTexture(string name, out Texture2D texture)
         {
-            sheet.Value.Dispose();
+            bool exists = _textures.TryGetValue(name, out texture);
+
+            return exists;
         }
 
-        foreach (KeyValuePair<uint, GameBlockData> block in _gameBlockData)
+        public bool GetMaterial(uint uid, out Material material)
         {
-            block.Value.Dispose();
+            bool exists = _materials.TryGetValue(uid, out material);
+
+            return exists;
         }
 
-        foreach (KeyValuePair<string, Texture2D> texture in _textures)
+        public void Cleanup()
         {
-            GameObject.Destroy(texture.Value);
+            foreach (KeyValuePair<uint, EDSSSprite> sprite in _sprites)
+            {
+                sprite.Value.Dispose();
+            }
+
+            foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _spriteSheets)
+            {
+                sheet.Value.Dispose();
+            }
+
+            foreach (KeyValuePair<uint, GameBlockData> block in _gameBlockData)
+            {
+                block.Value.Dispose();
+            }
+
+            foreach (KeyValuePair<string, Texture2D> texture in _textures)
+            {
+                GameObject.Destroy(texture.Value);
+            }
+
+            foreach (KeyValuePair<uint, Material> material in _materials)
+            {
+                GameObject.Destroy(material.Value);
+            }
+
+            _sprites.Clear();
+            _spriteSheets.Clear();
+            _gameBlockData.Clear();
+            _textures.Clear();
+            _materials.Clear();
+
+            _sprites = null;
+            _spriteSheets = null;
+            _gameBlockData = null;
+            _textures = null;
+            _materials = null;
         }
-
-        foreach (KeyValuePair<uint, Material> material in _materials)
-        {
-            GameObject.Destroy(material.Value);
-        }
-
-        _sprites.Clear();
-        _spriteSheets.Clear();
-        _gameBlockData.Clear();
-        _textures.Clear();
-        _materials.Clear();
-
-        _sprites = null;
-        _spriteSheets = null;
-        _gameBlockData = null;
-        _textures = null;
-        _materials = null;
     }
 }

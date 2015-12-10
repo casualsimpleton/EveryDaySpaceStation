@@ -2,11 +2,13 @@
 	"art" :
 	[
 		"ss13-1.png",
-		"test1.png"
+		"test1.png",
+		"clown1.png"
 	],
 	"spritedata" :
 	[
 		"spritedata.json",
+		"clown.json"
 	],
 	"blockdata" :
 	[

@@ -43,4 +43,5 @@ public class DefaultFiles : MonoBehaviour
     public Texture2D colorTint;
     public Material defaultMaterial;
     public Shader defaultShader;
+    public Shader billboardShader;
 }

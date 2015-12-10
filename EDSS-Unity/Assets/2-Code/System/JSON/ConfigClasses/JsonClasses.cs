@@ -299,7 +299,7 @@ namespace EveryDaySpaceStation.Json
         /// </summary>
         [JsonProperty("spritewidthheight")]
         public Vec2Int SpriteWidthHeight { get; set; }
-
+        
         [JsonProperty("flags")]
         public string[] Flags { get; set; }
 

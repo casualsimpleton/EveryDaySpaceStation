@@ -276,7 +276,7 @@ namespace EveryDaySpaceStation
             Debug.Log(results);
         }
 
-        public static bool AttemptCreateSpriteSheet(SpriteDataJson spriteData, out EDSSSpriteSheet sheet)
+        public static bool AttemptCreateSpriteSheet(SpriteDataJson spriteData, string sheetName, EDSSSpriteSheet.ShaderType desiredType, out EDSSSpriteSheet sheet)
         {
             sheet = null;
 
@@ -296,8 +296,18 @@ namespace EveryDaySpaceStation
             uint matUID = GameManager.Singleton.Gamedata.GetNewMaterialUID();
 
             //Create a new material and assign the texture
-            Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
-            newMat.name = string.Format("{0}-mat", texture.name);
+            Material newMat;
+
+            if (desiredType == EDSSSpriteSheet.ShaderType.Billboard)
+            {
+                newMat = new Material(DefaultFiles.Singleton.billboardShader);
+            }
+            else
+            {
+                newMat = new Material(DefaultFiles.Singleton.defaultShader);
+            }
+            
+            newMat.name = string.Format("{0}", sheetName);
             newMat.SetTexture("_MainTex", texture); 
             GameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
 
@@ -383,15 +393,32 @@ namespace EveryDaySpaceStation
                 {
                     SpriteDataJson spriteData = spriteConfig.SpriteData[j];
 
+                    string sheetTypeName = "world";
+                    EDSSSpriteSheet.ShaderType shaderType = EDSSSpriteSheet.ShaderType.World;
+                    //We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
+                    for (int k = 0; k < spriteData.Flags.Length; k++)
+                    {
+                        string flag = spriteData.Flags[k].ToLower();
+
+                        switch (flag)
+                        {
+                            case "billboard":
+                                sheetTypeName = "billboard";
+                                shaderType = EDSSSpriteSheet.ShaderType.Billboard;
+                                break;
+                        }
+                    }
+
                     //First look if there is a EDSSSpriteSheet
                     EDSSSpriteSheet sheet = null;
-                    bool found = GameManager.Singleton.Gamedata.GetSpriteSheet(spriteData.SpriteSheetFileName, out sheet);
+                    string sheetname = string.Format("{0}-{1}", spriteData.SpriteSheetFileName, sheetTypeName);
+                    bool found = GameManager.Singleton.Gamedata.GetSpriteSheet(sheetname, out sheet);
 
                     //Couldn't find the sheet already created
                     if (!found)
                     {
                         //So attempt to create
-                        found = AttemptCreateSpriteSheet(spriteData, out sheet);
+                        found = AttemptCreateSpriteSheet(spriteData, sheetname, shaderType, out sheet);
                     }
 
                     //It's still not found, so we need to throw an error and move on
@@ -402,7 +429,7 @@ namespace EveryDaySpaceStation
                     }
 
                     //We've got a sheet somehow, so we're ready to make the sprite
-                    EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName);
+                    EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName, spriteData.Flags);
 
                     GameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
                     spriteProcessed++;

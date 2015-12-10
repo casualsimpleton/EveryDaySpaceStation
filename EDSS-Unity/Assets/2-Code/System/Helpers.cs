@@ -87,11 +87,29 @@ namespace EveryDaySpaceStation.Utils
             return pos;
         }
 
+        public static Vec2Int Vec2IntFromIndex(int index, int width)
+        {
+            Vec2Int pos = new Vec2Int(0, 0);
+            pos.y = (int)(index / width);
+            pos.x = index - (pos.y * width);
+
+            return pos;
+        }
+
         public static Vec2Int Vec2IntFromIndex(uint index, Vec2Int widthHeight)
         {
             Vec2Int pos = new Vec2Int(0, 0);
             pos.y = (int)(index / widthHeight.x);
             pos.x = (int)index - (pos.y * widthHeight.x);
+
+            return pos;
+        }
+
+        public static Vec2Int Vec2IntFromIndex(uint index, uint width)
+        {
+            Vec2Int pos = new Vec2Int(0, 0);
+            pos.y = (int)(index / width);
+            pos.x = (int)index - (pos.y * (int)width);
 
             return pos;
         }

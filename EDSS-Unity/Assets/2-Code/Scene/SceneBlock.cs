@@ -123,6 +123,13 @@ public class SceneBlock
         }
     }
 
+    public void UpdateSpecificFaceLights(GameData.GameBlockData.BlockFaces face, Color32 newColor)
+    {
+        int faceValueIndex = (int)face;
+
+        _parentChunk.ModifyColorNoUpdate(_associatedRendererUID, _vertFirstIndex[faceValueIndex], newColor);
+    }
+
     public void UpdateFaces(MapData.MapTileData mapTileData, bool isFirstTime = false)
     {
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;

@@ -23,11 +23,18 @@ namespace EveryDaySpaceStation.DataTypes
     [System.Serializable]
     public class EDSSSpriteSheet : System.IDisposable
     {
+        public enum ShaderType
+        {
+            World,
+            Billboard
+        }
+
         public uint UID { get; private set; }
         public uint MaterialUID { get; private set; }
         public Texture2D Texture { get; private set; }
         public List<EDSSSprite> Sprites { get; private set; }
         public Material Material { get; private set; }
+        public ShaderType MaterialType { get; private set; }
 
         public void CreateSpriteSheet(uint uid, uint materialUID, Texture2D art, Material mat, List<EDSSSprite> existingSprites = null)
         {
@@ -51,10 +58,10 @@ namespace EveryDaySpaceStation.DataTypes
             Sprites.Remove(sprite);
         }
 
-        public EDSSSprite CreateSprite(uint uid, Vec2Int pos, Vec2Int widthHeight, string spriteName = "")
+        public EDSSSprite CreateSprite(uint uid, Vec2Int pos, Vec2Int widthHeight, string spriteName, string[] spriteFlags)
         {
             EDSSSprite newSprite = new EDSSSprite();
-            newSprite.CreateSprite(uid, pos, widthHeight, this, spriteName);
+            newSprite.CreateSprite(uid, pos, widthHeight, this, spriteName, spriteFlags);
 
             if (Sprites == null)
             {
