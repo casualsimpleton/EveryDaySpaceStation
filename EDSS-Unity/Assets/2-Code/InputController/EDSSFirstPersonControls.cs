@@ -34,11 +34,15 @@ public class EDSSFirstPersonControls : MonoBehaviour
     [SerializeField]
     float _runSpeed = 4f;
 
-    TileLight _playerLight;
+    TileLightGameObject _playerLight;
 
-    void Start()
+    void Awake()
     {
         _transform = this.gameObject.transform;
+    }
+
+    void Start()
+    {        
         _charController = this.gameObject.GetComponentInChildren<CharacterController>();
 
         if (_charController == null)
@@ -66,13 +70,24 @@ public class EDSSFirstPersonControls : MonoBehaviour
         //}
         
         _charController.Move(moveDir);
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            _playerLight.enabled = !_playerLight.enabled;
+        }
     }
 
     public void SpawnTileLight()
     {
-        _playerLight = new TileLight(new Color32(255, 255, 255, 255), 5);
+        //_playerLight = new TileLight(new Color32(255, 255, 255, 255), 5);
 
-        SceneLevelManager.Singleton.AddLight(_playerLight);
-        _playerLight.IsMobile = true;
+        //SceneLevelManager.Singleton.AddLight(_playerLight);
+        //_playerLight.IsMobile = true;
+
+        GameObject go = new GameObject("PlayerLight");
+        go.transform.parent = _transform;
+        go.transform.localPosition = Vector3.zero;
+
+        _playerLight = go.AddComponent<TileLightGameObject>();
     }
 }

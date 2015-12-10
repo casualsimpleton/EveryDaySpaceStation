@@ -119,14 +119,24 @@ namespace EveryDaySpaceStation.Utils
                     continue;
                 }
 
+                int index = IndexFromVec2Int(i, y, mapData._mapSize.x);
                 Color32 newColor = new Color32(centerColor.r, centerColor.g, centerColor.b, centerColor.a);
+                Color32 curColor = mapData._mapTiles[index].LightColor;
                 int xDiff = centerX - i;
                 int yDiff = centerY - y;
                 float dist = Mathf.Sqrt((xDiff * xDiff) + (yDiff * yDiff));
+                //newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
+                //newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
+                //newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
+
                 newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
                 newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
                 newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
-                int index = IndexFromVec2Int(i, y, mapData._mapSize.x);
+
+                newColor.r = (curColor.r > newColor.r ? curColor.r : newColor.r);
+                newColor.g = (curColor.g > newColor.g ? curColor.g : newColor.g);
+                newColor.b = (curColor.b > newColor.b ? curColor.b : newColor.b);
+
                 mapData._mapTiles[index].LightColor = newColor;
             }
         }
@@ -139,7 +149,7 @@ namespace EveryDaySpaceStation.Utils
             int y = 0;
             int radiusError = 1 - x;
 
-            while (x >= y)
+            while (x > y)
             {
                 //Use symmetry to draw the two horizontal lines at this Y with a special case to draw
                 // only one line at the centerY where y == 0;

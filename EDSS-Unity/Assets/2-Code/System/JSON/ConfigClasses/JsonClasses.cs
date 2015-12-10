@@ -87,8 +87,8 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("block")]
         public uint Block { get; set; }
 
-        [JsonProperty("blocklight")]
-        public int BlockLight { get; set; }
+        [JsonProperty("overrideblocklight")]
+        public int OverrideBlockLight { get; set; }
     }
 
     public class MapDataJsonConverter : JsonConverter

@@ -59,6 +59,11 @@ public class SceneLevelManager : MonoBehaviour
         _visibleLights.Add(light);
     }
 
+    public void RemoveLight(TileLight light)
+    {
+        _visibleLights.Remove(light);
+    }
+
 #endregion
 
     #region Gets/Sets
@@ -74,10 +79,30 @@ public class SceneLevelManager : MonoBehaviour
         CreateMap();
 
         //TEMP
-        TileLight light = new TileLight(new Color32(255, 255, 255, 255), 2);
-        light.TilePos = new Vec2Int(3, 3);
-        light.TileIndex = Helpers.IndexFromVec2Int(light.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
-        _visibleLights.Add(light);
+        //TileLight light = new TileLight(new Color32(255, 255, 255, 255), 2);
+        //light.TilePos = new Vec2Int(3, 3);
+        //light.TileIndex = Helpers.IndexFromVec2Int(light.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        //_visibleLights.Add(light);
+
+        //TileLight light2 = new TileLight(new Color32(255, 255, 255, 255), 2);
+        //light2.TilePos = new Vec2Int(3, 12);
+        //light2.TileIndex = Helpers.IndexFromVec2Int(light2.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        //_visibleLights.Add(light2);
+
+        //TileLight light3 = new TileLight(new Color32(255, 255, 255, 255), 5);
+        //light3.TilePos = new Vec2Int(6, 8);
+        //light3.TileIndex = Helpers.IndexFromVec2Int(light3.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        //_visibleLights.Add(light3);
+
+        //TileLight light4 = new TileLight(new Color32(255, 255, 255, 255), 2);
+        //light4.TilePos = new Vec2Int(10, 5);
+        //light4.TileIndex = Helpers.IndexFromVec2Int(light4.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        //_visibleLights.Add(light4);
+
+        //TileLight light5 = new TileLight(new Color32(255, 255, 255, 255), 2);
+        //light5.TilePos = new Vec2Int(13, 12);
+        //light5.TileIndex = Helpers.IndexFromVec2Int(light5.TilePos, GameManager.Singleton.Mapdata._mapSize.x);
+        //_visibleLights.Add(light5);
 
         GameManager.Singleton.playerControl.SpawnTileLight();
     }
@@ -183,7 +208,7 @@ public class SceneLevelManager : MonoBehaviour
             for (int y = 0; y < _visibleLightBounds.MaxPoint.y; y++)
             {
                 int index = Helpers.IndexFromVec2Int(x, y, _visibleLightBounds.MaxPoint.x);
-                mapData._mapTiles[index].LightColor = new Color32(1, 1, 1, 255);
+                mapData._mapTiles[index].LightColor = new Color32(10, 10, 10, 255);
             }
         }
 
@@ -196,10 +221,23 @@ public class SceneLevelManager : MonoBehaviour
             //If the light is mobile, we need to update its position
             if (light.IsMobile)
             {
-                light.UpdatePosition(GameManager.Singleton.playerControl.transform.position);
+                light.UpdatePosition();
             }
 
-            Helpers.FillCircleAreaWithLight(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData);
+            if (light.TileIndex < 0 || light.TileIndex > mapData._mapTiles.Length - 1)
+                continue;
+
+            //Helpers.FillCircleAreaWithLight(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData);
+
+            if (!mapData._mapTiles[light.TileIndex].BlocksLight)
+            {
+                mapData._mapTiles[light.TileIndex].LightColor = light.LightColor;
+            }
+
+            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Up);
+            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Right);
+            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Down);
+            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Left);
         }
 
         //Now update the colors on the meshes

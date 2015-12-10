@@ -57,6 +57,10 @@ public sealed class GameData
         public string Name { get; private set; }
         public int DefaultStrength { get; private set; }
         public List<string> Flags { get; private set; }
+        public bool BlocksLight { get; private set; }
+        public bool IsVacuum { get; private set; }
+        public bool IsPorous { get; private set; }
+        public bool IsEmpty { get; private set; }
         /// <summary>
         /// The UID for the type of block that must be present in order for this block to be placed. Not required for mapping, 
         /// but will be used during run-time for dynamic building
@@ -72,6 +76,8 @@ public sealed class GameData
             DefaultStrength = defaultStrength;
             Flags = new List<string>(flags);
             RequirementUID = requirementUID;
+
+            ParseFlags();
         }
 
         public void SetFaceParameters(params int[] FaceValues)
@@ -117,6 +123,36 @@ public sealed class GameData
                 }
 
                 Faceinfo[i] = curFace;
+            }
+        }
+
+        private void ParseFlags()
+        {
+            if (Flags == null)
+                return;
+
+            for (int i = 0; i < Flags.Count; i++)
+            {
+                switch (Flags[i].ToLower())
+                {
+                    case "emtpty":
+                        IsEmpty = true;
+                        continue;
+                    case "vacuum":
+                        IsVacuum = true;
+                        continue;
+                    case "blockslight":
+                        BlocksLight = true;
+                        continue;
+                    case "door":
+                        //TODO
+                        continue;
+                    case "porous":
+                        continue;
+                    case "transparent":
+                        BlocksLight = false;
+                        continue;
+                }
             }
         }
 

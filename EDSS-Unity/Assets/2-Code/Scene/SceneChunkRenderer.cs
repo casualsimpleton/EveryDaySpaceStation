@@ -436,6 +436,7 @@ public class SceneChunkRenderer : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+#if UNITY_EDITOR
         if (ShowVertGizmos)
         {
             Gizmos.color = Color.red;
@@ -445,5 +446,6 @@ public class SceneChunkRenderer : MonoBehaviour
                 Gizmos.DrawWireSphere(_verts[i], 0.15f);
             }
         }
+#endif
     }
 }

@@ -36,11 +36,11 @@ public sealed class MapData
         public uint FloorSpriteUID { get; set; }
         public uint WallSpriteUID { get; set; }
 
-        public override string ToString()
-        {
-            return string.Format("Pos: {0} Index: {1} BlocksLight: {2} IsTransparent: {3} ScaffoldingUID: {4} FloorSpriteUID: {5} WallSpriteUID: {6}",
-                TilePosition, TileIndex, BlocksLight, IsTransparent, BlockType, ScaffoldingUID, FloorSpriteUID, WallSpriteUID);
-        }
+        //public override string ToString()
+        //{
+        //    return string.Format("Pos: {0} Index: {1} BlocksLight: {2} IsTransparent: {3} ScaffoldingUID: {4} FloorSpriteUID: {5} WallSpriteUID: {6}",
+        //        TilePosition, TileIndex, BlocksLight, IsTransparent, BlockType, ScaffoldingUID, FloorSpriteUID, WallSpriteUID);
+        //}
     }
     #endregion
 
@@ -76,7 +76,6 @@ public sealed class MapData
 
             mapTile.TilePosition = new Vec2Int(tile.X, tile.Y);
             mapTile.TileIndex = Helpers.IndexFromVec2Int(mapTile.TilePosition, _mapSize.x);
-            mapTile.BlocksLight = (tile.BlockLight > 0 ? true : false);
             mapTile.LightColor = new Color32(1, 1, 1, 255);
             
             //Look up the block type
@@ -84,6 +83,11 @@ public sealed class MapData
             GameManager.Singleton.Gamedata.GetGameBlock(tile.Block, out block);
 
             mapTile.BlockType = block;
+            mapTile.BlocksLight = block.BlocksLight;
+
+            //Do this after the block type since the map may force an override
+            //Basically the override allows you to force it to do the opposite of the block's basic definition
+            mapTile.BlocksLight = (tile.OverrideBlockLight > 0 ? !mapTile.BlocksLight : mapTile.BlocksLight);
 
             mapTile.FaceSpritesUID = new uint?[(int)GameData.GameBlockData.BlockFaces.MAX];
 

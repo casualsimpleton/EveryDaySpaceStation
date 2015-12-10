@@ -77,7 +77,7 @@
 			"facebottom" : 1,
 			"flags" :
 			[
-				"None" 
+				"BlocksLight" 
 			],
 			"requirement" : 3
 		},
@@ -93,7 +93,7 @@
 			"facebottom" : 1,
 			"flags" :
 			[
-				"None" 
+				"Door" 
 			],
 			"requirement" : 3
 		},

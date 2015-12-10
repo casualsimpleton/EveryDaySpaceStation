@@ -1,0 +1,26 @@
+{
+	"mapdata":
+	{
+		"mapname" : "glasswalls1",
+		"displayname" : "Glass walls TEST!!!!",
+		"mapformat" : 1,
+		"mapversion" : "1",
+		"createtime" : 1449723164,
+		"lastmodifiedtime" : 1449723164,
+		"anchorpoint" : { "x" : 0, "y" : 0 },
+		"size" : { "x" : 1, "y" : 1 },
+		"tiledata" : 
+		[
+			{
+				"x": 0,
+				"y": 0,
+				"facespritesuid" : [ 17, 17, 17, 17, 13, 8],
+				"scaffold": 1,
+				"floor": 1,
+				"wall": 1,
+				"block": 7,
+				"overrideblocklight" : 0
+			}
+		]
+	}
+}

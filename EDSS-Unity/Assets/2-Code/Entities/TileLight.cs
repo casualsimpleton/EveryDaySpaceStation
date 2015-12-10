@@ -59,6 +59,8 @@ public class TileLight
         get { return _isMobile; }
         set { _isMobile = value; }
     }
+
+    public Transform _transform { get; set; }
     #endregion
 
     public TileLight(Color32 initColor, int range)
@@ -73,8 +75,9 @@ public class TileLight
     /// Convert world position to tile position and index
     /// </summary>
     /// <param name="worldPosition"></param>
-    public void UpdatePosition(Vector3 worldPosition)
+    public void UpdatePosition()
     {
+        Vector3 worldPosition = _transform.position;
         _tilePos = new Vec2Int((int)worldPosition.x, (int)worldPosition.z);
 
         _tileIndex = Helpers.IndexFromVec2Int(_tilePos, GameManager.Singleton.Mapdata._mapSize.x);
