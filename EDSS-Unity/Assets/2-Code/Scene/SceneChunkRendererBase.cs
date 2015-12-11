@@ -214,7 +214,7 @@ public abstract class SceneChunkRendererBase : MonoBehaviour
 
     #endregion
 
-    protected void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
 #if UNITY_EDITOR
         if (ShowVertGizmos)

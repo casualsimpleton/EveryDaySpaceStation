@@ -44,6 +44,7 @@ public class PoolManager : MonoBehaviour
     public bool IsInit { get; private set; }
 
     protected PoolSceneChunkRenderer _sceneChunkRendererPool;
+    protected PoolSceneChunkScaffoldRenderer _sceneChunkScaffoldRendererPool;
     protected PoolCubeCollider _cubeCollider1;
     protected PoolCubeCollider _cubeCollider2;
     protected PoolCubeCollider _cubeCollider3;
@@ -65,6 +66,18 @@ public class PoolManager : MonoBehaviour
     public void ReturnSceneChunkRenderer(SceneChunkRenderer scr)
     {
         _sceneChunkRendererPool.ReturnObject(scr);
+    }
+    #endregion
+
+    #region Scene Chunk Scaffold Renderers
+    public SceneChunkScaffoldRenderer RequestSceneChunkScaffolderRenderer()
+    {
+        return _sceneChunkScaffoldRendererPool.RequestObject();
+    }
+
+    public void ReturnSceneChunkRenderer(SceneChunkScaffoldRenderer sscr)
+    {
+        _sceneChunkScaffoldRendererPool.ReturnObject(sscr);
     }
     #endregion
 
@@ -168,8 +181,10 @@ public class PoolManager : MonoBehaviour
     public void LateInit()
     {
         _sceneChunkRendererPool = new PoolSceneChunkRenderer();
+        _sceneChunkScaffoldRendererPool = new PoolSceneChunkScaffoldRenderer();
 
         _sceneChunkRendererPool.Init(4, 0.1f, 5, 0.25f);
+        _sceneChunkScaffoldRendererPool.Init(4, 0.1f, 5, 0.25f);
 
         IsInit = true;
 
@@ -180,6 +195,7 @@ public class PoolManager : MonoBehaviour
     public void Update()
     {
         _sceneChunkRendererPool.Maintenance();
+        _sceneChunkScaffoldRendererPool.Maintenance();
     }
 
     public void Cleanup()
@@ -187,6 +203,18 @@ public class PoolManager : MonoBehaviour
         try
         {
             _sceneChunkRendererPool.Dispose();
+            _sceneChunkScaffoldRendererPool.Dispose();
+
+            _cubeCollider1.Dispose();
+            _cubeCollider2.Dispose();
+            _cubeCollider3.Dispose();
+            _cubeCollider4.Dispose();
+            _cubeCollider5.Dispose();
+            _cubeCollider6.Dispose();
+            _cubeCollider7.Dispose();
+            _cubeCollider8.Dispose();
+            _cubeCollider9.Dispose();
+            _cubeCollider10.Dispose();
         }
         catch (System.Exception ex)
         {

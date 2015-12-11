@@ -402,7 +402,7 @@ public class SceneChunkRenderer : SceneChunkRendererBase
 
     #endregion
 
-    void OnDrawGizmosSelected()
+    protected override void OnDrawGizmosSelected()
     {
 //#if UNITY_EDITOR
 //        if (ShowVertGizmos)

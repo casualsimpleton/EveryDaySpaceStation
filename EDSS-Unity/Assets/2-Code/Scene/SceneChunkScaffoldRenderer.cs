@@ -277,7 +277,7 @@ public class SceneChunkScaffoldRenderer : SceneChunkRendererBase
 
     #endregion
 
-    void OnDrawGizmosSelected()
+    protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
     }

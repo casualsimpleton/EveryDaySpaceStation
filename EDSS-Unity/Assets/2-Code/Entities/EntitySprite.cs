@@ -35,7 +35,7 @@ public class EntitySprite
     public EntitySprite(string name, uint edssSpriteUID, EntitySpriteGameObject parent)
     {
         _parentEntity = parent;
-        bool exists = GameManager.Singleton.Gamedata.GetSprite(edssSpriteUID, out _sprite);
+        /*bool exists =*/ GameManager.Singleton.Gamedata.GetSprite(edssSpriteUID, out _sprite);
     }
 
     public void UpdateMesh(GameObject meshObject)
