@@ -213,6 +213,8 @@ public class SceneChunkScaffoldRenderer : SceneChunkRendererBase
     /// </summary>
     public override void ModifyTrianglesNoUpdate(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
     {
+        //Debug.Log(string.Format("SSCR index {0} v1 {1} v2 {2} v3 {3} v4 {4}", triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex));
+
         base.ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
     }
 

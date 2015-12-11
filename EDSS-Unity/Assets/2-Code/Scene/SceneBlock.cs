@@ -58,11 +58,24 @@ public class SceneBlock
     int[] _facesFirstTriangleIndex;
 
     /// <summary>
+    /// First indices for each of the underlayer faces
+    /// </summary>
+    [SerializeField]
+    int[] _underlayerFacesFirstTriangleIndex;
+
+    /// <summary>
     /// Keep a copy of the index of each vertex for the face. That way we don't have to re-compute it each time
     /// Might not be necessary if blocks don't change too often and we find we're using too much memory
     /// </summary>
     [SerializeField]
     int[] _vertFirstIndex;
+
+    /// <summary>
+    /// Keep a copy of the index of each vertex for the underlayer face. That way we don't have to re-compute it each time
+    /// Might not be necessary if blocks don't change too often and we find we're using too much memory
+    /// </summary>
+    [SerializeField]
+    int[] _underlayerVertFirstIndex;
     
     [SerializeField]
     SceneChunk _parentChunk;
@@ -72,7 +85,7 @@ public class SceneBlock
     /// the chunk can quickly know which SceneChunkRenderer to modify
     /// </summary>
     [SerializeField]
-    uint _associatedRendererUID;
+    HashSet<uint> _associatedRendererUID;
     #endregion
 
     #region Gets/Sets
@@ -80,15 +93,18 @@ public class SceneBlock
     public int WorldPosIndex { get { return _worldPosIndex; } }
     public Vec2Int ChunkPos { get { return _chunkPos; } }
     public int ChunkPosIndex { get { return _chunkPosIndex; } }
-    public uint AssociatedRendererUID
+    public HashSet<uint> AssociatedRendererUID
     {
         get { return _associatedRendererUID; }
         set { _associatedRendererUID = value; }
     }
     #endregion
 
-    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, int[] facesFirstIndex, int[] vertFirstIndex, SceneChunk parentChunk)
+    public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, 
+        int[] facesFirstIndex, int[] vertFirstIndex, int[] underlayerFaceFirstIndex, int[] underlayerVertFirstIndex, SceneChunk parentChunk)
     {
+        _associatedRendererUID = new HashSet<uint>();
+
         _worldPos = worldPosition;
         _chunkPos = chunkPosition;
 
@@ -98,29 +114,35 @@ public class SceneBlock
         _facesFirstTriangleIndex = facesFirstIndex;
         _vertFirstIndex = vertFirstIndex;
 
+        _underlayerFacesFirstTriangleIndex = underlayerFaceFirstIndex;
+        _underlayerVertFirstIndex = underlayerVertFirstIndex;
+
         _parentChunk = parentChunk;
     }
 
     /// <summary>
     /// Call this when you need to collapse the whole block
     /// </summary>
-    public void CollapseBlock()
-    {
-        //Collapse vertical walls and ceiling
-        for (int i = 0; i < 6; i++)
-        {
-            int faceIndex = _facesFirstTriangleIndex[i];
+    //public void CollapseBlock()
+    //{
+    //    //Collapse vertical walls and ceiling
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        int faceIndex = _facesFirstTriangleIndex[i];
 
-            _parentChunk.ModifyTriangles(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
-        }
-    }
+    //        _parentChunk.ModifyTriangles(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
+    //    }
+    //}
 
     public void UpdateLights(MapData.MapTileData mapTileData)
     {
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
         for (int i = 0; i < faceInfo.Length; i++)
         {
-            _parentChunk.ModifyColorNoUpdate(_associatedRendererUID, _vertFirstIndex[i], mapTileData.LightColor);
+            foreach (uint uid in _associatedRendererUID)
+            {
+                _parentChunk.ModifyColorNoUpdate(uid, _vertFirstIndex[i], mapTileData.LightColor);
+            }
         }
     }
 
@@ -128,7 +150,10 @@ public class SceneBlock
     {
         int faceValueIndex = (int)face;
 
-        _parentChunk.ModifyColorNoUpdate(_associatedRendererUID, _vertFirstIndex[faceValueIndex], newColor);
+        foreach (uint uid in _associatedRendererUID)
+        {
+            _parentChunk.ModifyColorNoUpdate(uid, _vertFirstIndex[faceValueIndex], newColor);
+        }
     }
 
     public void UpdateFaces(MapData.MapTileData mapTileData, bool isFirstTime = false)
@@ -152,7 +177,8 @@ public class SceneBlock
                 Debug.LogError(string.Format("Can't find sprite with UID: {0}", (uint)mapTileData.FaceSpritesUID[i]));
             }
 
-            _associatedRendererUID = sprite.SpriteSheet.MaterialUID;
+            uint uid = sprite.SpriteSheet.MaterialUID;
+            _associatedRendererUID.Add(uid);
 
             int faceIndex = _facesFirstTriangleIndex[i];
 
@@ -160,31 +186,76 @@ public class SceneBlock
             if (!faceInfo[i]._visible)
             {
                 //We feed in all the same index and thus make the face basically be non existent
-                _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
+                _parentChunk.ModifyTrianglesNoUpdate(uid, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i], _vertFirstIndex[i]);
             }
             else //Face is visible, let's figure out which direction
             {
                 //Faces outwards from center of box
                 if (faceInfo[i]._faceDir == GameData.GameBlockData.FaceInfo.FaceDirection.Forward)
                 {
-                    _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i] + 1, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 3);
+                    _parentChunk.ModifyTrianglesNoUpdate(uid, faceIndex, _vertFirstIndex[i], _vertFirstIndex[i] + 1, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 3);
                 }
                 else //Inverted faces
                 {
-                    _parentChunk.ModifyTrianglesNoUpdate(_associatedRendererUID, faceIndex, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 1, _vertFirstIndex[i], _vertFirstIndex[i] + 3);
+                    _parentChunk.ModifyTrianglesNoUpdate(uid, faceIndex, _vertFirstIndex[i] + 2, _vertFirstIndex[i] + 1, _vertFirstIndex[i], _vertFirstIndex[i] + 3);
                 }
 
                 //_parentChunk.AssignMaterial(sprite);
 
                 //UVs can use the same vert index since they match in count
-                _parentChunk.ModifyUVNoUpdate(_associatedRendererUID, _vertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
+                _parentChunk.ModifyUVNoUpdate(uid, _vertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
             }
 
             //_parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
         }
 
-        _parentChunk.UpdateMesh(_associatedRendererUID, isFirstTime);
-        _parentChunk.UpdateUV(_associatedRendererUID);
-        _parentChunk.UpdateColors(_associatedRendererUID);
+        foreach (uint uid in _associatedRendererUID)
+        {
+            _parentChunk.UpdateMesh(uid, isFirstTime);
+            _parentChunk.UpdateUV(uid);
+            _parentChunk.UpdateColors(uid);
+        }
+    }
+
+    public void UpdateUnderLayerFaces(MapData.MapTileData mapTileData, bool isFirstTime = false)
+    {
+        uint[] underLayerFaceSpritesUID = mapTileData.UnderLayerFaceSpritesUID;
+
+        for (int i = 0; i < underLayerFaceSpritesUID.Length; i++)
+        {
+            //Look up sprite
+            EDSSSprite sprite = null;
+            bool foundSprite = GameManager.Singleton.Gamedata.GetSprite(underLayerFaceSpritesUID[i], out sprite);
+
+            if (!foundSprite)
+            {
+                Debug.LogError(string.Format("Can't find sprite with UID: {0}", (uint)underLayerFaceSpritesUID[i]));
+            }
+
+            uint uid = sprite.SpriteSheet.MaterialUID;
+            _associatedRendererUID.Add(uid);
+
+            int faceIndex = _underlayerFacesFirstTriangleIndex[i];
+
+            //Is the face visible? We tell this by the UID
+            if (underLayerFaceSpritesUID[i] == 0)
+            {
+                //It should be visible, so collapse it
+                _parentChunk.ModifyUnderlayerTrianglesNoUpdate(uid, faceIndex, _underlayerVertFirstIndex[i], _underlayerVertFirstIndex[i], _underlayerVertFirstIndex[i], _underlayerVertFirstIndex[i]);
+            }
+            else //Face has something present
+            {
+                _parentChunk.ModifyUnderlayerTrianglesNoUpdate(uid, faceIndex, _underlayerVertFirstIndex[i], _underlayerVertFirstIndex[i] + 1, _underlayerVertFirstIndex[i] + 2, _underlayerVertFirstIndex[i] + 3);
+            }
+
+            _parentChunk.ModifyUnderlayerUVNoUpdate(uid, _underlayerVertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
+        }
+
+        foreach(uint uid in _associatedRendererUID)
+        {
+            _parentChunk.UpdateUnderlayerMesh(uid, isFirstTime);
+            _parentChunk.UpdateUnderlayerUV(uid);
+            _parentChunk.UpdateUnderlayerColors(uid);
+        }
     }
 }

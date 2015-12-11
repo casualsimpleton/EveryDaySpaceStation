@@ -75,8 +75,8 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("facespritesuid")]
         public uint?[] FaceSpriteUID { get; set; }
 
-        [JsonProperty("scaffold")]
-        public uint ScaffoldUID { get; set; }
+        [JsonProperty("hasscaffold")]
+        public byte HasScaffold { get; set; }
 
         [JsonProperty("floor")]
         public uint FloorUID { get; set; }

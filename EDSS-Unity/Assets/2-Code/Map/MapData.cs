@@ -21,6 +21,9 @@ using EveryDaySpaceStation.Json;
 public sealed class MapData
 {
     #region Classes
+    /// <summary>
+    /// Represents the playable area
+    /// </summary>
     public class MapTileData
     {
         public Vec2Int TilePosition { get; set; }
@@ -31,7 +34,9 @@ public sealed class MapData
         public Color32 LightColor { get; set; }
 
         public uint?[] FaceSpritesUID { get; set; }
+        public uint[] UnderLayerFaceSpritesUID { get; set; }
 
+        public bool HasScaffold { get; set; }
         public uint ScaffoldingUID { get; set; }
         public uint FloorSpriteUID { get; set; }
         public uint WallSpriteUID { get; set; }
@@ -42,6 +47,34 @@ public sealed class MapData
         //        TilePosition, TileIndex, BlocksLight, IsTransparent, BlockType, ScaffoldingUID, FloorSpriteUID, WallSpriteUID);
         //}
     }
+
+    /// <summary>
+    /// Represents the atmosphere data for a tile
+    /// </summary>
+    public class AtmosphereTileData
+    {
+    }
+
+    /// <summary>
+    /// Represents the large tube data for a tile
+    /// </summary>
+    public class LargeTubeTileData
+    {
+    }
+
+    /// <summary>
+    /// Represents the thin tube data for a tile
+    /// </summary>
+    public class ThinTubeTileData
+    {
+    }
+
+    /// <summary>
+    /// Represents the wire data for a tile
+    /// </summary>
+    public class WireTileData
+    {
+    }
     #endregion
 
     #region Vars
@@ -51,6 +84,10 @@ public sealed class MapData
     public int MapFormat { get; set; }
     public Vec2Int _mapSize;
     public MapTileData[] _mapTiles;
+    //public AtmosphereTileData[] _atmosTiles;
+    //public LargeTubeTileData[] _largeTubeTiles;
+    //public ThinTubeTileData[] _thinTubeTiles;
+    //public WireTileData[] _wireTubeTiles;
     #endregion
 
     /// <summary>
@@ -58,7 +95,6 @@ public sealed class MapData
     /// </summary>
     public bool LoadMap(MapDataConfig mapConfig)
     {
-
         MapName = mapConfig.LevelData.LevelName;
         DisplayName = mapConfig.LevelData.DisplayName;
         MapVersion = mapConfig.LevelData.MapVersion;
@@ -90,6 +126,7 @@ public sealed class MapData
             mapTile.BlocksLight = (tile.OverrideBlockLight > 0 ? !mapTile.BlocksLight : mapTile.BlocksLight);
 
             mapTile.FaceSpritesUID = new uint?[(int)GameData.GameBlockData.BlockFaces.MAX];
+            mapTile.UnderLayerFaceSpritesUID = new uint[(int)GameData.GameBlockData.UnderFaces.MAX];
 
             for(int j = 0; j < mapTile.FaceSpritesUID.Length && j < tile.FaceSpriteUID.Length; j++)
             {
@@ -102,7 +139,14 @@ public sealed class MapData
                 mapTile.FaceSpritesUID[j] = tile.FaceSpriteUID[j];
             }
 
-            mapTile.ScaffoldingUID = tile.ScaffoldUID;
+            mapTile.HasScaffold = false;
+            if (tile.HasScaffold != 0)
+            {
+                mapTile.HasScaffold = true;
+                mapTile.UnderLayerFaceSpritesUID[(int)GameData.GameBlockData.UnderFaces.BottomLayer] = 500;
+            }
+
+            mapTile.ScaffoldingUID = 0;
             mapTile.FloorSpriteUID = tile.FloorUID;
             mapTile.WallSpriteUID = tile.WallUID;
         }

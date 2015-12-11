@@ -280,7 +280,7 @@
 	,
 	{
 		"uid": 18,
-		"name": "test1",
+		"name": "chrome",
 		"spritesheet": "test1.png",
 		"spritepos": {
 			"x": 0,

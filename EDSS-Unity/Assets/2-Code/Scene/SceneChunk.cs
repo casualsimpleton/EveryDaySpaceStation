@@ -37,9 +37,13 @@ public class SceneChunk : MonoBehaviour
     Dictionary<uint, SceneChunkRenderer> _sceneChunkRenders;
     SceneChunkRenderer _lastUsedSCR;
 
+    Dictionary<uint, SceneChunkScaffoldRenderer> _sceneChunkScaffoldRenders;
+    SceneChunkScaffoldRenderer _lastUsedSSCR;
+
     public void CreateChunk(Vector3 worldPosition, Vec2Int chunkPosition)
     {
         _sceneChunkRenders = new Dictionary<uint, SceneChunkRenderer>();
+        _sceneChunkScaffoldRenders = new Dictionary<uint, SceneChunkScaffoldRenderer>();
         _worldPosition = worldPosition;
         _chunkPos = chunkPosition;
 
@@ -60,6 +64,7 @@ public class SceneChunk : MonoBehaviour
 
         int len = SceneLevelManager.Singleton.BlocksPerChuck * SceneLevelManager.Singleton.BlocksPerChuck;
         int vertIndex = 0;
+        int underLayerVertIndex = 0;
         for (int i = 0; i < len; i++)
         {
             z = i / SceneLevelManager.Singleton.BlocksPerChuck;
@@ -69,24 +74,33 @@ public class SceneChunk : MonoBehaviour
             Vec2Int pos = new Vec2Int(x, z);
             int index = Helpers.IndexFromVec2Int(pos, SceneLevelManager.Singleton.BlocksPerChuck);
             int[] vertFirstIndex = new int[SceneBlock.FacesPerBlock];
+            int[] underlayerVertFirstIndex = new int[SceneBlock.UnderLayerFaces];
 
             #region Verts, Norms, UVs and Triangles
             //Forward Face - Z+ - Clockwise LOOKING AT face - normal point Z+
             //Vert 0
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZForward] = vertIndex;
+            underlayerVertFirstIndex[(int)GameData.GameBlockData.UnderFaces.BottomLayer] = underLayerVertIndex;
             vertIndex += 4;
+            underLayerVertIndex += 4;
 
             //Right Face - X+ - Clockwise LOOKING AT face - normal point X+
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXForward] = vertIndex;
+            underlayerVertFirstIndex[(int)GameData.GameBlockData.UnderFaces.LargePipeLayer] = underLayerVertIndex;
             vertIndex += 4;
+            underLayerVertIndex += 4;
 
             //Back Face - Z- - Clockwise LOOKING at face - normal pointing Z-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceZBack] = vertIndex;
+            underlayerVertFirstIndex[(int)GameData.GameBlockData.UnderFaces.ThinPipeLayer] = underLayerVertIndex;
             vertIndex += 4;
+            underLayerVertIndex += 4;
 
             //Left Face - X- - Clockwise LOOKING at face - normal pointing X-
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceXBack] = vertIndex;
+            underlayerVertFirstIndex[(int)GameData.GameBlockData.UnderFaces.WireLayer] = underLayerVertIndex;
             vertIndex += 4;
+            underLayerVertIndex += 4;
 
             //Top Face - Y+ - since this will be seen from a top down view (for the time being)
             vertFirstIndex[(int)GameData.GameBlockData.BlockFaces.FaceTop] = vertIndex;
@@ -111,12 +125,24 @@ public class SceneChunk : MonoBehaviour
                 vertCount += 4;
                 faceIndex++;
             }
+
+            startPoint = i * SceneBlock.UnderLayerFaces * 6;
+            triLen = startPoint + (SceneBlock.UnderLayerFaces * 6);
+            vertCount = 0 + (i * SceneBlock.UnderLayerFaces * 4);
+            int[] underlayerFaceFirstIndex = new int[SceneBlock.UnderLayerFaces];
+            faceIndex = 0;
+            for (int j = startPoint; j < triLen; j += 6)
+            {
+                underlayerFaceFirstIndex[faceIndex] = j;
+                vertCount += 4;
+                faceIndex++;
+            }
             #endregion
 
             _chunkBlocks[i] = new SceneBlock();
             Vec2Int worldPos = new Vec2Int(pos.x + (SceneLevelManager.Singleton.BlocksPerChuck * _chunkPos.x), pos.y + (SceneLevelManager.Singleton.BlocksPerChuck * _chunkPos.y));
             int worldIndex = Helpers.IndexFromVec2Int(worldPos, GameManager.Singleton.Mapdata._mapSize.x);
-            _chunkBlocks[i].Create(worldPos, pos, worldIndex, index, faceFirstTri, vertFirstIndex, this);
+            _chunkBlocks[i].Create(worldPos, pos, worldIndex, index, faceFirstTri, vertFirstIndex, underlayerFaceFirstIndex, underlayerVertFirstIndex, this);
         }
     }
 
@@ -269,6 +295,7 @@ public class SceneChunk : MonoBehaviour
         }
 
         block.UpdateFaces(blockData, false);
+        block.UpdateUnderLayerFaces(blockData, false);
     }
 
     /// <summary>
@@ -298,6 +325,7 @@ public class SceneChunk : MonoBehaviour
         }
 
         block.UpdateFaces(blockData, true);
+        block.UpdateUnderLayerFaces(blockData, true);
     }
 
     public void UpdateAllMeshColliders()
@@ -316,7 +344,20 @@ public class SceneChunk : MonoBehaviour
         }
     }
 
-    #region SceneChunkRenderer Wrangling
+    public void UpdateAllUnderLayerColliders()
+    {
+        //We'll use a large box collider here since players won't be directly walking on them
+    }
+
+    public void UpdateAllUnderLayerMeshColors()
+    {
+        foreach (KeyValuePair<uint, SceneChunkScaffoldRenderer> sscr in _sceneChunkScaffoldRenders)
+        {
+            sscr.Value.UpdateColors();
+        }
+    }
+
+    #region Scene Chunk Renderer Wrangling
     private SceneChunkRenderer GetSceneChunkRenderer(uint scrUID)
     {
         //Since we often use the same one in a row, we'll check if it's the same as the last one, so we can prevent looking it up
@@ -348,6 +389,39 @@ public class SceneChunk : MonoBehaviour
         _lastUsedSCR = scr;
 
         return scr;
+    }
+
+    private SceneChunkScaffoldRenderer GetSceneChunkScaffoldRenderer(uint sscrUID)
+    {
+        //Since we often use the same one in a row, we'll check if it's the same as the last one, so we can prevent looking it up
+        if (_lastUsedSSCR != null && sscrUID == _lastUsedSSCR._MaterialUID)
+        {
+            return _lastUsedSSCR;
+        }
+
+        SceneChunkScaffoldRenderer sscr = null;
+        bool exists = _sceneChunkScaffoldRenders.TryGetValue(sscrUID, out sscr);
+
+        //No SSCR exists for that, so we need to get one
+        if (!exists)
+        {
+            Material mat = null;
+            GameManager.Singleton.Gamedata.GetMaterial(sscrUID, out mat);
+
+            sscr = PoolManager.Singleton.RequestSceneChunkScaffolderRenderer();
+            sscr.UpdateMaterial(mat, sscrUID);
+
+            sscr.AssignToChunk(this);
+            sscr.gameObject.SetActive(true);
+
+            sscr.UpdateMaterial(mat, sscrUID);
+
+            _sceneChunkScaffoldRenders.Add(sscrUID, sscr);
+        }
+
+        _lastUsedSSCR = sscr;
+
+        return sscr;
     }
     #endregion
 
@@ -418,6 +492,76 @@ public class SceneChunk : MonoBehaviour
         SceneChunkRenderer scr = GetSceneChunkRenderer(rendererUID);
 
         scr.UpdateColors();
+    }
+    #endregion
+
+    #region Underlayers Updates/Modifications
+    public void ModifyUnderlayerTriangles(uint rendererUID, int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyTriangles(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
+        sscr.UpdateMesh(true);
+    }
+
+    public void ModifyUnderlayerTrianglesNoUpdate(uint rendererUID, int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
+    }
+
+    public void ModifyUnderlayerUV(uint rendererUID, int uvIndex, Vector4 uv)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyUV(uvIndex, uv);
+
+        sscr.UpdateUV();
+    }
+
+    public void ModifyUnderlayerUVNoUpdate(uint rendererUID, int uvIndex, Vector4 uv, Vector2 uvOffset)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyUVNoUpdate(uvIndex, uv, uvOffset);
+    }
+
+    public void ModifyUnderlayerColor(uint rendererUID, int colorIndex, Color32 newColor)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyColorNoUpdate(colorIndex, newColor);
+
+        sscr.UpdateColors();
+    }
+
+    public void ModifyUnderlayerColorNoUpdate(uint rendererUID, int colorIndex, Color32 newColor)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.ModifyColorNoUpdate(colorIndex, newColor);
+    }
+
+    public void UpdateUnderlayerMesh(uint rendererUID, bool isFirstTime = false)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.UpdateMesh(isFirstTime);
+    }
+
+    public void UpdateUnderlayerUV(uint rendererUID)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.UpdateUV();
+    }
+
+    public void UpdateUnderlayerColors(uint rendererUID)
+    {
+        SceneChunkScaffoldRenderer sscr = GetSceneChunkScaffoldRenderer(rendererUID);
+
+        sscr.UpdateColors();
     }
     #endregion
 }
