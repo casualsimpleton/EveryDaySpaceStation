@@ -2,8 +2,9 @@
 Shader "EDSS/SpriteBillboard" {
    Properties {
       _MainTex ("Texture Image", 2D) = "white" {}
-	  _Color ("Color", Color) = (1,1,1,1)
-	  _Scale ("Scale", Vector) = (1.0, 1.0, 1.0)
+	  _Color ("Color", Color) = (0.5,0.5,0.5,1)
+	  _Scale ("Scale", Vector) = (0.5, 0.5, 0.5)
+	  _ExtraColor("Extra Color", Color) = (0.5,0.5,0.5,1)
    }
    SubShader {
       Pass {   
@@ -33,6 +34,7 @@ Shader "EDSS/SpriteBillboard" {
 
 	fixed4 _MainTex_ST;
 	fixed4 _Color;
+	fixed4 _ExtraColor;
 	float3 _Scale = float3(1.0, 1.0, 1.0);
 
 	v2f vert (appdata v)
@@ -51,7 +53,7 @@ Shader "EDSS/SpriteBillboard" {
 		fixed4 c = tex2D(_MainTex,i.uv) * _Color;
 		clip(c.a - 0.5f);
 		c.a *= 0;
-		c.rgb = BlendOverlay(c.rgb, i.color.rgb);
+		c.rgb = BlendOverlay(c.rgb, i.color.rgb * (_ExtraColor * 2));
 		return c;
 	}
 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	

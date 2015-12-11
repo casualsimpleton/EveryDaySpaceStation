@@ -179,7 +179,7 @@ namespace EveryDaySpaceStation
                     while (curDist2 > 0 && overflow3 < 100)
                     {
                         overflow3++;
-                        if (neighborRightIndex < mapData._mapTiles.Length && neighborRightXY.x > -1 && neighborRightXY.y > -1 && neighborRightXY.x < mapData._mapSize.x && neighborRightXY.y < mapData._mapSize.y
+                        if (neighborRightIndex < mapData._mapTiles.Length && neighborRightXY.x > -1 && neighborRightXY.y > -1 && neighborRightXY.x < mapData._mapSize.x - 1 && neighborRightXY.y < mapData._mapSize.y - 1
                             && !mapData._mapTiles[neighborRightIndex].BlocksLight)
                         {
                             _tilesWaitingCheck.Enqueue(new LightFloodFillQueueItem(fillDir, neighborRightIndex, curDist2 - 1));
@@ -189,7 +189,7 @@ namespace EveryDaySpaceStation
                             fillIndexModifierTangent1 = 0;
                         }
 
-                        if (neighborLeftIndex < mapData._mapTiles.Length && neighborLeftXY.x > -1 && neighborLeftXY.y > -1 && neighborLeftXY.x < mapData._mapSize.x && neighborLeftXY.y < mapData._mapSize.y
+                        if (neighborLeftIndex < mapData._mapTiles.Length && neighborLeftXY.x > -1 && neighborLeftXY.y > -1 && neighborLeftXY.x < mapData._mapSize.x - 1 && neighborLeftXY.y < mapData._mapSize.y - 1
                             && !mapData._mapTiles[neighborLeftIndex].BlocksLight)
                         {
                             _tilesWaitingCheck.Enqueue(new LightFloodFillQueueItem(fillDir, neighborLeftIndex, curDist2 - 1));
@@ -201,6 +201,8 @@ namespace EveryDaySpaceStation
 
                         neighborRightIndex = neighborRightIndex + fillIndexModifierTangent1;
                         neighborLeftIndex = neighborLeftIndex + fillIndexModifierTangent2;
+                        neighborRightXY = Helpers.Vec2IntFromIndex(neighborRightIndex, mapData._mapSize);
+                        neighborLeftXY = Helpers.Vec2IntFromIndex(neighborLeftIndex, mapData._mapSize);
 
                         curDist2--;
                     }

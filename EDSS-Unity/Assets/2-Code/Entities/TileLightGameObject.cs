@@ -33,7 +33,7 @@ public class TileLightGameObject : MonoBehaviour
 
     void Start()
     {
-        TileLight newLight = new TileLight(new Color32(128, 128, 128, 255), 5);
+        TileLight newLight = new TileLight(new Color32(255, 255, 255, 255), 5);
         Create(newLight);
 
         SceneLevelManager.Singleton.AddLight(_light);

@@ -56,6 +56,16 @@ namespace EveryDaySpaceStation
                 MAX
             }
 
+            public enum UnderFaces : byte
+            {
+                BottomLayer,
+                LargePipeLayer,
+                ThinPipeLayer,
+                WireLayer,
+                //..
+                MAX
+            }
+
             public uint UID { get; private set; }
             public string Name { get; private set; }
             public int DefaultStrength { get; private set; }

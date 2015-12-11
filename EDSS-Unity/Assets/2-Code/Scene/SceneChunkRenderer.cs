@@ -19,65 +19,21 @@ using EveryDaySpaceStation;
 using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 
-public class SceneChunkRenderer : MonoBehaviour
+public class SceneChunkRenderer : SceneChunkRendererBase
 {
     #region Vars
-#if UNITY_EDITOR
-    public bool ShowVertGizmos = false;
-#endif
 
-    public Transform _transform { get; private set; }
-
-    public SceneChunk _parentChunk { get; private set; }
-
-    public uint _MaterialUID { get; set; }
-
-    [SerializeField]
-    Mesh _mesh;
-
-    [SerializeField]
-    MeshRenderer _meshRenderer;
-
-    [SerializeField]
-    MeshFilter _meshFilter;
-
-    [SerializeField]
-    Quaternion _rotation;
-
-    [SerializeField]
-    Material _material;
-
-    [SerializeField]
-    Vector3[] _verts;
-
-    [SerializeField]
-    Vector3[] _normals;
-
-    [SerializeField]
-    Vector2[] _uv;
-
-    [SerializeField]
-    Color32[] _colors;
-
-    [SerializeField]
-    int[] _tri;
-
-    [SerializeField]
-    MeshCollider _meshCollider;
     #endregion
 
     /// <summary>
     /// Resets stuff before being returned to pool
     /// </summary>
-    public void Reset()
+    public override void Reset()
     {
-        _transform = this.gameObject.transform;
-        _transform.parent = PoolManager.Singleton._transform;
-
-        this.gameObject.SetActive(false);
+        base.Reset();
     }
 
-    public void Create()
+    public override void Create()
     {
         _verts = new Vector3[SceneLevelManager.Singleton.BlocksPerChuck * SceneLevelManager.Singleton.BlocksPerChuck * SceneBlock.FacesPerBlock * 4]; //Probably 16x16 or 8x8 blocks, with 6 faces, and 4 verts per face
         _normals = new Vector3[_verts.Length];
@@ -109,18 +65,19 @@ public class SceneChunkRenderer : MonoBehaviour
         _mesh.RecalculateBounds();
     }
 
-    public void AssignToChunk(SceneChunk parentChunk)
+    public override void AssignToChunk(SceneChunk parentChunk)
     {
-        _parentChunk = parentChunk;
+        //_parentChunk = parentChunk;
 
-        _transform.parent = parentChunk._transform;
-        _transform.localPosition = Vector3.zero;
+        //_transform.parent = parentChunk._transform;
+        //_transform.localPosition = Vector3.zero;
+        base.AssignToChunk(parentChunk);
     }
 
     /// <summary>
     /// Creates each block and sets up all the verts, normals and triangles for that block
     /// </summary>
-    void PrepareBlockElements()
+    protected override void PrepareBlockElements()
     {
         int x, z;
         int xx, zz;
@@ -309,88 +266,94 @@ public class SceneChunkRenderer : MonoBehaviour
     }    
 
     #region Triangle and Face Modification
-    public void ModifyTriangles(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    public override void ModifyTriangles(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
     {
-        ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
+        //ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
 
-        UpdateMesh(true);
+        //UpdateMesh(true);
+        base.ModifyTriangles(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
     }
 
     /// <summary>
     /// Same functionality as ModifyTriangles but doesn't update the mesh. Useful if modifying large number of faces at once
     /// </summary>
-    public void ModifyTrianglesNoUpdate(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
+    public override void ModifyTrianglesNoUpdate(int triIndex, int vertOneIndex, int vertTwoIndex, int vertThreeIndex, int vertFourIndex)
     {
-        _tri[triIndex] = vertOneIndex;
-        _tri[triIndex + 1] = vertTwoIndex;
-        _tri[triIndex + 2] = vertThreeIndex;
+//        _tri[triIndex] = vertOneIndex;
+//        _tri[triIndex + 1] = vertTwoIndex;
+//        _tri[triIndex + 2] = vertThreeIndex;
 
-        _tri[triIndex + 3] = vertThreeIndex;
-        _tri[triIndex + 4] = vertFourIndex;
-        _tri[triIndex + 5] = vertOneIndex;
+//        _tri[triIndex + 3] = vertThreeIndex;
+//        _tri[triIndex + 4] = vertFourIndex;
+//        _tri[triIndex + 5] = vertOneIndex;
 
-#if DEBUGCLIENT
-        if (_tri[triIndex] > _verts.Length ||
-            _tri[triIndex + 1] > _verts.Length ||
-            _tri[triIndex + 2] > _verts.Length ||
-            _tri[triIndex + 3] > _verts.Length ||
-            _tri[triIndex + 4] > _verts.Length ||
-            _tri[triIndex + 5] > _verts.Length)
-        {
-            Debug.LogError("Triangle refers to out of bounds vert");
-        }
-#endif
+//#if DEBUGCLIENT
+//        if (_tri[triIndex] > _verts.Length ||
+//            _tri[triIndex + 1] > _verts.Length ||
+//            _tri[triIndex + 2] > _verts.Length ||
+//            _tri[triIndex + 3] > _verts.Length ||
+//            _tri[triIndex + 4] > _verts.Length ||
+//            _tri[triIndex + 5] > _verts.Length)
+//        {
+//            Debug.LogError("Triangle refers to out of bounds vert");
+//        }
+//#endif
+        base.ModifyTrianglesNoUpdate(triIndex, vertOneIndex, vertTwoIndex, vertThreeIndex, vertFourIndex);
     }
 
     /// <summary>
     /// Updates the mesh's assigned verts and triangles. This has some cost associated with it, so doing it too often can cause performance issues
     /// </summary>
-    public void UpdateMesh(bool isFirstTime)
+    public override void UpdateMesh(bool isFirstTime)
     {
-        _mesh.vertices = _verts;
-        _mesh.triangles = _tri;
+        //_mesh.vertices = _verts;
+        //_mesh.triangles = _tri;
 
-        if (!isFirstTime)
-        {
-            _meshCollider.enabled = false;
-            _meshCollider.sharedMesh = _mesh;
-            _meshCollider.enabled = true;
-        }        
+        //if (!isFirstTime)
+        //{
+        //    _meshCollider.enabled = false;
+        //    _meshCollider.sharedMesh = _mesh;
+        //    _meshCollider.enabled = true;
+        //}        
+        base.UpdateMesh(isFirstTime);
     }
     #endregion
 
     #region Texturing and Materials
-    public void ModifyUV(int uvIndex, Vector4 uv)
+    public override void ModifyUV(int uvIndex, Vector4 uv)
     {
-        ModifyUV(uvIndex, uv);
+        //ModifyUV(uvIndex, uv);
 
-        UpdateUV();
+        //UpdateUV();
+        base.ModifyUV(uvIndex, uv);
     }
 
-    public void ModifyUVNoUpdate(int uvIndex, Vector4 uv, Vector2 uvOffset)
+    public override void ModifyUVNoUpdate(int uvIndex, Vector4 uv, Vector2 uvOffset)
     {
-        _uv[uvIndex] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uvOffset.y);
-        _uv[uvIndex + 1] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uv.w + uvOffset.y);
-        _uv[uvIndex + 2] = new Vector2(uv.x + uvOffset.x, uv.y - uv.w + uvOffset.y);
-        _uv[uvIndex + 3] = new Vector2(uv.x + uvOffset.x, uv.y - uvOffset.y);
+//        _uv[uvIndex] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uvOffset.y);
+//        _uv[uvIndex + 1] = new Vector2(uv.x + uv.z - uvOffset.x, uv.y - uv.w + uvOffset.y);
+//        _uv[uvIndex + 2] = new Vector2(uv.x + uvOffset.x, uv.y - uv.w + uvOffset.y);
+//        _uv[uvIndex + 3] = new Vector2(uv.x + uvOffset.x, uv.y - uvOffset.y);
 
-#if DEBUGCLIENT
-        if (uvIndex < 0 || uvIndex > _uv.Length - 1)
-        {
-            Debug.LogError(string.Format("UV index {0} is out of bounds", uvIndex));
-        }
-#endif
+//#if DEBUGCLIENT
+//        if (uvIndex < 0 || uvIndex > _uv.Length - 1)
+//        {
+//            Debug.LogError(string.Format("UV index {0} is out of bounds", uvIndex));
+//        }
+//#endif
+        base.ModifyUVNoUpdate(uvIndex, uv, uvOffset);
     }
 
     /// <summary>
     /// Updates the mesh's assigned uvs. This has some cost associated with it, so doing it too often can cause performance issues
     /// </summary>
-    public void UpdateUV()
+    public override void UpdateUV()
     {
-        _mesh.uv = _uv;
+        //_mesh.uv = _uv;
+        base.UpdateUV();
     }
 
-    public void AssignMaterial(EDSSSprite sprite)
+    public override void AssignMaterial(EDSSSprite sprite)
     {
         //TODO Currently can only do one material per chunk
         //if (_meshRenderer.material != null && _meshRenderer.material != sprite.SpriteSheet.Material)
@@ -398,35 +361,40 @@ public class SceneChunkRenderer : MonoBehaviour
         //    return;
         //}
 
-        _meshRenderer.material = sprite.SpriteSheet.Material;
+        //_meshRenderer.material = sprite.SpriteSheet.Material;
+        base.AssignMaterial(sprite);
     }
 
-    public void UpdateMaterial(Material mat, uint MatUID)
+    public override void UpdateMaterial(Material mat, uint MatUID)
     {
-        _meshRenderer.material = _material = mat;
-        _MaterialUID = MatUID;
+        //_meshRenderer.material = _material = mat;
+        //_MaterialUID = MatUID;
+        base.UpdateMaterial(mat, MatUID);
     }
     #endregion
 
     #region Colors
-    public void ModifyColor(int colorIndex, Color32 newColor)
+    public override void ModifyColor(int colorIndex, Color32 newColor)
     {
-        ModifyColorNoUpdate(colorIndex, newColor);
+        //ModifyColorNoUpdate(colorIndex, newColor);
 
-        UpdateColors();
+        //UpdateColors();
+        base.ModifyColor(colorIndex, newColor);
     }
 
-    public void ModifyColorNoUpdate(int colorIndex, Color32 newColor)
+    public override void ModifyColorNoUpdate(int colorIndex, Color32 newColor)
     {
-        _colors[colorIndex] = newColor;
-        _colors[colorIndex + 1] = newColor;
-        _colors[colorIndex + 2] = newColor;
-        _colors[colorIndex + 3] = newColor;
+        //_colors[colorIndex] = newColor;
+        //_colors[colorIndex + 1] = newColor;
+        //_colors[colorIndex + 2] = newColor;
+        //_colors[colorIndex + 3] = newColor;
+        base.ModifyColorNoUpdate(colorIndex, newColor);
     }
 
-    public void UpdateColors()
+    public override void UpdateColors()
     {
-        _mesh.colors32 = _colors;
+        //_mesh.colors32 = _colors;
+        base.UpdateColors();
     }
     #endregion
 
@@ -436,16 +404,17 @@ public class SceneChunkRenderer : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-#if UNITY_EDITOR
-        if (ShowVertGizmos)
-        {
-            Gizmos.color = Color.red;
-            int len = _verts.Length;
-            for (int i = 0; i < len; i++)
-            {
-                Gizmos.DrawWireSphere(_verts[i], 0.15f);
-            }
-        }
-#endif
+//#if UNITY_EDITOR
+//        if (ShowVertGizmos)
+//        {
+//            Gizmos.color = Color.red;
+//            int len = _verts.Length;
+//            for (int i = 0; i < len; i++)
+//            {
+//                Gizmos.DrawWireSphere(_verts[i], 0.15f);
+//            }
+//        }
+//#endif
+        base.OnDrawGizmosSelected();
     }
 }

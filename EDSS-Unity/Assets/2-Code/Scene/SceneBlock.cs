@@ -25,6 +25,7 @@ public class SceneBlock
 {
     #region Vars
     public static int FacesPerBlock = 6; //Number of faces per block. Probably will go up as additional default faces are added
+    public static int UnderLayerFaces = 4; //Number of faces in the under layer (layer 0 is scaffold or plating, layer 1 is large pipe, layer 2 is thin pipe, layer 3 is wire)
 
     /// <summary>
     /// World Position of tile

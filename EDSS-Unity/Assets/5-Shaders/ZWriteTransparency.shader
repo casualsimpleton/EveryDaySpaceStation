@@ -2,7 +2,8 @@
 {
 	Properties {
 		_MainTex("Main Texture", 2D) = "white" {}
-		_Color("Color",Color) = (1,1,1,1)
+		_Color("Color",Color) = (0.5,0.5,0.5,1)
+		_ExtraColor("Extra Color", Color) = (0.5,0.5,0.5,1)
 	}
 
 Subshader {
@@ -46,6 +47,7 @@ Subshader {
 
 	fixed4 _MainTex_ST;
 	fixed4 _Color;
+	fixed4 _ExtraColor;
 
 	//v2f vert(appdata_img v)
 	//{
@@ -68,7 +70,7 @@ Subshader {
 		fixed4 c = tex2D(_MainTex,i.uv) * _Color;
 		clip(c.a - 0.5f);
 		c.a *= 0;
-		c.rgb = BlendOverlay(c.rgb, i.color.rgb);
+		c.rgb = BlendOverlay(c.rgb, i.color.rgb * (_ExtraColor * 2));
 		return c;
 	}
 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	
