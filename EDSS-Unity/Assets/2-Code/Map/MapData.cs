@@ -82,6 +82,12 @@ public sealed class MapData
     public string DisplayName { get; set; }
     public string MapVersion { get; set; }
     public int MapFormat { get; set; }
+    private Color32 _ambientLight = new Color32(10,10,10,255);
+    public Color32 AmbientLightColor 
+    { 
+        get { return _ambientLight; }
+        set { _ambientLight = value; }
+    }
     public Vec2Int _mapSize;
     public MapTileData[] _mapTiles;
     //public AtmosphereTileData[] _atmosTiles;
@@ -100,6 +106,7 @@ public sealed class MapData
         MapVersion = mapConfig.LevelData.MapVersion;
         MapFormat = mapConfig.LevelData.MapFormat;
 
+        AmbientLightColor = mapConfig.LevelData.AmbientLightColor;
         _mapSize = mapConfig.LevelData.Size;
         _mapTiles = new MapTileData[_mapSize.x * _mapSize.y];
 
@@ -112,7 +119,7 @@ public sealed class MapData
 
             mapTile.TilePosition = new Vec2Int(tile.X, tile.Y);
             mapTile.TileIndex = Helpers.IndexFromVec2Int(mapTile.TilePosition, _mapSize.x);
-            mapTile.LightColor = new Color32(1, 1, 1, 255);
+            mapTile.LightColor = AmbientLightColor;//new Color32(1, 1, 1, 255);
             
             //Look up the block type
             GameData.GameBlockData block = null;

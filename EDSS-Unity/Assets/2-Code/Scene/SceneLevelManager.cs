@@ -208,7 +208,7 @@ public class SceneLevelManager : MonoBehaviour
             for (int y = 0; y < _visibleLightBounds.MaxPoint.y; y++)
             {
                 int index = Helpers.IndexFromVec2Int(x, y, _visibleLightBounds.MaxPoint.x);
-                mapData._mapTiles[index].LightColor = new Color32(10, 10, 10, 255);
+                mapData._mapTiles[index].LightColor = GameManager.Singleton.Mapdata.AmbientLightColor; //new Color32(10, 10, 10, 255);
             }
         }
 

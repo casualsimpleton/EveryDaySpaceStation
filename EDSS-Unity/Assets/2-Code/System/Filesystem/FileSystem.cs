@@ -272,7 +272,11 @@ namespace EveryDaySpaceStation
             int blockDataProcessed = 0;
             int blockFilesProcessed = ProcessBlockData(_gameManifestConfig.BlockDataFileNames, out blockDataProcessed);
 
-            string results = string.Format("Game Manifest Done! Processed: {0} Art Files, {1} Sprite Files and {2} Sprites, {3} Game Block Files and {4} Game Blocks", artProcessed, spriteFileProcessed, spritesProcessed, blockFilesProcessed, blockDataProcessed);
+            //Entity Data
+            int entityDataProcessed = 0;
+            int entityFilesProcessed = ProcessEntityData(_gameManifestConfig.EntityDataFileNames, out entityDataProcessed);
+
+            string results = string.Format("Game Manifest Done! Processed: {0} Art Files, {1} Sprite Files and {2} Sprites, {3} Game Block Files and {4} Game Blocks, {5} Entity Data Files and {6} Entities", artProcessed, spriteFileProcessed, spritesProcessed, blockFilesProcessed, blockDataProcessed, entityFilesProcessed, entityDataProcessed);
             Debug.Log(results);
         }
 
@@ -360,6 +364,49 @@ namespace EveryDaySpaceStation
             }
 
             return blockDataProcessed;
+        }
+        #endregion
+
+        #region Entity Data Processing
+        private static int ProcessEntityData(string[] entityDataFilesNames, out int entityFilesProcessed)
+        {
+            int entityDataProcessed = 0;
+            entityFilesProcessed = 0;
+            for (int i = 0; i < entityDataFilesNames.Length; i++)
+            {
+                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, entityDataFilesNames[i]);
+
+                if (!File.Exists(fileAndPath))
+                {
+                    Debug.LogError(string.Format("Unable to load entity data file '{0}'. Check manifest.json for accuracy", fileAndPath));
+                    continue;
+                }
+
+                string rawJson = File.ReadAllText(fileAndPath);
+
+                EntityDataConfig entityConfig = JsonConvert.DeserializeObject<EntityDataConfig>(rawJson);
+
+                if (entityConfig == null)
+                {
+                    Debug.LogError(string.Format("Problem loading entity data config for '{0}'. Please double check it.", fileAndPath));
+                    continue;
+                }
+
+                for (int j = 0; j < entityConfig.EntityData.Length; j++)
+                {
+                    EntityDataJson entityData = entityConfig.EntityData[j];
+
+                    GameData.EntityData newEntity = new GameData.EntityData(entityData.UID, entityData.EntityName);
+
+                    GameManager.Singleton.Gamedata.AddEntity(newEntity.UID, newEntity);
+
+                    entityDataProcessed++;
+                }
+
+                entityFilesProcessed++;
+            }
+
+            return entityDataProcessed;
         }
         #endregion
 

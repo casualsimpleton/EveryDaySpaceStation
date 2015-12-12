@@ -24,6 +24,18 @@ namespace EveryDaySpaceStation
     public sealed class GameData
     {
         #region Classes/Structs
+        public class EntityData
+        {
+            public uint UID { get; private set; }
+            public string Name { get; private set; }
+
+            public EntityData(uint uid, string name)
+            {
+                UID = uid;
+                Name = name;
+            }
+        }
+
         public class GameBlockData : System.IDisposable
         {
             public struct FaceInfo
@@ -215,16 +227,12 @@ namespace EveryDaySpaceStation
         #endregion
 
         #region Vars
-        [SerializeField]
         Dictionary<uint, EDSSSprite> _sprites;
-        [SerializeField]
         Dictionary<uint, EDSSSpriteSheet> _spriteSheets;
-        [SerializeField]
         Dictionary<uint, GameBlockData> _gameBlockData;
-        [SerializeField]
         Dictionary<string, Texture2D> _textures;
-        [SerializeField]
         Dictionary<uint, Material> _materials;
+        Dictionary<uint, EntityData> _entityData;        
 
         private uint _spriteSheetUID = 1;
         private uint _materialUID = 1;
@@ -243,6 +251,7 @@ namespace EveryDaySpaceStation
             _gameBlockData = new Dictionary<uint, GameBlockData>();
             _textures = new Dictionary<string, Texture2D>();
             _materials = new Dictionary<uint, Material>();
+            _entityData = new Dictionary<uint, EntityData>();
         }
         #endregion
 
@@ -259,6 +268,11 @@ namespace EveryDaySpaceStation
         public void AddGameBlock(uint uid, GameBlockData blockData)
         {
             _gameBlockData.Add(uid, blockData);
+        }
+
+        public void AddEntity(uint uid, EntityData entityData)
+        {
+            _entityData.Add(uid, entityData);
         }
 
         public void AddTexture(string name, Texture2D texture)

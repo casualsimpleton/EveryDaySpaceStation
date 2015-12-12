@@ -60,6 +60,9 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("size")]
         public Vec2Int Size { get; set; }
 
+        [JsonProperty("defaultambient")]
+        public Color32 AmbientLightColor { get; set; }
+
         [JsonProperty("tiledata")]
         public TileDataJson[] TileData { get; set; }
     }
@@ -143,6 +146,9 @@ namespace EveryDaySpaceStation.Json
 
         [JsonProperty("blockdata")]
         public string[] BlockDataFileNames { get; set; }
+
+        [JsonProperty("entitydata")]
+        public string[] EntityDataFileNames { get; set; }
     }
 
     public class GameManifestJsonConverter : JsonConverter
@@ -348,6 +354,97 @@ namespace EveryDaySpaceStation.Json
             {
                 JObject obj = JObject.FromObject(value, serializer);
                 //JObject details = new JObject();
+
+                obj.WriteTo(writer);
+            }
+        }
+    }
+    #endregion
+
+    #region Entity Data
+    [JsonConverter(typeof(EntityDataJsonConverter))]
+    public class EntityDataConfig
+    {
+        [JsonProperty("entitydata")]
+        public EntityDataJson[] EntityData { get; set; }
+    }
+
+    public class EntityDataJson
+    {
+        [JsonProperty("uid")]
+        public uint UID { get; set; }
+
+        [JsonProperty("name")]
+        public string EntityName { get; set; }
+
+        [JsonProperty("states")]
+        public EntityStateDataJson[] EntityStates { get; set; }
+
+        [JsonProperty("movementtype")]
+        public string MovementTypeString { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Entity UID: {0} Name: {1} State#: {2} MovementType: {3}", UID, EntityName, EntityStates.Length, MovementTypeString);
+        }
+    }
+
+    public class EntityStateDataJson
+    {
+        [JsonProperty("stateuid")]
+        public uint StateUID { get; set; }
+
+        [JsonProperty("statename")]
+        public string StateName { get; set; }
+
+        [JsonProperty("spriteuid")]
+        public uint SpriteUID { get; set; }
+
+        /// <summary>
+        /// Size of the display plane in world size (1,1,1 is the same size as a world block
+        /// </summary>
+        [JsonProperty("size")]
+        public Vector3 DisplaySize { get; set; }
+
+        /// <summary>
+        /// Position offset for display plane
+        /// </summary>
+        [JsonProperty("positionoffset")]
+        public Vector3 PositionOffset { get; set; }
+    }
+
+    public class EntityDataJsonConverter : JsonConverter
+    {
+        bool CannotWrite { get; set; }
+
+        public override bool CanWrite { get { return !CannotWrite; } }
+
+        public override bool CanConvert(System.Type objectType)
+        {
+            return typeof(EntityDataConfig).IsAssignableFrom(objectType);
+        }
+
+        public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject obj = JObject.Load(reader);
+            using (reader = obj.CreateReader())
+            {
+                // Using "populate" avoids infinite recursion.
+                existingValue = (existingValue ?? new EntityDataConfig());
+                serializer.Populate(reader, existingValue);
+            }
+            return existingValue;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            (writer as JsonTextWriter).IndentChar = '\t';
+            (writer as JsonTextWriter).Indentation = 1;
+
+            // Disabling writing prevents infinite recursion.
+            using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
+            {
+                JObject obj = JObject.FromObject(value, serializer);
 
                 obj.WriteTo(writer);
             }

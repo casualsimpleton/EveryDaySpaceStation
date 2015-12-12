@@ -82,7 +82,7 @@ public class SceneChunkRenderer : SceneChunkRendererBase
         int x, z;
         int xx, zz;
 
-        Color32 initColor = new Color32(1, 1, 1, 255);
+        Color32 initColor = GameManager.Singleton.Mapdata.AmbientLightColor; //new Color32(1, 1, 1, 255);
         int len = SceneLevelManager.Singleton.BlocksPerChuck * SceneLevelManager.Singleton.BlocksPerChuck;
         int vertIndex = 0;
         int normIndex = 0;
