@@ -5,7 +5,7 @@
 		"module" : "default",
 		"maps" :
 		[
-			"testlevel2"
+			"testlevel1"
 		],
 		"defaultmaxroundtime" : 7200
 	}

@@ -9,6 +9,7 @@
 		"lastmodifiedtime" : 1449286848,
 		"anchorpoint" : { "x" : 0, "y" : 0 },
 		"size" : { "x" : 16, "y" : 16 },
+		"defaultambient": { "r": 25, "g": 25, "b": 25, "a": 255 },
 		"tiledata" : 
 		[
 			{
@@ -2585,6 +2586,14 @@
 				"wall": 1,
 				"block": 4,
 				"overrideblocklight" : 0
+			}
+		],
+		"entitydata" :
+		[
+			{
+				"x": 0,
+				"y": 0
+				
 			}
 		]
 	}

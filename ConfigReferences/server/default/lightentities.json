@@ -1,0 +1,51 @@
+{
+	"entitydata": [
+	{
+		"uid": 1,
+		"name": "Tube Light",
+		"states": [
+		{
+			"stateuid": 0,
+			"statename": "On",
+			"spriteuid": 600,
+			"size": { "x": 0.8, "y": 0.15, "z": 1 },
+			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"light" : 5,
+			
+		},
+		{
+			"stateuid": 1,
+			"statename": "Off",
+			"spriteuid": 601,
+			"size": { "x": 0.8, "y": 0.15, "z": 1 },
+			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"light" : 0,
+		},
+		{
+			"stateuid": 2,
+			"statename": "Broken",
+			"spriteuid": 602,
+			"size": { "x": 0.8, "y": 0.15, "z": 1 },
+			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"light" : 0,
+		},
+		{
+			"stateuid": 3,
+			"statename": "Burned Out",
+			"spriteuid": 603,
+			"size": { "x": 0.8, "y": 0.15, "z": 1 },
+			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"light" : 0,
+		},
+		{
+			"stateuid": 4,
+			"statename": "Empty",
+			"spriteuid": 603,
+			"size": { "x": 0.8, "y": 0.15, "z": 1 },
+			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"light" : 0,
+		}
+		],
+		"movementtype" : "static"
+	}]
+}

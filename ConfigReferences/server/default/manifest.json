@@ -15,5 +15,9 @@
 	"blockdata" :
 	[
 		"blockdata.json",
+	],
+	"entitydata" :
+	[
+		"lightentities.json",
 	]
 }
