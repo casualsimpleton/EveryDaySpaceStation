@@ -380,15 +380,31 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("states")]
         public EntityStateDataJson[] EntityStates { get; set; }
 
-        [JsonProperty("movementtype")]
-        public string MovementTypeString { get; set; }
+        [JsonProperty("typeflags")]
+        public string[] EntityTypeFlags { get; set; }
+
+        [JsonProperty("lightstates")]
+        public EntityLightStateJson[] EntityLightStates { get; set; }
+
+        [JsonProperty("fixedstates")]
+        public EntityFixedStateJson[] EntityFixedStates { get; set; }
+
+        [JsonProperty("poweredstates")]
+        public EntityPoweredStateJson[] EntityPoweredStates { get; set; }
+
+        [JsonProperty("devicestates")]
+        public EntityDeviceStateJson[] EntityDeviceStates { get; set; }
+
+        [JsonProperty("craftstates")]
+        public EntityCraftStateJson[] EntityCraftStates { get; set; }
 
         public override string ToString()
         {
-            return string.Format("Entity UID: {0} Name: {1} State#: {2} MovementType: {3}", UID, EntityName, EntityStates.Length, MovementTypeString);
+            return string.Format("Entity UID: {0} Name: {1} State#: {2}", UID, EntityName, EntityStates.Length);
         }
     }
 
+    #region Entity Components
     public class EntityStateDataJson
     {
         [JsonProperty("stateuid")]
@@ -413,6 +429,111 @@ namespace EveryDaySpaceStation.Json
         public Vector3 PositionOffset { get; set; }
     }
 
+    /// <summary>
+    /// Abstract base class entity components
+    /// </summary>
+    public abstract class EntityTypeComponentBaseJson
+    {
+        public string EntityTypeComponentName { get; set; }
+
+        public EntityTypeComponentBaseJson(string componentType)
+        {
+            EntityTypeComponentName = componentType;
+        }
+    }
+
+    public class EntityLightStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityLightStateJson()
+            : base("lightstates")
+        {
+        }
+
+        /// <summary>
+        /// Range of the light, color and strength determined by the light bulb
+        /// </summary>
+        [JsonProperty("light")]
+        public int EntityLightValue { get; set; }
+    }
+
+    public class EntityFixedStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityFixedStateJson()
+            : base("fixedstates")
+        {
+        }
+
+        /// <summary>
+        /// UID for type of tool necessary to toggle whether the entity is anchored (bolted to ground) or free
+        /// </summary>
+        [JsonProperty("toggletooltype")]
+        public uint[] EntityFixedToggleToolType { get; set; }
+
+        /// <summary>
+        /// UID for type of tool necessary to break the entity free from its anchoring
+        /// </summary>
+        [JsonProperty("breakabletooltype")]
+        public uint[] EntityFixedBreakbleToolType { get; set; }
+
+        /// <summary>
+        /// UID for type of tool necessary to repair the anchoring if it's been broken
+        /// </summary>
+        [JsonProperty("repairtooltype")]
+        public uint[] EntityFixedRepairToolType { get; set; }
+    }
+
+    public class EntityPoweredStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityPoweredStateJson()
+            : base("poweredstates")
+        {
+        }
+
+        [JsonProperty("resourcename")]
+        public string EntityPowerResourceName { get; set; }
+
+        /// <summary>
+        /// How much the resource costs, can be negative (and thus generate that resource)
+        /// </summary>
+        [JsonProperty("cost")]
+        public int EntityPowerCost { get; set; }
+    }
+
+    public class EntityDeviceStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityDeviceStateJson()
+            : base("devicestates")
+        {
+        }
+
+        [JsonProperty("acceptedinputtype")]
+        public string[] EntityAcceptedInputTypeNames { get; set; }
+
+        [JsonProperty("maxcount")]
+        public int EntityAcceptedInputCount { get; set; }
+    }
+
+    public class EntityCraftStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityCraftStateJson()
+            : base("craftstates")
+        {
+        }
+
+        [JsonProperty("materials")]
+        public MaterialsJson[] EntityCraftMaterials { get; set; }
+
+        public class MaterialsJson
+        {
+            [JsonProperty("name")]
+            public string MaterialCraftingName { get; set; }
+
+            [JsonProperty("count")]
+            public int MaterialCraftingCount { get; set; }
+        }
+    }
+    #endregion
+
     public class EntityDataJsonConverter : JsonConverter
     {
         bool CannotWrite { get; set; }
@@ -427,6 +548,13 @@ namespace EveryDaySpaceStation.Json
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject obj = JObject.Load(reader);
+            //obj.SelectToken("entitydata.lightstates").MoveTo(obj);
+            //obj.SelectToken("entitydata.fixedstates").MoveTo(obj);
+            //obj.SelectToken("entitydata.poweredstates").MoveTo(obj);
+            //obj.SelectToken("entitydata.devicestates").MoveTo(obj);
+            //obj.SelectToken("entitydata.craftstates").MoveTo(obj);
+            //obj.SelectToken("entitydata.craftstates.materials.name").MoveTo(obj);
+            //obj.SelectToken("entitydata.craftstates.materials.count").MoveTo(obj);
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
@@ -450,6 +578,7 @@ namespace EveryDaySpaceStation.Json
             }
         }
     }
+
     #endregion
 
     #region FileSystem
