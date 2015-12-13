@@ -35,7 +35,19 @@ public class EntitySpriteGameObject : MonoBehaviour
     public void Create(EntitySprite newEntity)
     {
         _entitySprite = newEntity;
-        newEntity._transform = this.transform;
+        if (newEntity != null)
+        {
+            newEntity._transform = this.transform;
+        }
+    }
+
+    public void Reset()
+    {
+        _entitySprite = null;
+        _transform = this.gameObject.transform;
+        _transform.parent = PoolManager.Singleton._transform;
+
+        this.gameObject.SetActive(false);
     }
 
     void Start()

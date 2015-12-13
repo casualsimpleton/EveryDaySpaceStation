@@ -95,9 +95,11 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            MapDataConfig testMap = LoadMap(_serverConfig.MapChoices[0]);  //"testLevel1");
+            MapDataConfig testMap = LoadMap(_serverConfig.MapChoices[0].MapName);  //"testLevel1");
+            MapEntityDataConfig testEntities = LoadMapEnities(_serverConfig.MapChoices[0].EntityName);
 
             GameManager.Singleton.ProcessMap(testMap);
+            GameManager.Singleton.ProcessMapEntities(testEntities);
 
             _initDone = true;
             _hasGameStarted = true;
@@ -219,6 +221,21 @@ namespace EveryDaySpaceStation
             string rawJson = File.ReadAllText(fileAndPath);
 
             return JsonConvert.DeserializeObject<MapDataConfig>(rawJson);
+        }
+
+        public static MapEntityDataConfig LoadMapEnities(string entityFileName)
+        {
+            string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, entityFileName);
+
+            if (!File.Exists(fileAndPath))
+            {
+                Debug.LogWarning(string.Format("Could not find entity file: '{0}'.", fileAndPath));
+                return null;
+            }
+
+            string rawJson = File.ReadAllText(fileAndPath);
+
+            return JsonConvert.DeserializeObject<MapEntityDataConfig>(rawJson);
         }
 
         public static void SaveMap(MapDataConfig mapData, string mapName)
@@ -403,7 +420,7 @@ namespace EveryDaySpaceStation
                     newEntity.ParseDeviceStates(entityData.EntityDeviceStates);
                     newEntity.ParseCraftStates(entityData.EntityCraftStates);
 
-                    GameManager.Singleton.Gamedata.AddEntity(newEntity.UID, newEntity);
+                    GameManager.Singleton.Gamedata.AddEntityTemplate(newEntity.UID, newEntity);
 
                     entityDataProcessed++;
                 }

@@ -160,4 +160,24 @@ public sealed class MapData
 
         return true;
     }
+
+    public bool LoadEntities(MapEntityDataConfig mapEntities)
+    {
+        for (int i = 0; i < mapEntities.EntityInstanceData.Length; i++)
+        {
+            MapEntityJson curEntry = mapEntities.EntityInstanceData[i];
+
+            //Check bounds, and print a warning if outside bounds, but we'll skip it for now
+            if (curEntry.EntityTilePos.x < 0 || curEntry.EntityTilePos.x > _mapSize.x - 1 ||
+                curEntry.EntityTilePos.y < 0 || curEntry.EntityTilePos.y > _mapSize.y - 1)
+            {
+                Debug.LogWarning(string.Format("Entity entry {0} has a tile pos of {1} which is out of bounds for current map (mapsize: {2})", (i + 1), curEntry.EntityTilePos, _mapSize));
+                continue;
+            }
+
+
+        }
+
+        return true;
+    }
 }

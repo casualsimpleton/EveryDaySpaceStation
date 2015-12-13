@@ -1,0 +1,11 @@
+{
+	"mapdataentities":
+	[
+		{
+			"mapentityUID": 1,
+			"entityTemplateUID": 1,
+			"tilepos": { "x": 3, "y": 3},
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		}
+	]
+}

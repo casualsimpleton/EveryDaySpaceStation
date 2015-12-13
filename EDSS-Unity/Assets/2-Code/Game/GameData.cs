@@ -498,7 +498,7 @@ namespace EveryDaySpaceStation
         Dictionary<uint, GameBlockData> _gameBlockData;
         Dictionary<string, Texture2D> _textures;
         Dictionary<uint, Material> _materials;
-        Dictionary<uint, EntityDataTemplate> _entityData;        
+        Dictionary<uint, EntityDataTemplate> _entityDataTemplates;        
 
         private uint _spriteSheetUID = 1;
         private uint _materialUID = 1;
@@ -517,7 +517,7 @@ namespace EveryDaySpaceStation
             _gameBlockData = new Dictionary<uint, GameBlockData>();
             _textures = new Dictionary<string, Texture2D>();
             _materials = new Dictionary<uint, Material>();
-            _entityData = new Dictionary<uint, EntityDataTemplate>();
+            _entityDataTemplates = new Dictionary<uint, EntityDataTemplate>();
         }
         #endregion
 
@@ -536,9 +536,9 @@ namespace EveryDaySpaceStation
             _gameBlockData.Add(uid, blockData);
         }
 
-        public void AddEntity(uint uid, EntityDataTemplate entityData)
+        public void AddEntityTemplate(uint uid, EntityDataTemplate entityData)
         {
-            _entityData.Add(uid, entityData);
+            _entityDataTemplates.Add(uid, entityData);
         }
 
         public void AddTexture(string name, Texture2D texture)

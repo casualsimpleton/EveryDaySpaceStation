@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     protected GameData _gameData;
     [SerializeField]
     protected MapData _mapData;
-
+    
     protected float _timeSinceGameStarted;
 
     public EDSSFirstPersonControls playerControl;
@@ -91,5 +91,16 @@ public class GameManager : MonoBehaviour
         //mapConfig.LevelData.TileData
         _mapData = new MapData();
         _mapData.LoadMap(mapConfig);
+    }
+
+    public void ProcessMapEntities(EveryDaySpaceStation.Json.MapEntityDataConfig mapEntityConfig)
+    {
+        if (_mapData == null)
+        {
+            Debug.LogError("Can't load map entity data before map data");
+            return;
+        }
+
+        _mapData.LoadEntities(mapEntityConfig);
     }
 }

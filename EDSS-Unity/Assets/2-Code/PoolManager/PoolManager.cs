@@ -45,6 +45,7 @@ public class PoolManager : MonoBehaviour
 
     protected PoolSceneChunkRenderer _sceneChunkRendererPool;
     protected PoolSceneChunkScaffoldRenderer _sceneChunkScaffoldRendererPool;
+    protected PoolEntitySpriteGameObject _entitySpritesPool;
     protected PoolCubeCollider _cubeCollider1;
     protected PoolCubeCollider _cubeCollider2;
     protected PoolCubeCollider _cubeCollider3;
@@ -78,6 +79,18 @@ public class PoolManager : MonoBehaviour
     public void ReturnSceneChunkRenderer(SceneChunkScaffoldRenderer sscr)
     {
         _sceneChunkScaffoldRendererPool.ReturnObject(sscr);
+    }
+    #endregion
+
+    #region Entity Sprites GOs
+    public EntitySpriteGameObject RequestEntitySpriteGameObject()
+    {
+        return _entitySpritesPool.RequestObject();
+    }
+
+    public void ReturnEntitySpriteGameObject(EntitySpriteGameObject es)
+    {
+        _entitySpritesPool.ReturnObject(es);
     }
     #endregion
 
@@ -176,6 +189,9 @@ public class PoolManager : MonoBehaviour
         _cubeCollider8.Init(10, new Vec2Int(1, 8), 0.1f, 2, 0.1f);
         _cubeCollider9.Init(10, new Vec2Int(1, 9), 0.1f, 2, 0.1f);
         _cubeCollider10.Init(10, new Vec2Int(1, 10), 0.1f, 2, 0.1f);
+
+        _entitySpritesPool = new PoolEntitySpriteGameObject();
+        _entitySpritesPool.Init(10, 0.1f, 2, 0.1f);
     }
 
     public void LateInit()
@@ -196,6 +212,18 @@ public class PoolManager : MonoBehaviour
     {
         _sceneChunkRendererPool.Maintenance();
         _sceneChunkScaffoldRendererPool.Maintenance();
+        _entitySpritesPool.Maintenance();
+
+        _cubeCollider1.Maintenance();
+        _cubeCollider2.Maintenance();
+        _cubeCollider3.Maintenance();
+        _cubeCollider4.Maintenance();
+        _cubeCollider5.Maintenance();
+        _cubeCollider6.Maintenance();
+        _cubeCollider7.Maintenance();
+        _cubeCollider8.Maintenance();
+        _cubeCollider9.Maintenance();
+        _cubeCollider10.Maintenance();
     }
 
     public void Cleanup()
@@ -204,6 +232,7 @@ public class PoolManager : MonoBehaviour
         {
             _sceneChunkRendererPool.Dispose();
             _sceneChunkScaffoldRendererPool.Dispose();
+            _entitySpritesPool.Dispose();
 
             _cubeCollider1.Dispose();
             _cubeCollider2.Dispose();

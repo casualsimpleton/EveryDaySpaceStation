@@ -134,6 +134,81 @@ namespace EveryDaySpaceStation.Json
     }
     #endregion
 
+    #region Map Entity Data
+    [JsonConverter(typeof(MapEntityDataJsonConverter))]
+    public class MapEntityDataConfig
+    {
+        [JsonProperty("mapdataentities")]
+        public MapEntityJson[] EntityInstanceData { get; set; }
+    }
+
+    public class MapEntityJson
+    {
+        /// <summary>
+        /// This should be unique to the map and this particular entity configuration file
+        /// </summary>
+        [JsonProperty("mapentityuid")]
+        public uint MapEntityInstanceUID { get; set; }
+
+        /// <summary>
+        /// This should match the UID of one of the entities listed in manifest.json, probably won't be unique
+        /// </summary>
+        [JsonProperty("entitytemplateuid")]
+        public uint EntityTemplateUID { get; set; }
+
+        /// <summary>
+        /// The tile that this entity will start associated with
+        /// </summary>
+        [JsonProperty("tilepos")]
+        public Vec2Int EntityTilePos { get; set; }
+
+        /// <summary>
+        /// Rotation in world space. Some entities might ignore this
+        /// </summary>
+        [JsonProperty("rotation")]
+        public Vector3 Rotation { get; set; }
+    }
+
+    public class MapEntityDataJsonConverter : JsonConverter
+    {
+        bool CannotWrite { get; set; }
+
+        public override bool CanWrite { get { return !CannotWrite; } }
+
+        public override bool CanConvert(System.Type objectType)
+        {
+            return typeof(MapEntityDataConfig).IsAssignableFrom(objectType);
+        }
+
+        public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject obj = JObject.Load(reader);
+
+            using (reader = obj.CreateReader())
+            {
+                // Using "populate" avoids infinite recursion.
+                existingValue = (existingValue ?? new MapEntityDataConfig());
+                serializer.Populate(reader, existingValue);
+            }
+            return existingValue;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            (writer as JsonTextWriter).IndentChar = '\t';
+            (writer as JsonTextWriter).Indentation = 1;
+            // Disabling writing prevents infinite recursion.
+            using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
+            {
+                JObject obj = JObject.FromObject(value, serializer);
+                //JObject details = new JObject();
+
+                obj.WriteTo(writer);
+            }
+        }
+    }
+    #endregion
+
     #region Game Data Manifest
     [JsonConverter(typeof(GameManifestJsonConverter))]
     public class GameManfiest
@@ -721,10 +796,19 @@ namespace EveryDaySpaceStation.Json
         public string ModuleName { get; set; }
 
         [JsonProperty("maps")]
-        public string[] MapChoices { get; set; }
+        public ServerConfigMapNameJson[] MapChoices { get; set; }
 
         [JsonProperty("defaultmaxroundtime")]
         public int MaxRoundTime { get; set; }
+    }
+
+    public class ServerConfigMapNameJson
+    {
+        [JsonProperty("map")]
+        public string MapName { get; set; }
+
+        [JsonProperty("entities")]
+        public string EntityName { get; set; }
     }
 
     public class ServerConfigJsonConverter : JsonConverter
