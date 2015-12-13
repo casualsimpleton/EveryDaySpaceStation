@@ -396,7 +396,12 @@ namespace EveryDaySpaceStation
                 {
                     EntityDataJson entityData = entityConfig.EntityData[j];
 
-                    GameData.EntityData newEntity = new GameData.EntityData(entityData.UID, entityData.EntityName);
+                    GameData.EntityDataTemplate newEntity = new GameData.EntityDataTemplate(entityData.UID, entityData.EntityName, entityData.EntityTypeFlags, entityData.EntityStates);
+                    newEntity.ParseLightStates(entityData.EntityLightStates);
+                    newEntity.ParseFixedStates(entityData.EntityFixedStates);
+                    newEntity.ParsePoweredStates(entityData.EntityPoweredStates);
+                    newEntity.ParseDeviceStates(entityData.EntityDeviceStates);
+                    newEntity.ParseCraftStates(entityData.EntityCraftStates);
 
                     GameManager.Singleton.Gamedata.AddEntity(newEntity.UID, newEntity);
 

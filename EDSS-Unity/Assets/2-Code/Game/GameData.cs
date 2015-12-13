@@ -24,15 +24,281 @@ namespace EveryDaySpaceStation
     public sealed class GameData
     {
         #region Classes/Structs
-        public class EntityData
+        public class EntityDataTemplate
         {
+            #region Classes
+            public class State
+            {
+                public ushort StateUID { get; private set; }
+                public string StateName { get; private set; }
+                public uint SpriteUID { get; private set; }
+                public Vector3 StateSize { get; private set; }
+                public Vector3 StatePositionOffset { get; private set; }
+
+                public State(ushort uid, string name, uint spriteUID, Vector3 size, Vector3 offset)
+                {
+                    StateUID = uid;
+                    StateName = name;
+                    SpriteUID = spriteUID;
+                    StateSize = size;
+                    StatePositionOffset = offset;
+                }
+            }
+
+            public class LightState
+            {
+                public int LightRadius { get; private set; }
+
+                public LightState(int radius)
+                {
+                    LightRadius = radius;
+                }
+
+                public static LightState ZeroState = new LightState(0);
+            }
+
+            public class FixedState
+            {
+                public uint[] ToggleToolTypeUID { get; private set; }
+                public uint[] BreakableToolTypeUID { get; private set; }
+                public uint[] RepairToolTypeUID { get; private set; }
+
+                public FixedState(uint[] toggleTypes, uint[] breakableTypes, uint[] repairTypes)
+                {
+                    ToggleToolTypeUID = toggleTypes;
+                    BreakableToolTypeUID = breakableTypes;
+                    RepairToolTypeUID = repairTypes;
+                }
+            }
+
+            public class PoweredState
+            {
+                public string ResourceName { get; private set; }
+                public int Cost { get; private set; }
+
+                public PoweredState(string name, int cost)
+                {
+                    ResourceName = ResourceName;
+                    Cost = cost;
+                }
+
+                public static PoweredState ZeroState = new PoweredState("electricity", 0);
+            }
+
+            public class DeviceState
+            {
+                public string[] AcceptedInputNames { get; private set; }
+                public int MaxCount { get; private set; }
+
+                public DeviceState(string[] acceptedInputs, int maxCount)
+                {
+                    AcceptedInputNames = acceptedInputs;
+                    MaxCount = maxCount;
+                }
+            }
+
+            public class CraftState
+            {
+                public List<Tuple<string, int>> Materials { get; private set; }
+
+                public CraftState()
+                {
+                    Materials = new List<Tuple<string, int>>();
+                }
+
+                public void AddMaterial(string name, int count)
+                {
+                    Materials.Add(new Tuple<string, int>(name, count));
+                }
+            }
+            #endregion
+
             public uint UID { get; private set; }
             public string Name { get; private set; }
+            public string[] EntityTypes { get; private set; }
 
-            public EntityData(uint uid, string name)
+            public Dictionary<ushort, State> EntityStates { get; private set; }
+            public Dictionary<ushort, LightState> LightStates { get; private set; }
+            public Dictionary<ushort, FixedState> FixedStates { get; private set; }
+            public Dictionary<ushort, PoweredState> PoweredStates { get; private set; }
+            public Dictionary<ushort, DeviceState> DeviceStates { get; private set; }
+            public Dictionary<ushort, CraftState> CraftStates { get; private set; }
+
+            public EntityDataTemplate(uint uid, string name, string[] typeFlags, EveryDaySpaceStation.Json.EntityStateDataJson[] states)
             {
                 UID = uid;
                 Name = name;
+                EntityTypes = typeFlags;
+
+                EntityStates = new Dictionary<ushort, State>();
+
+                //Process these first as this determines a bunch of other things as the number of other states should not exceed this count
+                for (int i = 0; i < states.Length; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityStateDataJson curState = states[i];
+                    State newState = new State(curState.StateUID, curState.StateName, curState.SpriteUID, curState.DisplaySize, curState.PositionOffset);
+
+                    EntityStates.Add(newState.StateUID, newState);
+                }
+
+                if (EntityTypes == null)
+                {
+                    Debug.LogError("No type flags provided. What to do?");
+                    return;
+                }
+
+                for (int i = 0; i < EntityTypes.Length; i++)
+                {
+                    string curType = EntityTypes[i].ToLower();
+
+                    //TODO EXPAND THIS
+                    switch (curType)
+                    {
+                        case "light":
+                            LightStates = new Dictionary<ushort, LightState>(EntityStates.Count);
+                            break;
+
+                        case "fixed":
+                            FixedStates = new Dictionary<ushort, FixedState>(EntityStates.Count);
+                            break;
+
+                        case "powered":
+                            PoweredStates = new Dictionary<ushort, PoweredState>(EntityStates.Count);
+                            break;
+
+                        case "device":
+                            DeviceStates = new Dictionary<ushort, DeviceState>(EntityStates.Count);
+                            break;
+
+                        case "craftable":
+                            CraftStates = new Dictionary<ushort, CraftState>(EntityStates.Count);
+                            break;
+                    }
+                }
+            }
+
+            public void ParseLightStates(EveryDaySpaceStation.Json.EntityLightStateJson[] lightstates)
+            {
+                if (lightstates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < lightstates.Length && i < EntityStates.Count; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityLightStateJson lightState = lightstates[i];
+                    LightState newState = new LightState(lightState.EntityLightValue);
+
+                    LightStates.Add(i, newState);
+                }
+
+                //We need to have as many light states as we do states, so if there's any missing, pad them out
+                if (i < EntityStates.Count)
+                {
+                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has less light states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, lightstates.Length, EntityStates.Count));
+                    while (i < EntityStates.Count)
+                    {
+                        i++;
+
+                        LightStates.Add(i, LightState.ZeroState);
+                    }
+                }
+
+                if (lightstates.Length > EntityStates.Count)
+                {
+                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has more light states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, lightstates.Length, EntityStates.Count));
+                }
+            }
+
+            public void ParseFixedStates(EveryDaySpaceStation.Json.EntityFixedStateJson[] fixedStates)
+            {
+                if (fixedStates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < fixedStates.Length && i < EntityStates.Count; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityFixedStateJson fixedState = fixedStates[i];
+                    FixedState newState = new FixedState(fixedState.EntityFixedToggleToolType, fixedState.EntityFixedBreakbleToolType, fixedState.EntityFixedRepairToolType);
+
+                     FixedStates.Add(i, newState);
+                }
+            }
+
+            public void ParsePoweredStates(EveryDaySpaceStation.Json.EntityPoweredStateJson[] poweredStates)
+            {
+                if (poweredStates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < poweredStates.Length && i < EntityStates.Count; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityPoweredStateJson poweredState = poweredStates[i];
+                    PoweredState newState = new PoweredState(poweredState.EntityPowerResourceName, poweredState.EntityPowerCost);
+
+                    PoweredStates.Add(i, newState);
+                }
+
+                //We need to have as many light states as we do states, so if there's any missing, pad them out
+                if (i < EntityStates.Count)
+                {
+                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has less powered states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, poweredStates.Length, EntityStates.Count));
+                    while (i < EntityStates.Count)
+                    {
+                        i++;
+
+                        PoweredStates.Add(i, PoweredState.ZeroState);
+                    }
+                }
+
+                if (poweredStates.Length > EntityStates.Count)
+                {
+                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has more powered states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, poweredStates.Length, EntityStates.Count));
+                }
+            }
+
+            public void ParseDeviceStates(EveryDaySpaceStation.Json.EntityDeviceStateJson[] deviceStates)
+            {
+                if (deviceStates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < deviceStates.Length && i < EntityStates.Count; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityDeviceStateJson deviceState = deviceStates[i];
+                    DeviceState newState = new DeviceState(deviceState.EntityAcceptedInputTypeNames, deviceState.EntityAcceptedInputCount);
+
+                    DeviceStates.Add(i, newState);
+                }
+            }
+
+            public void ParseCraftStates(EveryDaySpaceStation.Json.EntityCraftStateJson[] craftStates)
+            {
+                if (craftStates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < craftStates.Length && i < EntityStates.Count; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityCraftStateJson craftState = craftStates[i];
+                    CraftState newState = new CraftState();
+
+                    for (int j = 0; j < craftState.EntityCraftMaterials.Length; j++)
+                    {
+                        newState.AddMaterial(craftState.EntityCraftMaterials[j].MaterialCraftingName, craftState.EntityCraftMaterials[j].MaterialCraftingCount);
+                    }
+
+                    CraftStates.Add(i, newState);
+                }
             }
         }
 
@@ -232,7 +498,7 @@ namespace EveryDaySpaceStation
         Dictionary<uint, GameBlockData> _gameBlockData;
         Dictionary<string, Texture2D> _textures;
         Dictionary<uint, Material> _materials;
-        Dictionary<uint, EntityData> _entityData;        
+        Dictionary<uint, EntityDataTemplate> _entityData;        
 
         private uint _spriteSheetUID = 1;
         private uint _materialUID = 1;
@@ -251,7 +517,7 @@ namespace EveryDaySpaceStation
             _gameBlockData = new Dictionary<uint, GameBlockData>();
             _textures = new Dictionary<string, Texture2D>();
             _materials = new Dictionary<uint, Material>();
-            _entityData = new Dictionary<uint, EntityData>();
+            _entityData = new Dictionary<uint, EntityDataTemplate>();
         }
         #endregion
 
@@ -270,7 +536,7 @@ namespace EveryDaySpaceStation
             _gameBlockData.Add(uid, blockData);
         }
 
-        public void AddEntity(uint uid, EntityData entityData)
+        public void AddEntity(uint uid, EntityDataTemplate entityData)
         {
             _entityData.Add(uid, entityData);
         }

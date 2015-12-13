@@ -3,6 +3,7 @@
 	{
 		"uid": 1,
 		"name": "Tube Light",
+		"typeflags" : [ "Light", "Fixed", "Powered", "Device", "Craftable"],
 		"states": [
 		{
 			"stateuid": 0,
@@ -10,8 +11,6 @@
 			"spriteuid": 600,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
-			"light" : 5,
-			
 		},
 		{
 			"stateuid": 1,
@@ -19,7 +18,6 @@
 			"spriteuid": 601,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
-			"light" : 0,
 		},
 		{
 			"stateuid": 2,
@@ -27,15 +25,13 @@
 			"spriteuid": 602,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
-			"light" : 0,
 		},
 		{
 			"stateuid": 3,
-			"statename": "Burned Out",
+			"statename": "Burnt Out",
 			"spriteuid": 603,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
-			"light" : 0,
 		},
 		{
 			"stateuid": 4,
@@ -43,9 +39,62 @@
 			"spriteuid": 603,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
-			"light" : 0,
 		}
 		],
-		"movementtype" : "static"
+		"lightstates": [
+		{
+			"light": 5
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		}
+		],
+		"fixedstates" : [{
+			"toggletooltype" : [ 1 ],
+			"breakabletooltype" : [ 0 ],
+			"repairtooltype" : [ 1 ]
+		}],		
+		"poweredstates" : [
+		{
+			"resourcename": "electricity",
+			"cost": 10
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 2
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		}
+		],
+		"devicestates" :
+		[{
+			"acceptedinputtype" : [ "lighttube" ],
+			"maxcount" : 1
+		}],
+		"craftstates" :
+		[{
+			"materials" : [ 
+			{"name" : "metal", "count": 1 }
+			]
+		}]
 	}]
 }

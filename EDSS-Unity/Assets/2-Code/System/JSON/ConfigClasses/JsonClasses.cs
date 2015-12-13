@@ -408,7 +408,7 @@ namespace EveryDaySpaceStation.Json
     public class EntityStateDataJson
     {
         [JsonProperty("stateuid")]
-        public uint StateUID { get; set; }
+        public ushort StateUID { get; set; }
 
         [JsonProperty("statename")]
         public string StateName { get; set; }
