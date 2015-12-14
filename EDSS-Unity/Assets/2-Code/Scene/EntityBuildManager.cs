@@ -109,6 +109,13 @@ public class EntityBuildManager : MonoBehaviour
         }
 
         entity.Sprite.Create(entity);
+        //If it has light states, then it must emit light at some point
+        if (entity.Template.LightStates != null)
+        {
+            LightComponent lc = entity.Sprite.gameObject.AddComponent<LightComponent>();
+            lc.Create(entity.Sprite, entity.Template.LightStates[entity.CurrentStateUID]);
+            entity.Sprite.UpdateLightComponent();
+        }
 
         entity.BuildState.IsBuildingQueued = false;
         entity.BuildState.IsBuilt = true;

@@ -154,7 +154,7 @@ public class SceneBlock
         //foreach (uint uid in _associatedRendererUID)
         for (int j = 0; j < _associatedRendererUID.Count; j++)
         {
-            _parentChunk.ModifyColorNoUpdate(_associatedRendererUID.List[j], _vertFirstIndex[faceValueIndex], newColor);
+            _parentChunk.ModifyColorNoUpdate(_associatedRendererUID.GetValue(j), _vertFirstIndex[faceValueIndex], newColor);
         }
     }
 

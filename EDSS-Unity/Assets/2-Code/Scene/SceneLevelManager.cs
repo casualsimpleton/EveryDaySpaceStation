@@ -49,18 +49,18 @@ public class SceneLevelManager : MonoBehaviour
 
     [SerializeField]
     protected bool _enableLights = true;
-    protected List<TileLight> _visibleLights;
+    protected List<LightComponent> _visibleLights;
     protected float _lightUpdateTimer;
     protected float _lightUpdateDelta = 1f / 10f;
     protected SquareBounds _previousVisibleLightBounds;
     protected SquareBounds _visibleLightBounds;
 
-    public void AddLight(TileLight light)
+    public void AddLight(LightComponent light)
     {
         _visibleLights.Add(light);
     }
 
-    public void RemoveLight(TileLight light)
+    public void RemoveLight(LightComponent light)
     {
         _visibleLights.Remove(light);
     }
@@ -75,7 +75,7 @@ public class SceneLevelManager : MonoBehaviour
     {
         EntityBuildManager.Singleton.Init(5, 5);
         BlocksPerChuck = FileSystem.Optionsconfig.SceneChunkSize;
-        _visibleLights = new List<TileLight>();
+        _visibleLights = new List<LightComponent>();
         _visibleLightBounds = new SquareBounds(new Vec2Int(0, 0), GameManager.Singleton.Mapdata._mapSize);
         _previousVisibleLightBounds = _visibleLightBounds;
 
@@ -246,7 +246,7 @@ public class SceneLevelManager : MonoBehaviour
         int count = _visibleLights.Count;
         for (int i = 0; i < count; i++)
         {
-            TileLight light = _visibleLights[i];
+            LightComponent light = _visibleLights[i];
 
             //If the light is mobile, we need to update its position
             if (light.IsMobile)
@@ -254,22 +254,32 @@ public class SceneLevelManager : MonoBehaviour
                 light.UpdatePosition();
             }
 
-            if (light.TileIndex < 0 || light.TileIndex > mapData._mapTiles.Length - 1)
+            if (light.EntitySpriteObject == null || light.LightRadius < 1)//  .TileIndex < 0 || light.TileIndex > mapData._mapTiles.Length - 1)
+            {
+                //If the light's entity is nul,, then something funky is going on, and we should remove the light component
+                _visibleLights.RemoveAt(i);
+                i--;
                 continue;
-
+            }
+            
             //Helpers.FillCircleAreaWithLight(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData);
 
-            if (!mapData._mapTiles[light.TileIndex].BlocksLight)
+            if (!light.EntitySpriteObject.EntityData.MapTile.BlocksLight)
             {
-                mapData._mapTiles[light.TileIndex].LightColor = light.LightColor;
+                light.EntitySpriteObject.EntityData.MapTile.LightColor = light.LightColor;
             }
 
-            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Up);
-            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Right);
-            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Down);
-            SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Left);
+            Vec2Int tilePos = light.EntitySpriteObject.EntityData.MapTile.TilePosition;
+
+            SceneLighting.LightFloodFillForward(tilePos.x, tilePos.y, light.LightRadius, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Up);
+            SceneLighting.LightFloodFillForward(tilePos.x, tilePos.y, light.LightRadius, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Right);
+            SceneLighting.LightFloodFillForward(tilePos.x, tilePos.y, light.LightRadius, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Down);
+            SceneLighting.LightFloodFillForward(tilePos.x, tilePos.y, light.LightRadius, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Left);
         }
 
+#if DEBUGCLIENT
+        Profiler.BeginSample("Update Neighbors");
+#endif
         ////Now update the colors on the meshes
         count = mapData._mapTiles.Length;
         for (int i = 0; i < count; i++)
@@ -278,11 +288,20 @@ public class SceneLevelManager : MonoBehaviour
             int chunkIndex = GetChunkIndex(mapData._mapTiles[i].TilePosition, GameManager.Singleton.Mapdata._mapSize.x, out localTileIndex);
             _sceneChunks[chunkIndex].UpdateBlockLightWithNeighborsWalls(mapData._mapTiles[i], localTileIndex);
         }
+#if DEBUGCLIENT
+        Profiler.EndSample();
+#endif
 
+#if DEBUGCLIENT
+        Profiler.BeginSample("Update Mesh Colors");
+#endif
         for (int i = 0; i < _sceneChunks.Length; i++)
         {
             _sceneChunks[i].UpdateAllMeshColors();
         }
+#if DEBUGCLIENT
+        Profiler.EndSample();
+#endif
 
         _lightUpdateTimer = Time.time + _lightUpdateDelta;
     }

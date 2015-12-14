@@ -8,6 +8,70 @@
 			"tilepos": { "x": 1, "y": 3},
 			"anchor": "left",
 			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 2,
+			"entitytemplateuid": 1,
+			"overridename" : "Test Name",
+			"tilepos": { "x": 1, "y": 8},
+			"anchor": "left",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 3,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 7, "y": 5},
+			"anchor": "right",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 4,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 7, "y": 9},
+			"anchor": "front",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 5,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 10, "y": 1},
+			"anchor": "back",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 6,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 14, "y": 6},
+			"anchor": "right",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 7,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 11, "y": 12},
+			"anchor": "right",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 8,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 13, "y": 12},
+			"anchor": "left",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 9,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 5, "y": 11},
+			"anchor": "back",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
+		},
+		{
+			"mapentityuid": 10,
+			"entitytemplateuid": 1,
+			"tilepos": { "x": 2, "y": 13},
+			"anchor": "left",
+			"rotation": { "x": 0, "y": 0, "z": 0}			
 		}
 	]
 }

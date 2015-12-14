@@ -24,46 +24,46 @@ public class TileLightGameObject : MonoBehaviour
     protected TileLight _light;
     #endregion
 
-    public void Create(TileLight newLight)
-    {
-        _light = newLight;
-        _light.IsMobile = true;
-        _light._transform = this.transform;
-    }
+    //public void Create(TileLight newLight)
+    //{
+    //    _light = newLight;
+    //    _light.IsMobile = true;
+    //    _light._transform = this.transform;
+    //}
 
-    void Start()
-    {
-        TileLight newLight = new TileLight(new Color32(255, 255, 255, 255), 5);
-        Create(newLight);
+    //void Start()
+    //{
+    //    TileLight newLight = new TileLight(new Color32(255, 255, 255, 255), 5);
+    //    Create(newLight);
 
-        SceneLevelManager.Singleton.AddLight(_light);
-    }
+    //    SceneLevelManager.Singleton.AddLight(_light);
+    //}
 
-    public void OnEnable()
-    {
-        if (_light != null)
-        {
-            SceneLevelManager.Singleton.AddLight(_light);
-        }
-    }
+    //public void OnEnable()
+    //{
+    //    if (_light != null)
+    //    {
+    //        SceneLevelManager.Singleton.AddLight(_light);
+    //    }
+    //}
 
-    public void OnDisable()
-    {
-        if (_light != null)
-        {
-            SceneLevelManager.Singleton.RemoveLight(_light);
-        }
-    }
+    //public void OnDisable()
+    //{
+    //    if (_light != null)
+    //    {
+    //        SceneLevelManager.Singleton.RemoveLight(_light);
+    //    }
+    //}
 
-    void OnDestroy()
-    {
-        if (_light != null)
-        {
-            SceneLevelManager.Singleton.RemoveLight(_light);
-        }
+    //void OnDestroy()
+    //{
+    //    if (_light != null)
+    //    {
+    //        SceneLevelManager.Singleton.RemoveLight(_light);
+    //    }
 
-        _light = null;
-    }
+    //    _light = null;
+    //}
 
     void Update()
     {

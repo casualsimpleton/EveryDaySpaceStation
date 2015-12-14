@@ -21,6 +21,7 @@ namespace EveryDaySpaceStation.DataTypes
     {
         protected List<T> _list;
 
+        public T GetValue(int index) { return _list[index]; }
         public List<T> List { get { return _list; } }
         public int Count { get { return _list.Count; } }
 

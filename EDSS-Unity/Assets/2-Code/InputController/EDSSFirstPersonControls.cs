@@ -34,6 +34,9 @@ public class EDSSFirstPersonControls : MonoBehaviour
     [SerializeField]
     float _runSpeed = 4f;
 
+    [SerializeField]
+    Vec2Int _currentTile = new Vec2Int(0,0);
+
     TileLightGameObject _playerLight;
 
     void Awake()
@@ -75,6 +78,8 @@ public class EDSSFirstPersonControls : MonoBehaviour
         {
             _playerLight.enabled = !_playerLight.enabled;
         }
+
+        UpdateTilePosition();
     }
 
     public void SpawnTileLight()
@@ -89,5 +94,12 @@ public class EDSSFirstPersonControls : MonoBehaviour
         go.transform.localPosition = Vector3.zero;
 
         _playerLight = go.AddComponent<TileLightGameObject>();
+    }
+
+    public void UpdateTilePosition()
+    {
+        Vector3 worldPosition = _transform.position;
+        _currentTile.x = (int)worldPosition.x;
+        _currentTile.y = (int)worldPosition.z;
     }
 }

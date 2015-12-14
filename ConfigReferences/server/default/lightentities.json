@@ -10,35 +10,35 @@
 			"statename": "On",
 			"spriteuid": 201,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
-			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
 			"stateuid": 1,
 			"statename": "Off",
 			"spriteuid": 200,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
-			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
 			"stateuid": 2,
 			"statename": "Broken",
 			"spriteuid": 202,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
-			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
 			"stateuid": 3,
 			"statename": "Burnt Out",
 			"spriteuid": 203,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
-			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
 			"stateuid": 4,
 			"statename": "Empty",
 			"spriteuid": 204,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
-			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
+			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		}
 		],
 		"lightstates": [

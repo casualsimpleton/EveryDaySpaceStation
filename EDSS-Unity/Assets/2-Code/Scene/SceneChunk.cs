@@ -34,16 +34,16 @@ public class SceneChunk : MonoBehaviour
     [SerializeField]
     Vector3 _worldPosition;
 
-    Dictionary<uint, SceneChunkRenderer> _sceneChunkRenders;
+    PairedListUint<SceneChunkRenderer> _sceneChunkRenders;
     SceneChunkRenderer _lastUsedSCR;
 
-    Dictionary<uint, SceneChunkScaffoldRenderer> _sceneChunkScaffoldRenders;
+    PairedListUint<SceneChunkScaffoldRenderer> _sceneChunkScaffoldRenders;
     SceneChunkScaffoldRenderer _lastUsedSSCR;
 
     public void CreateChunk(Vector3 worldPosition, Vec2Int chunkPosition)
     {
-        _sceneChunkRenders = new Dictionary<uint, SceneChunkRenderer>();
-        _sceneChunkScaffoldRenders = new Dictionary<uint, SceneChunkScaffoldRenderer>();
+        _sceneChunkRenders = new PairedListUint<SceneChunkRenderer>();
+        _sceneChunkScaffoldRenders = new PairedListUint<SceneChunkScaffoldRenderer>();
         _worldPosition = worldPosition;
         _chunkPos = chunkPosition;
 
@@ -321,17 +321,27 @@ public class SceneChunk : MonoBehaviour
 
     public void UpdateAllMeshColliders()
     {
-        foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        //foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        //{
+        //    scr.Value.UpdateMesh(false);
+        //}
+        for (int i = 0; i < _sceneChunkRenders.Keys.Count; i++)
         {
-            scr.Value.UpdateMesh(false);
+            //_sceneChunkRenders.Values[i].UpdateMesh(false);
+            _sceneChunkRenders.GetValue(i).UpdateMesh(false);
         }
     }
 
     public void UpdateAllMeshColors()
     {
-        foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        //foreach (KeyValuePair<uint, SceneChunkRenderer> scr in _sceneChunkRenders)
+        //{
+        //    scr.Value.UpdateColors();
+        //}
+        for (int i = 0; i < _sceneChunkRenders.Keys.Count; i++)
         {
-            scr.Value.UpdateColors();
+            //_sceneChunkRenders.Values[i].UpdateColors();
+            _sceneChunkRenders.GetValue(i).UpdateColors();
         }
     }
 
@@ -342,15 +352,21 @@ public class SceneChunk : MonoBehaviour
 
     public void UpdateAllUnderLayerMeshColors()
     {
-        foreach (KeyValuePair<uint, SceneChunkScaffoldRenderer> sscr in _sceneChunkScaffoldRenders)
+        //foreach (KeyValuePair<uint, SceneChunkScaffoldRenderer> sscr in _sceneChunkScaffoldRenders)
+        //{
+        //    sscr.Value.UpdateColors();
+        //}
+        for (int i = 0; i < _sceneChunkScaffoldRenders.Keys.Count; i++)
         {
-            sscr.Value.UpdateColors();
+            //_sceneChunkScaffoldRenders.Values[i].UpdateColors();
+            _sceneChunkScaffoldRenders.GetValue(i).UpdateColors();
         }
     }
 
     #region Scene Chunk Renderer Wrangling
     private SceneChunkRenderer GetSceneChunkRenderer(uint scrUID)
     {
+        //Profiler.BeginSample("GetSceneChunkRenderer");
         //Since we often use the same one in a row, we'll check if it's the same as the last one, so we can prevent looking it up
         if (_lastUsedSCR != null && scrUID == _lastUsedSCR._MaterialUID)
         {
@@ -378,6 +394,7 @@ public class SceneChunk : MonoBehaviour
         }
 
         _lastUsedSCR = scr;
+        //Profiler.EndSample();
 
         return scr;
     }

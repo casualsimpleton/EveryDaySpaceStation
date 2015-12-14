@@ -257,10 +257,10 @@ public sealed class MapData
             EntityUID = UID;
             TemplateUID = templateUID;
             _rotation = rotation;
+            _template = null;
+            GameManager.Singleton.Gamedata.GetEntityTemplate(templateUID, out _template);
             if (string.IsNullOrEmpty(entityName))
             {
-                _template = null;
-                GameManager.Singleton.Gamedata.GetEntityTemplate(UID, out _template);
                 EntityName = _template.Name;
             }
             else
