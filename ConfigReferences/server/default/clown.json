@@ -1,7 +1,7 @@
 {
 	"spritedata": [
 	{
-		"uid": 100,
+		"uid": 1000,
 		"name": "clown",
 		"spritesheet": "clown1.png",
 		"spritepos": {

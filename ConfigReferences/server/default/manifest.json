@@ -4,13 +4,15 @@
 		"ss13-1.png",
 		"test1.png",
 		"clown1.png",
-		"underlayer1.png"
+		"underlayer1.png",
+		"lights1.png"
 	],
 	"spritedata" :
 	[
 		"spritedata.json",
 		"clown.json",
-		"underlayer-spritedata.json"
+		"underlayer-spritedata.json",
+		"lights1.json"
 	],
 	"blockdata" :
 	[

@@ -169,6 +169,12 @@ namespace EveryDaySpaceStation.Json
         public Vec2Int EntityTilePos { get; set; }
 
         /// <summary>
+        /// What wall (if any) this entity is anchored to
+        /// </summary>
+        [JsonProperty("anchor")]
+        public string AnchorType { get; set; }
+
+        /// <summary>
         /// Rotation in world space. Some entities might ignore this
         /// </summary>
         [JsonProperty("rotation")]

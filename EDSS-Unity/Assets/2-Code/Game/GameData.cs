@@ -29,11 +29,13 @@ namespace EveryDaySpaceStation
             #region Classes
             public class StateTemplate
             {
+
                 public ushort StateUID { get; private set; }
                 public string StateName { get; private set; }
                 public uint SpriteUID { get; private set; }
                 public Vector3 StateSize { get; private set; }
                 public Vector3 StatePositionOffset { get; private set; }
+
 
                 public StateTemplate(ushort uid, string name, uint spriteUID, Vector3 size, Vector3 offset)
                 {
@@ -704,13 +706,19 @@ namespace EveryDaySpaceStation
         {
             bool exists = _textures.TryGetValue(name, out texture);
 
+            //Can't find texture, so return default
+            if (!exists)
+            {
+                texture = _textures[DefaultSprite.SpriteSheet.Texture.name];
+            }
+
             return exists;
         }
 
         public bool GetMaterial(uint uid, out Material material)
         {
             bool exists = _materials.TryGetValue(uid, out material);
-
+            
             return exists;
         }
 

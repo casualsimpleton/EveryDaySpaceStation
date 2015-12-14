@@ -44,6 +44,8 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: f1970d69313145040b1401ea14ca9a61, type: 2}
   defaultShader: {fileID: 4800000, guid: 3890e88820ac58245803a027e2029a0b, type: 3}
   billboardShader: {fileID: 4800000, guid: 1974557fb55d353428f218ae8ee6ebb3, type: 3}
+  twoSidedSpriteShader: {fileID: 4800000, guid: 13d2f775065feef4ebe751843507ada8,
+    type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

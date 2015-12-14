@@ -5,7 +5,8 @@
 			"mapentityuid": 1,
 			"entitytemplateuid": 1,
 			"overridename" : "Test Name",
-			"tilepos": { "x": 3, "y": 3},
+			"tilepos": { "x": 1, "y": 3},
+			"anchor": "left",
 			"rotation": { "x": 0, "y": 0, "z": 0}			
 		}
 	]

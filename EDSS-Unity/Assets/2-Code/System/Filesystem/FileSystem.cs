@@ -101,6 +101,9 @@ namespace EveryDaySpaceStation
             GameManager.Singleton.ProcessMap(testMap);
             GameManager.Singleton.ProcessMapEntities(testEntities);
 
+            //Trigger a collection now so it doesn't kick in later as we just produced a good amount of trash
+            System.GC.Collect();
+
             _initDone = true;
             _hasGameStarted = true;
         }
@@ -289,7 +292,7 @@ namespace EveryDaySpaceStation
 
                 if (!File.Exists(fileAndPath))
                 {
-                    Debug.LogError(string.Format("Unable to load art file '{0}'. Check manifest.json for accuracy"));
+                    Debug.LogError(string.Format("Unable to load art file '{0}'. Check manifest.json for accuracy", fileAndPath));
                     continue;
                 }
 
@@ -345,6 +348,10 @@ namespace EveryDaySpaceStation
             {
                 newMat = new Material(DefaultFiles.Singleton.billboardShader);
             }
+            else if (desiredType == EDSSSpriteSheet.ShaderType.TwoSidedSprite)
+            {
+                newMat = new Material(DefaultFiles.Singleton.twoSidedSpriteShader);
+            }
             else
             {
                 newMat = new Material(DefaultFiles.Singleton.defaultShader);
@@ -371,7 +378,7 @@ namespace EveryDaySpaceStation
 
             Texture2D texture = null;
             //We'll use the same name since we copied that
-            bool found = GameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
+            GameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
 
             newMat.name = string.Format("{0}", texture);
             newMat.SetTexture("_MainTex", texture);
@@ -548,6 +555,11 @@ namespace EveryDaySpaceStation
                         case "billboard":
                             sheetTypeName = "billboard";
                             shaderType = EDSSSpriteSheet.ShaderType.Billboard;
+                            break;
+
+                        case "twosided":
+                            sheetTypeName = "twosided";
+                            shaderType = EDSSSpriteSheet.ShaderType.TwoSidedSprite;
                             break;
                     }
                 }

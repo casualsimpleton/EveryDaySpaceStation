@@ -51,6 +51,14 @@ namespace EveryDaySpaceStation.DataTypes
         {
             es.Reset();
 
+#if CLIENTDEBUG
+            //es.gameObject.name = string.Format("spriteGO-{0}", uid);
+            //Feeling lazy, but no way of keeping track of previous UID from pool
+            es.gameObject.name = string.Format("spriteGO");
+#else
+            es.gameObject.name = string.Format("spriteGO");
+#endif
+
             base.ReturnObject(es);
         }
 

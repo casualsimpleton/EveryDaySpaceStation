@@ -26,7 +26,8 @@ namespace EveryDaySpaceStation.DataTypes
         public enum ShaderType
         {
             World,
-            Billboard
+            Billboard,
+            TwoSidedSprite
         }
 
         public uint UID { get; private set; }

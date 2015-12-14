@@ -1,7 +1,7 @@
 {
 	"spritedata": [
 	{
-		"uid": 500,
+		"uid": 100,
 		"name": "scaffold4way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -17,7 +17,7 @@
 		]
 	},
 	{
-		"uid": 501,
+		"uid": 101,
 		"name": "scaffolddownedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -33,7 +33,7 @@
 		]
 	},
 	{
-		"uid": 502,
+		"uid": 102,
 		"name": "scaffoldleftedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -49,7 +49,7 @@
 		]
 	},
 	{
-		"uid": 503,
+		"uid": 103,
 		"name": "scaffoldtopedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -65,7 +65,7 @@
 		]
 	},
 	{
-		"uid": 504,
+		"uid": 104,
 		"name": "scaffoldrightedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -81,7 +81,7 @@
 		]
 	},
 	{
-		"uid": 505,
+		"uid": 105,
 		"name": "scaffoldhorizontal",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -97,7 +97,7 @@
 		]
 	},
 	{
-		"uid": 506,
+		"uid": 106,
 		"name": "scaffoldvertical",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -113,7 +113,7 @@
 		]
 	},
 	{
-		"uid": 507,
+		"uid": 107,
 		"name": "scaffoldtopleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -129,7 +129,7 @@
 		]
 	},
 	{
-		"uid": 508,
+		"uid": 108,
 		"name": "scaffoldbottomright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -145,7 +145,7 @@
 		]
 	},
 	{
-		"uid": 509,
+		"uid": 109,
 		"name": "scaffoldbottomleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -161,7 +161,7 @@
 		]
 	},
 	{
-		"uid": 510,
+		"uid": 110,
 		"name": "scaffoldtopright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -177,7 +177,7 @@
 		]
 	},
 	{
-		"uid": 511,
+		"uid": 111,
 		"name": "scaffoldleft3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -193,7 +193,7 @@
 		]
 	},
 	{
-		"uid": 512,
+		"uid": 112,
 		"name": "scaffoldtop3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -209,7 +209,7 @@
 		]
 	},
 	{
-		"uid": 513,
+		"uid": 113,
 		"name": "scaffoldbottom3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -225,7 +225,7 @@
 		]
 	},
 	{
-		"uid": 514,
+		"uid": 114,
 		"name": "scaffoldright3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -241,7 +241,7 @@
 		]
 	},	
 	{
-		"uid": 515,
+		"uid": 115,
 		"name": "thickpipe4way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -257,7 +257,7 @@
 		]
 	},
 	{
-		"uid": 516,
+		"uid": 116,
 		"name": "thickpipedownedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -273,7 +273,7 @@
 		]
 	},
 	{
-		"uid": 517,
+		"uid": 117,
 		"name": "thickpipeleftedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -289,7 +289,7 @@
 		]
 	},
 	{
-		"uid": 518,
+		"uid": 118,
 		"name": "thickpipetopedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -305,7 +305,7 @@
 		]
 	},
 	{
-		"uid": 519,
+		"uid": 119,
 		"name": "thickpiperightedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -321,7 +321,7 @@
 		]
 	},
 	{
-		"uid": 520,
+		"uid": 120,
 		"name": "thickpipehorizontal",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -337,7 +337,7 @@
 		]
 	},
 	{
-		"uid": 521,
+		"uid": 121,
 		"name": "thickpipevertical",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -353,7 +353,7 @@
 		]
 	},
 	{
-		"uid": 522,
+		"uid": 122,
 		"name": "thickpipetopleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -369,7 +369,7 @@
 		]
 	},
 	{
-		"uid": 523,
+		"uid": 123,
 		"name": "thickpipebottomright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -385,7 +385,7 @@
 		]
 	},
 	{
-		"uid": 524,
+		"uid": 124,
 		"name": "thickpipebottomleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -401,7 +401,7 @@
 		]
 	},
 	{
-		"uid": 525,
+		"uid": 125,
 		"name": "thickpipetopright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -417,7 +417,7 @@
 		]
 	},
 	{
-		"uid": 526,
+		"uid": 126,
 		"name": "thickpipeleft3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -433,7 +433,7 @@
 		]
 	},
 	{
-		"uid": 527,
+		"uid": 127,
 		"name": "thickpipetop3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -449,7 +449,7 @@
 		]
 	},
 	{
-		"uid": 528,
+		"uid": 128,
 		"name": "thickpipebottom3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -465,7 +465,7 @@
 		]
 	},
 	{
-		"uid": 529,
+		"uid": 129,
 		"name": "thickpiperight3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -481,7 +481,7 @@
 		]
 	},
 	{
-		"uid": 530,
+		"uid": 130,
 		"name": "thinpipe4way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -497,7 +497,7 @@
 		]
 	},
 	{
-		"uid": 531,
+		"uid": 131,
 		"name": "thinpipedownedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -513,7 +513,7 @@
 		]
 	},
 	{
-		"uid": 532,
+		"uid": 132,
 		"name": "thinpipeleftedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -529,7 +529,7 @@
 		]
 	},
 	{
-		"uid": 533,
+		"uid": 133,
 		"name": "thinpipetopedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -545,7 +545,7 @@
 		]
 	},
 	{
-		"uid": 534,
+		"uid": 134,
 		"name": "thinpiperightedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -561,7 +561,7 @@
 		]
 	},
 	{
-		"uid": 535,
+		"uid": 135,
 		"name": "thinpipehorizontal",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -577,7 +577,7 @@
 		]
 	},
 	{
-		"uid": 536,
+		"uid": 136,
 		"name": "thinpipevertical",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -593,7 +593,7 @@
 		]
 	},
 	{
-		"uid": 537,
+		"uid": 137,
 		"name": "thinpipetopleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -609,7 +609,7 @@
 		]
 	},
 	{
-		"uid": 538,
+		"uid": 138,
 		"name": "thinpipebottomright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -625,7 +625,7 @@
 		]
 	},
 	{
-		"uid": 539,
+		"uid": 139,
 		"name": "thinpipebottomleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -641,7 +641,7 @@
 		]
 	},
 	{
-		"uid": 540,
+		"uid": 140,
 		"name": "thinpipetopright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -657,7 +657,7 @@
 		]
 	},
 	{
-		"uid": 541,
+		"uid": 141,
 		"name": "thinpipeleft3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -673,7 +673,7 @@
 		]
 	},
 	{
-		"uid": 542,
+		"uid": 142,
 		"name": "thinpipetop3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -689,7 +689,7 @@
 		]
 	},
 	{
-		"uid": 543,
+		"uid": 143,
 		"name": "thinpipebottom3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -705,7 +705,7 @@
 		]
 	},
 	{
-		"uid": 544,
+		"uid": 144,
 		"name": "thinpiperight3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -721,7 +721,7 @@
 		]
 	},	
 	{
-		"uid": 545,
+		"uid": 145,
 		"name": "wire4way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -737,7 +737,7 @@
 		]
 	},
 	{
-		"uid": 546,
+		"uid": 146,
 		"name": "wiredownedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -753,7 +753,7 @@
 		]
 	},
 	{
-		"uid": 547,
+		"uid": 147,
 		"name": "wireleftedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -769,7 +769,7 @@
 		]
 	},
 	{
-		"uid": 548,
+		"uid": 148,
 		"name": "wiretopedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -785,7 +785,7 @@
 		]
 	},
 	{
-		"uid": 549,
+		"uid": 149,
 		"name": "wirerightedge",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -801,7 +801,7 @@
 		]
 	},
 	{
-		"uid": 550,
+		"uid": 150,
 		"name": "wirehorizontal",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -817,7 +817,7 @@
 		]
 	},
 	{
-		"uid": 551,
+		"uid": 151,
 		"name": "wirevertical",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -833,7 +833,7 @@
 		]
 	},
 	{
-		"uid": 552,
+		"uid": 152,
 		"name": "wiretopleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -849,7 +849,7 @@
 		]
 	},
 	{
-		"uid": 553,
+		"uid": 153,
 		"name": "wirebottomright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -865,7 +865,7 @@
 		]
 	},
 	{
-		"uid": 554,
+		"uid": 154,
 		"name": "wirebottomleft",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -881,7 +881,7 @@
 		]
 	},
 	{
-		"uid": 555,
+		"uid": 155,
 		"name": "wiretopright",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -897,7 +897,7 @@
 		]
 	},
 	{
-		"uid": 556,
+		"uid": 156,
 		"name": "wireleft3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -913,7 +913,7 @@
 		]
 	},
 	{
-		"uid": 557,
+		"uid": 157,
 		"name": "wiretop3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -929,7 +929,7 @@
 		]
 	},
 	{
-		"uid": 558,
+		"uid": 158,
 		"name": "wirebottom3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {
@@ -945,7 +945,7 @@
 		]
 	},
 	{
-		"uid": 559,
+		"uid": 159,
 		"name": "wireright3way",
 		"spritesheet": "underlayer1.png",
 		"spritepos": {

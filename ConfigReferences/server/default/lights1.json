@@ -1,0 +1,164 @@
+{
+	"spritedata": [
+	{
+		"uid": 200,
+		"name": "tubelifeoff",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 4,
+			"y": 26
+		},
+		"spritewidthheight": {
+			"x": 24,
+			"y": 6
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 201,
+		"name": "tubelighton",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 36,
+			"y": 26
+		},
+		"spritewidthheight": {
+			"x": 26,
+			"y": 6
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 202,
+		"name": "tubelightbroken",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 203,
+		"name": "tubelightburntout",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 204,
+		"name": "tubelightempty",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 205,
+		"name": "lightbulboff",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 206,
+		"name": "lightbulbon",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 207,
+		"name": "lightbulbbroken",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 224,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 208,
+		"name": "lightbulburntout",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 256,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 209,
+		"name": "lightbulbempty",
+		"spritesheet": "lights1.png",
+		"spritepos": {
+			"x": 288,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	]
+}

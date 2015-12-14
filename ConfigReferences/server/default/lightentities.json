@@ -8,35 +8,35 @@
 		{
 			"stateuid": 0,
 			"statename": "On",
-			"spriteuid": 600,
+			"spriteuid": 201,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
 		},
 		{
 			"stateuid": 1,
 			"statename": "Off",
-			"spriteuid": 601,
+			"spriteuid": 200,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
 		},
 		{
 			"stateuid": 2,
 			"statename": "Broken",
-			"spriteuid": 602,
+			"spriteuid": 202,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
 		},
 		{
 			"stateuid": 3,
 			"statename": "Burnt Out",
-			"spriteuid": 603,
+			"spriteuid": 203,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
 		},
 		{
 			"stateuid": 4,
 			"statename": "Empty",
-			"spriteuid": 603,
+			"spriteuid": 204,
 			"size": { "x": 0.8, "y": 0.15, "z": 1 },
 			"positionoffset" : { "x": 0.1, "y": 0.85, "z": 0.05 }
 		}

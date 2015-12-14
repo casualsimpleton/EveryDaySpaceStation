@@ -103,6 +103,11 @@ public sealed class MapData
             }
         }
 
+        public Vector3 GetWorldPosition()
+        {
+            return new Vector3(TilePosition.x * SceneChunk.blockSize, 0, TilePosition.y * SceneChunk.blockSize);
+        }
+
         //public override string ToString()
         //{
         //    return string.Format("Pos: {0} Index: {1} BlocksLight: {2} IsTransparent: {3} ScaffoldingUID: {4} FloorSpriteUID: {5} WallSpriteUID: {6}",
@@ -117,6 +122,18 @@ public sealed class MapData
     [System.Serializable]
     public class EntityData
     {
+        #region Enums
+        public enum EntityWallAnchor
+        {
+            None,
+            Front, //Z+
+            Right, //X+
+            Back, //Z-
+            Left, //X-
+            Ceiling,
+            Floor
+        }
+        #endregion
         #region Classes
         public class EntityState
         {
@@ -167,11 +184,15 @@ public sealed class MapData
         }
         #endregion
         [SerializeField]
+        protected GameData.EntityDataTemplate _template;
+        [SerializeField]
         protected uint _entityUID;
         [SerializeField]
         protected uint _templateUID;
         [SerializeField]
         protected string _entityName;
+        [SerializeField]
+        protected Vector3 _rotation;
         [SerializeField]
         protected ushort _curStateUID;
         [SerializeField]
@@ -180,9 +201,15 @@ public sealed class MapData
         protected EntitySpriteGameObject _entitySprite;
         [System.NonSerialized] 
         protected MapTileData _associatedMapTile;
-        [SerializeField]
         public EntityBuildManager.BuildConstructionQueueHelper BuildState;
+        [SerializeField]
+        protected EntityWallAnchor _anchorType;
 
+        public GameData.EntityDataTemplate Template
+        {
+            get { return _template; }
+            private set { _template = value; }
+        }
         public uint EntityUID
         {
             get { return _entityUID; }
@@ -197,6 +224,11 @@ public sealed class MapData
         {
             get { return _entityName; }
             private set { _entityName = value; }
+        }
+        public Vector3 Rotation
+        {
+            get { return _rotation; }
+            private set { _rotation = value; }
         }
         public ushort CurrentStateUID
         {
@@ -218,15 +250,18 @@ public sealed class MapData
 
         public MapTileData MapTile { get { return _associatedMapTile; } }
 
-        public EntityData(uint UID, uint templateUID, string entityName)
+        public EntityWallAnchor WallAnchor { get { return _anchorType; } }
+
+        public EntityData(uint UID, uint templateUID, string entityName, Vector3 rotation, string anchorTypeStr)
         {
             EntityUID = UID;
             TemplateUID = templateUID;
+            _rotation = rotation;
             if (string.IsNullOrEmpty(entityName))
             {
-                GameData.EntityDataTemplate temp = null;
-                GameManager.Singleton.Gamedata.GetEntityTemplate(UID, out temp);
-                EntityName = temp.Name;
+                _template = null;
+                GameManager.Singleton.Gamedata.GetEntityTemplate(UID, out _template);
+                EntityName = _template.Name;
             }
             else
             {
@@ -235,6 +270,51 @@ public sealed class MapData
 
             //CS - 12/13/2015 - I know this isn't ideal, but it prevents having to store temporary variables and stuff
             BuildState = new EntityBuildManager.BuildConstructionQueueHelper();
+
+            anchorTypeStr = anchorTypeStr.ToLower();
+            _anchorType = EntityWallAnchor.None;
+            switch(anchorTypeStr)
+            {
+                case "top":
+                case "ceiling":
+                    _anchorType = EntityWallAnchor.Ceiling;
+                    break;
+
+                case "bottom":
+                case "floor":
+                    _anchorType = EntityWallAnchor.Floor;
+                    break;
+
+                case "front":
+                case "forward":
+                case "z+":
+                case "zplus":
+                    _anchorType = EntityWallAnchor.Front;
+                    break;
+
+                case "back":
+                case "rear":
+                case "z-":
+                case "zminus":
+                    _anchorType = EntityWallAnchor.Back;
+                    break;
+
+                case "right":
+                case "x+":
+                case "xplus":
+                    _anchorType = EntityWallAnchor.Right;
+                    break;
+
+                case "left":
+                case "x-":
+                case "xminus":
+                    _anchorType = EntityWallAnchor.Left;
+                    break;
+
+                default:
+                    _anchorType = EntityWallAnchor.None;
+                    break;
+            }
 
             _currentEntityState = new EntityState(this, 0);
         }
@@ -367,7 +447,7 @@ public sealed class MapData
                 mapTile.HasScaffold = true;
 
                 //TODO Unhardcode this
-                mapTile.UnderLayerFaceSpritesUID[(int)GameData.GameBlockData.UnderFaces.BottomLayer] = 500;
+                mapTile.UnderLayerFaceSpritesUID[(int)GameData.GameBlockData.UnderFaces.BottomLayer] = 100;
             }
 
             mapTile.ScaffoldingUID = 0;
@@ -394,7 +474,7 @@ public sealed class MapData
                 continue;
             }
 
-            EntityData newEntity = new EntityData(curEntry.MapEntityInstanceUID, curEntry.EntityTemplateUID, curEntry.EntityOverrideName);
+            EntityData newEntity = new EntityData(curEntry.MapEntityInstanceUID, curEntry.EntityTemplateUID, curEntry.EntityOverrideName, curEntry.Rotation, curEntry.AnchorType);
 
             //Keep track of the 
             if (newEntity.EntityUID > _currentEntityUID)

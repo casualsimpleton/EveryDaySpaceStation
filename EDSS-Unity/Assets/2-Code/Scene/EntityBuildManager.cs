@@ -112,6 +112,9 @@ public class EntityBuildManager : MonoBehaviour
 
         entity.BuildState.IsBuildingQueued = false;
         entity.BuildState.IsBuilt = true;
+
+        entity.Sprite.Detach();
+        entity.Sprite.UpdatePosition();
     }
 
     private void DeconstructEntity(MapData.EntityData entity)
