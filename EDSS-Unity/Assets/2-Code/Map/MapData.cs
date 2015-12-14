@@ -18,12 +18,14 @@ using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 using EveryDaySpaceStation.Json;
 
+[System.Serializable]
 public sealed class MapData
 {
     #region Classes
     /// <summary>
     /// Represents the playable area
     /// </summary>
+    [System.Serializable]
     public class MapTileData
     {
         public Vec2Int TilePosition { get; set; }
@@ -41,11 +43,190 @@ public sealed class MapData
         public uint FloorSpriteUID { get; set; }
         public uint WallSpriteUID { get; set; }
 
+        public bool IsVisible { get; set; }
+
+        [SerializeField]
+        private List<EntityData> _presentEntities;
+
+        public MapTileData()
+        {
+            _presentEntities = new List<EntityData>();
+        }
+
+        public void AddEntityToTile(EntityData entity)
+        {
+            _presentEntities.Add(entity);
+
+            //Tell the entity it belongs to this tile now
+            entity.ChangeTile(this);
+        }
+
+        public void RemoveEntityToTile(EntityData entity)
+        {
+            _presentEntities.Remove(entity);
+        }
+
+        /// <summary>
+        /// Attempt to remove an entity from tile by UID incase that's necessary
+        /// </summary>
+        /// <param name="entityUID"></param>
+        public void RemoveEntityToTile(uint entityUID)
+        {
+            for (int i = 0; i < _presentEntities.Count; i++)
+            {
+                if (entityUID == _presentEntities[i].EntityUID)
+                {
+                    _presentEntities.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
         //public override string ToString()
         //{
         //    return string.Format("Pos: {0} Index: {1} BlocksLight: {2} IsTransparent: {3} ScaffoldingUID: {4} FloorSpriteUID: {5} WallSpriteUID: {6}",
         //        TilePosition, TileIndex, BlocksLight, IsTransparent, BlockType, ScaffoldingUID, FloorSpriteUID, WallSpriteUID);
         //}
+    }
+
+    /// <summary>
+    /// Basic class for EntityData as used by both server and client for doing all the various entity logic. 
+    /// Contains links to entity templates, sprites and other necessary things
+    /// </summary>
+    [System.Serializable]
+    public class EntityData
+    {
+        #region Classes
+        public class EntityState
+        {
+            public delegate void OnStateSwitch(EntityState entityState, EntityData entity);
+
+            /// <summary>
+            /// A reference to the template data. We don't need an instance of this since it'll be the same no matter what
+            /// This will also change 
+            /// </summary>
+            protected GameData.EntityDataTemplate.StateTemplate _entityState;
+
+            protected float _timeAtStateSwitch;
+
+            protected EntityData _associatedEntity;
+
+            public GameData.EntityDataTemplate.StateTemplate StateTemplate { get { return _entityState; } }
+            public float TimeAtStateSwitch { get { return _timeAtStateSwitch; } }
+            public EntityData Entity { get { return _associatedEntity; } }
+
+            public EntityState(EntityData entity, ushort entityStateUID)
+            {
+                GameData.EntityDataTemplate template = null;
+                bool foundTemplate = GameManager.Singleton.Gamedata.GetEntityTemplate(entity.TemplateUID, out template);
+
+                if (!foundTemplate)
+                {
+                    Debug.LogWarning(string.Format("Unable to find entity template '{0}' for EntityData.EntityState()", entity.TemplateUID));
+                    return;
+                }
+
+                bool foundStateTemplate = template.GetEntityStateTemplate(entityStateUID, out _entityState);
+
+                if (!foundStateTemplate)
+                {
+                    Debug.LogWarning(string.Format("Unable to find entity state template '{0}' for EntityData.EntityState()", entityStateUID));
+                    return;
+                }
+
+                ChangeState(_entityState);
+            }
+
+            public void ChangeState(GameData.EntityDataTemplate.StateTemplate newState)
+            {
+                _timeAtStateSwitch = Time.time;
+
+                _entityState = newState;
+            }
+        }
+        #endregion
+        [SerializeField]
+        protected uint _entityUID;
+        [SerializeField]
+        protected uint _templateUID;
+        [SerializeField]
+        protected string _entityName;
+        [SerializeField]
+        protected ushort _curStateUID;
+        [SerializeField]
+        protected EntityState _currentEntityState;
+        [SerializeField]
+        protected EntitySpriteGameObject _entitySprite;
+        [System.NonSerialized] 
+        protected MapTileData _associatedMapTile;
+        [SerializeField]
+        protected bool _isBuilt;
+
+        public uint EntityUID
+        {
+            get { return _entityUID; }
+            private set { _entityUID = value; }
+        }
+        public uint TemplateUID
+        {
+            get { return _templateUID; }
+            private set { _templateUID = value; }
+        }
+        public string EntityName
+        {
+            get { return _entityName; }
+            private set { _entityName = value; }
+        }
+        public ushort CurrentStateUID
+        {
+            get { return _curStateUID; }
+            private set { _curStateUID = value; }
+        }
+
+        public EntitySpriteGameObject Sprite
+        {
+            get { return _entitySprite; }
+        }
+
+        public bool IsEntityBuilt
+        {
+            get { return _isBuilt; }
+        }
+
+        public bool IsVisible
+        {
+            get { return _associatedMapTile.IsVisible; }
+        }
+
+        public EntityState CurrentEntityState { get { return _currentEntityState; } }
+
+        public MapTileData MapTile { get { return _associatedMapTile; } }
+
+        public EntityData(uint UID, uint templateUID, string entityName)
+        {
+            EntityUID = UID;
+            TemplateUID = templateUID;
+            if (string.IsNullOrEmpty(entityName))
+            {
+                GameData.EntityDataTemplate temp = null;
+                GameManager.Singleton.Gamedata.GetEntityTemplate(UID, out temp);
+                EntityName = temp.Name;
+            }
+            else
+            {
+                EntityName = entityName;
+            }
+        }
+
+        public void ChangeState(ushort newStateUID)
+        {
+            CurrentStateUID = newStateUID;
+        }
+
+        public void ChangeTile(MapTileData mapTile)
+        {
+            _associatedMapTile = mapTile;
+        }
     }
 
     /// <summary>
@@ -94,6 +275,14 @@ public sealed class MapData
     //public LargeTubeTileData[] _largeTubeTiles;
     //public ThinTubeTileData[] _thinTubeTiles;
     //public WireTileData[] _wireTubeTiles;
+
+    private Dictionary<uint, EntityData> _entitiesInMap;
+    private uint _currentEntityUID;
+
+    public uint GetNewEntityUID()
+    {
+        return _currentEntityUID++;
+    }
     #endregion
 
     /// <summary>
@@ -150,6 +339,8 @@ public sealed class MapData
             if (tile.HasScaffold != 0)
             {
                 mapTile.HasScaffold = true;
+
+                //TODO Unhardcode this
                 mapTile.UnderLayerFaceSpritesUID[(int)GameData.GameBlockData.UnderFaces.BottomLayer] = 500;
             }
 
@@ -163,6 +354,8 @@ public sealed class MapData
 
     public bool LoadEntities(MapEntityDataConfig mapEntities)
     {
+        _entitiesInMap = new Dictionary<uint, EntityData>();
+        uint entitiesAdded = 0;
         for (int i = 0; i < mapEntities.EntityInstanceData.Length; i++)
         {
             MapEntityJson curEntry = mapEntities.EntityInstanceData[i];
@@ -175,9 +368,37 @@ public sealed class MapData
                 continue;
             }
 
+            EntityData newEntity = new EntityData(curEntry.MapEntityInstanceUID, curEntry.EntityTemplateUID, curEntry.EntityOverrideName);
 
+            //Keep track of the 
+            if (newEntity.EntityUID > _currentEntityUID)
+            {
+                _currentEntityUID = newEntity.EntityUID + 1;
+            }
+
+            _entitiesInMap.Add(newEntity.EntityUID, newEntity);
+
+            //Map tile Stuff
+            int index = Helpers.IndexFromVec2Int(curEntry.EntityTilePos, _mapSize.x);
+            //Tell map tile about the new entity
+            _mapTiles[index].AddEntityToTile(newEntity);
+
+            entitiesAdded++;
         }
 
+        Debug.Log(string.Format("Added {0} entities to map", entitiesAdded));
+
         return true;
+    }
+
+    public void Cleanup()
+    {
+        //foreach (KeyValuePair<uint, EntityData> entity in _entitiesInMap)
+        //{
+        //    //TODO Depending on how EntityData evolves
+        //}
+
+        _entitiesInMap.Clear();
+        _entitiesInMap = null;
     }
 }

@@ -106,7 +106,9 @@ namespace EveryDaySpaceStation
 
         public static void LightFloodFillForward(int centerX, int centerY, int maxDist, Color32 centerColor, ref MapData mapData, LightFloodFillQueueItem.FillDirection fillDir)
         {
+#if DEBUGCLIENT
             Profiler.BeginSample("Lightfill");
+#endif
             _stopWatch.Reset();
             _stopWatch.Start();
 
@@ -238,7 +240,9 @@ namespace EveryDaySpaceStation
             _stopWatch.Stop();
             //Debug.Log(string.Format("Elapsed time for {0},{1} fill {2} is {3}ms", centerX, centerY, fillDir, timer1.ElapsedMilliseconds));
 
+#if DEBUGCLIENT
             Profiler.EndSample();
+#endif
         }
     }
 }

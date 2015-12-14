@@ -85,7 +85,7 @@ public class SceneBlock
     /// the chunk can quickly know which SceneChunkRenderer to modify
     /// </summary>
     [SerializeField]
-    HashSet<uint> _associatedRendererUID;
+    UniqueList<uint> _associatedRendererUID;
     #endregion
 
     #region Gets/Sets
@@ -93,7 +93,7 @@ public class SceneBlock
     public int WorldPosIndex { get { return _worldPosIndex; } }
     public Vec2Int ChunkPos { get { return _chunkPos; } }
     public int ChunkPosIndex { get { return _chunkPosIndex; } }
-    public HashSet<uint> AssociatedRendererUID
+    public UniqueList<uint> AssociatedRendererUID
     {
         get { return _associatedRendererUID; }
         set { _associatedRendererUID = value; }
@@ -103,7 +103,7 @@ public class SceneBlock
     public void Create(Vec2Int worldPosition, Vec2Int chunkPosition, int worldPositionIndex, int chunkPositionIndex, 
         int[] facesFirstIndex, int[] vertFirstIndex, int[] underlayerFaceFirstIndex, int[] underlayerVertFirstIndex, SceneChunk parentChunk)
     {
-        _associatedRendererUID = new HashSet<uint>();
+        _associatedRendererUID = new UniqueList<uint>();
 
         _worldPos = worldPosition;
         _chunkPos = chunkPosition;
@@ -139,9 +139,10 @@ public class SceneBlock
         GameData.GameBlockData.FaceInfo[] faceInfo = mapTileData.BlockType.Faceinfo;
         for (int i = 0; i < faceInfo.Length; i++)
         {
-            foreach (uint uid in _associatedRendererUID)
+            //foreach (uint uid in _associatedRendererUID)
+            for(int j = 0; j < _associatedRendererUID.Count; j++)
             {
-                _parentChunk.ModifyColorNoUpdate(uid, _vertFirstIndex[i], mapTileData.LightColor);
+                _parentChunk.ModifyColorNoUpdate(_associatedRendererUID.List[j], _vertFirstIndex[i], mapTileData.LightColor);
             }
         }
     }
@@ -150,9 +151,10 @@ public class SceneBlock
     {
         int faceValueIndex = (int)face;
 
-        foreach (uint uid in _associatedRendererUID)
+        //foreach (uint uid in _associatedRendererUID)
+        for (int j = 0; j < _associatedRendererUID.Count; j++)
         {
-            _parentChunk.ModifyColorNoUpdate(uid, _vertFirstIndex[faceValueIndex], newColor);
+            _parentChunk.ModifyColorNoUpdate(_associatedRendererUID.List[j], _vertFirstIndex[faceValueIndex], newColor);
         }
     }
 
@@ -209,11 +211,12 @@ public class SceneBlock
             //_parentChunk.ModifyColor(_associatedRendererUID, _vertFirstIndex[i], c);
         }
 
-        foreach (uint uid in _associatedRendererUID)
+        //foreach (uint uid in _associatedRendererUID)
+        for (int i = 0; i < _associatedRendererUID.Count; i++)
         {
-            _parentChunk.UpdateMesh(uid, isFirstTime);
-            _parentChunk.UpdateUV(uid);
-            _parentChunk.UpdateColors(uid);
+            _parentChunk.UpdateMesh(_associatedRendererUID.List[i], isFirstTime);
+            _parentChunk.UpdateUV(_associatedRendererUID.List[i]);
+            _parentChunk.UpdateColors(_associatedRendererUID.List[i]);
         }
     }
 
@@ -251,11 +254,12 @@ public class SceneBlock
             _parentChunk.ModifyUnderlayerUVNoUpdate(uid, _underlayerVertFirstIndex[i], sprite.GetUVCoords(), sprite.uvOffset);
         }
 
-        foreach(uint uid in _associatedRendererUID)
+        //foreach(uint uid in _associatedRendererUID)
+        for (int i = 0; i < _associatedRendererUID.Count; i++)
         {
-            _parentChunk.UpdateUnderlayerMesh(uid, isFirstTime);
-            _parentChunk.UpdateUnderlayerUV(uid);
-            _parentChunk.UpdateUnderlayerColors(uid);
+            _parentChunk.UpdateUnderlayerMesh(_associatedRendererUID.List[i], isFirstTime);
+            _parentChunk.UpdateUnderlayerUV(_associatedRendererUID.List[i]);
+            _parentChunk.UpdateUnderlayerColors(_associatedRendererUID.List[i]);
         }
     }
 }

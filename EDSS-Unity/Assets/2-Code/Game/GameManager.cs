@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
+        _mapData.Cleanup();
         _gameData.Cleanup();
     }
 

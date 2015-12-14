@@ -52,6 +52,7 @@ public class SceneLevelManager : MonoBehaviour
     protected List<TileLight> _visibleLights;
     protected float _lightUpdateTimer;
     protected float _lightUpdateDelta = 1f / 10f;
+    protected SquareBounds _previousVisibleLightBounds;
     protected SquareBounds _visibleLightBounds;
 
     public void AddLight(TileLight light)
@@ -75,6 +76,7 @@ public class SceneLevelManager : MonoBehaviour
         BlocksPerChuck = FileSystem.Optionsconfig.SceneChunkSize;
         _visibleLights = new List<TileLight>();
         _visibleLightBounds = new SquareBounds(new Vec2Int(0, 0), GameManager.Singleton.Mapdata._mapSize);
+        _previousVisibleLightBounds = _visibleLightBounds;
 
         CreateMap();
 
@@ -142,7 +144,7 @@ public class SceneLevelManager : MonoBehaviour
         for (int i = 0; i < len; i++)
         {
             GameObject newChunk = new GameObject();
-            newChunk.transform.parent = this.transform;
+            newChunk.transform.parent = _worldRootTransform;
             newChunk.transform.localPosition = Vector3.zero;
 
             _sceneChunks[i] = newChunk.AddComponent<SceneChunk>();
@@ -201,16 +203,43 @@ public class SceneLevelManager : MonoBehaviour
         }
 
         MapData mapData = GameManager.Singleton.Mapdata;
+        int mapWidth = GameManager.Singleton.Mapdata._mapSize.x;
 
-        //First reset all lights in visible area
-        for (int x = 0; x < _visibleLightBounds.MaxPoint.x; x++)
+#if DEBUGCLIENT
+        Profiler.BeginSample("Reset Visibility");
+#endif
+        //If the previousLightBounds is different than the current, we need to mark all of those tiles as not visible
+        if (_previousVisibleLightBounds != _visibleLightBounds)
         {
-            for (int y = 0; y < _visibleLightBounds.MaxPoint.y; y++)
+            for (int x = _previousVisibleLightBounds.MinPoint.x; x < _previousVisibleLightBounds.MaxPoint.x; x++)
             {
-                int index = Helpers.IndexFromVec2Int(x, y, _visibleLightBounds.MaxPoint.x);
-                mapData._mapTiles[index].LightColor = GameManager.Singleton.Mapdata.AmbientLightColor; //new Color32(10, 10, 10, 255);
+                for (int y = _previousVisibleLightBounds.MinPoint.y; y < _previousVisibleLightBounds.MaxPoint.y; y++)
+                {
+                    int index = Helpers.IndexFromVec2Int(x, y, mapWidth);
+                    mapData._mapTiles[index].IsVisible = false;
+                }
             }
         }
+        Profiler.EndSample();
+
+        //Reset all lights in visible area
+#if DEBUGCLIENT
+        Profiler.BeginSample("Reset Lighting");
+#endif
+        for (int x = _visibleLightBounds.MinPoint.x; x < _visibleLightBounds.MaxPoint.x; x++)
+        {
+            for (int y = _visibleLightBounds.MinPoint.y; y < _visibleLightBounds.MaxPoint.y; y++)
+            {
+                int index = Helpers.IndexFromVec2Int(x, y, mapWidth);
+                mapData._mapTiles[index].LightColor = GameManager.Singleton.Mapdata.AmbientLightColor; //new Color32(10, 10, 10, 255);
+                mapData._mapTiles[index].IsVisible = true;
+            }
+        }
+#if DEBUGCLIENT
+        Profiler.EndSample();
+#endif
+
+        _previousVisibleLightBounds = _visibleLightBounds;
 
         //Now go through each light, and find the tile it's on
         int count = _visibleLights.Count;
@@ -240,7 +269,7 @@ public class SceneLevelManager : MonoBehaviour
             SceneLighting.LightFloodFillForward(light.TilePos.x, light.TilePos.y, light.LightRange, light.LightColor, ref mapData, SceneLighting.LightFloodFillQueueItem.FillDirection.Left);
         }
 
-        //Now update the colors on the meshes
+        ////Now update the colors on the meshes
         count = mapData._mapTiles.Length;
         for (int i = 0; i < count; i++)
         {

@@ -157,6 +157,12 @@ namespace EveryDaySpaceStation.Json
         public uint EntityTemplateUID { get; set; }
 
         /// <summary>
+        /// Name of entity as overriden by map's entity entry. Otherwise it'll use template based name
+        /// </summary>
+        [JsonProperty("overridename")]
+        public string EntityOverrideName { get; set; }
+
+        /// <summary>
         /// The tile that this entity will start associated with
         /// </summary>
         [JsonProperty("tilepos")]

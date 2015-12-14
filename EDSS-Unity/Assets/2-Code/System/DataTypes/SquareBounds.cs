@@ -90,6 +90,48 @@ namespace EveryDaySpaceStation.DataTypes
 
             return true;
         }
+
+        public static bool operator !=(SquareBounds m, SquareBounds n)
+        {
+            if (m._anchor.x != n._anchor.x || m._anchor.y != n._anchor.y)
+                return true;
+
+            if (m._widthHeight.x != n._widthHeight.x || m._widthHeight.y != n._widthHeight.y)
+                return true;
+
+            return false;
+        }
+
+        public static bool operator ==(SquareBounds m, SquareBounds n)
+        {
+            if (m._anchor.x != n._anchor.x || m._anchor.y != n._anchor.y)
+                return false;
+
+            if (m._widthHeight.x != n._widthHeight.x || m._widthHeight.y != n._widthHeight.y)
+                return false;
+
+            return true;
+        }
+
+        //Just doing this to shutup the damn compiler. Don't think it's a particularly good idea
+        // Override the Object.Equals(object o) method:
+        public override bool Equals(object o)
+        {
+            try
+            {
+                return (bool)(this == (SquareBounds)o);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Override the Object.GetHashCode() method:
+        public override int GetHashCode()
+        {
+            return _anchor.x + _anchor.y + _widthHeight.x + _widthHeight.y;
+        }
     }
 
     //TODO - This isn't right. Haven't tested it, but I'm too tired ATM to figure out the dumb math

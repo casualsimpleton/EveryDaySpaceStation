@@ -27,7 +27,7 @@ namespace EveryDaySpaceStation
         public class EntityDataTemplate
         {
             #region Classes
-            public class State
+            public class StateTemplate
             {
                 public ushort StateUID { get; private set; }
                 public string StateName { get; private set; }
@@ -35,7 +35,7 @@ namespace EveryDaySpaceStation
                 public Vector3 StateSize { get; private set; }
                 public Vector3 StatePositionOffset { get; private set; }
 
-                public State(ushort uid, string name, uint spriteUID, Vector3 size, Vector3 offset)
+                public StateTemplate(ushort uid, string name, uint spriteUID, Vector3 size, Vector3 offset)
                 {
                     StateUID = uid;
                     StateName = name;
@@ -45,63 +45,70 @@ namespace EveryDaySpaceStation
                 }
             }
 
-            public class LightState
+            public class LightStateTemplate
             {
                 public int LightRadius { get; private set; }
 
-                public LightState(int radius)
+                public LightStateTemplate(int radius)
                 {
                     LightRadius = radius;
                 }
 
-                public static LightState ZeroState = new LightState(0);
+                public static LightStateTemplate ZeroState = new LightStateTemplate(0);
             }
 
-            public class FixedState
+            public class FixedStateTemplate
             {
                 public uint[] ToggleToolTypeUID { get; private set; }
                 public uint[] BreakableToolTypeUID { get; private set; }
                 public uint[] RepairToolTypeUID { get; private set; }
 
-                public FixedState(uint[] toggleTypes, uint[] breakableTypes, uint[] repairTypes)
+                public FixedStateTemplate(uint[] toggleTypes, uint[] breakableTypes, uint[] repairTypes)
                 {
                     ToggleToolTypeUID = toggleTypes;
                     BreakableToolTypeUID = breakableTypes;
                     RepairToolTypeUID = repairTypes;
                 }
+
+                public void Clear()
+                {
+                    ToggleToolTypeUID = null;
+                    BreakableToolTypeUID = null;
+                    RepairToolTypeUID = null;
+                }
             }
 
-            public class PoweredState
+            public class PoweredStateTemplate
             {
                 public string ResourceName { get; private set; }
                 public int Cost { get; private set; }
 
-                public PoweredState(string name, int cost)
+                public PoweredStateTemplate(string name, int cost)
                 {
                     ResourceName = ResourceName;
                     Cost = cost;
                 }
 
-                public static PoweredState ZeroState = new PoweredState("electricity", 0);
+                public static PoweredStateTemplate ZeroState = new PoweredStateTemplate("electricity", 0);
             }
 
-            public class DeviceState
+            public class DeviceStateTemplate
             {
                 public string[] AcceptedInputNames { get; private set; }
                 public int MaxCount { get; private set; }
 
-                public DeviceState(string[] acceptedInputs, int maxCount)
+                public DeviceStateTemplate(string[] acceptedInputs, int maxCount)
                 {
                     AcceptedInputNames = acceptedInputs;
                     MaxCount = maxCount;
                 }
             }
 
-            public class CraftState
+            public class CraftStateTemplate
             {
                 public List<Tuple<string, int>> Materials { get; private set; }
 
-                public CraftState()
+                public CraftStateTemplate()
                 {
                     Materials = new List<Tuple<string, int>>();
                 }
@@ -110,6 +117,11 @@ namespace EveryDaySpaceStation
                 {
                     Materials.Add(new Tuple<string, int>(name, count));
                 }
+
+                public void Clear()
+                {
+                    Materials.Clear();
+                }
             }
             #endregion
 
@@ -117,12 +129,48 @@ namespace EveryDaySpaceStation
             public string Name { get; private set; }
             public string[] EntityTypes { get; private set; }
 
-            public Dictionary<ushort, State> EntityStates { get; private set; }
-            public Dictionary<ushort, LightState> LightStates { get; private set; }
-            public Dictionary<ushort, FixedState> FixedStates { get; private set; }
-            public Dictionary<ushort, PoweredState> PoweredStates { get; private set; }
-            public Dictionary<ushort, DeviceState> DeviceStates { get; private set; }
-            public Dictionary<ushort, CraftState> CraftStates { get; private set; }
+            public Dictionary<ushort, StateTemplate> EntityStates { get; private set; }
+            public Dictionary<ushort, LightStateTemplate> LightStates { get; private set; }
+            public Dictionary<ushort, FixedStateTemplate> FixedStates { get; private set; }
+            public Dictionary<ushort, PoweredStateTemplate> PoweredStates { get; private set; }
+            public Dictionary<ushort, DeviceStateTemplate> DeviceStates { get; private set; }
+            public Dictionary<ushort, CraftStateTemplate> CraftStates { get; private set; }
+
+            public bool GetEntityStateTemplate(ushort uid, out StateTemplate template)
+            {
+                template = null;
+                return EntityStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetLightStateTemplate(ushort uid, out LightStateTemplate template)
+            {
+                template = null;
+                return LightStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetFixedStateTemplate(ushort uid, out FixedStateTemplate template)
+            {
+                template = null;
+                return FixedStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetPoweredStateTemplate(ushort uid, out PoweredStateTemplate template)
+            {
+                template = null;
+                return PoweredStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetDeviceStateTemplate(ushort uid, out DeviceStateTemplate template)
+            {
+                template = null;
+                return DeviceStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetCraftStateTemplate(ushort uid, out CraftStateTemplate template)
+            {
+                template = null;
+                return CraftStates.TryGetValue(uid, out template);
+            }
 
             public EntityDataTemplate(uint uid, string name, string[] typeFlags, EveryDaySpaceStation.Json.EntityStateDataJson[] states)
             {
@@ -130,13 +178,13 @@ namespace EveryDaySpaceStation
                 Name = name;
                 EntityTypes = typeFlags;
 
-                EntityStates = new Dictionary<ushort, State>();
+                EntityStates = new Dictionary<ushort, StateTemplate>();
 
                 //Process these first as this determines a bunch of other things as the number of other states should not exceed this count
                 for (int i = 0; i < states.Length; i++)
                 {
                     EveryDaySpaceStation.Json.EntityStateDataJson curState = states[i];
-                    State newState = new State(curState.StateUID, curState.StateName, curState.SpriteUID, curState.DisplaySize, curState.PositionOffset);
+                    StateTemplate newState = new StateTemplate(curState.StateUID, curState.StateName, curState.SpriteUID, curState.DisplaySize, curState.PositionOffset);
 
                     EntityStates.Add(newState.StateUID, newState);
                 }
@@ -155,23 +203,23 @@ namespace EveryDaySpaceStation
                     switch (curType)
                     {
                         case "light":
-                            LightStates = new Dictionary<ushort, LightState>(EntityStates.Count);
+                            LightStates = new Dictionary<ushort, LightStateTemplate>(EntityStates.Count);
                             break;
 
                         case "fixed":
-                            FixedStates = new Dictionary<ushort, FixedState>(EntityStates.Count);
+                            FixedStates = new Dictionary<ushort, FixedStateTemplate>(EntityStates.Count);
                             break;
 
                         case "powered":
-                            PoweredStates = new Dictionary<ushort, PoweredState>(EntityStates.Count);
+                            PoweredStates = new Dictionary<ushort, PoweredStateTemplate>(EntityStates.Count);
                             break;
 
                         case "device":
-                            DeviceStates = new Dictionary<ushort, DeviceState>(EntityStates.Count);
+                            DeviceStates = new Dictionary<ushort, DeviceStateTemplate>(EntityStates.Count);
                             break;
 
                         case "craftable":
-                            CraftStates = new Dictionary<ushort, CraftState>(EntityStates.Count);
+                            CraftStates = new Dictionary<ushort, CraftStateTemplate>(EntityStates.Count);
                             break;
                     }
                 }
@@ -188,7 +236,7 @@ namespace EveryDaySpaceStation
                 for (i = 0; i < lightstates.Length && i < EntityStates.Count; i++)
                 {
                     EveryDaySpaceStation.Json.EntityLightStateJson lightState = lightstates[i];
-                    LightState newState = new LightState(lightState.EntityLightValue);
+                    LightStateTemplate newState = new LightStateTemplate(lightState.EntityLightValue);
 
                     LightStates.Add(i, newState);
                 }
@@ -201,7 +249,7 @@ namespace EveryDaySpaceStation
                     {
                         i++;
 
-                        LightStates.Add(i, LightState.ZeroState);
+                        LightStates.Add(i, LightStateTemplate.ZeroState);
                     }
                 }
 
@@ -222,7 +270,7 @@ namespace EveryDaySpaceStation
                 for (i = 0; i < fixedStates.Length && i < EntityStates.Count; i++)
                 {
                     EveryDaySpaceStation.Json.EntityFixedStateJson fixedState = fixedStates[i];
-                    FixedState newState = new FixedState(fixedState.EntityFixedToggleToolType, fixedState.EntityFixedBreakbleToolType, fixedState.EntityFixedRepairToolType);
+                    FixedStateTemplate newState = new FixedStateTemplate(fixedState.EntityFixedToggleToolType, fixedState.EntityFixedBreakbleToolType, fixedState.EntityFixedRepairToolType);
 
                      FixedStates.Add(i, newState);
                 }
@@ -239,7 +287,7 @@ namespace EveryDaySpaceStation
                 for (i = 0; i < poweredStates.Length && i < EntityStates.Count; i++)
                 {
                     EveryDaySpaceStation.Json.EntityPoweredStateJson poweredState = poweredStates[i];
-                    PoweredState newState = new PoweredState(poweredState.EntityPowerResourceName, poweredState.EntityPowerCost);
+                    PoweredStateTemplate newState = new PoweredStateTemplate(poweredState.EntityPowerResourceName, poweredState.EntityPowerCost);
 
                     PoweredStates.Add(i, newState);
                 }
@@ -252,7 +300,7 @@ namespace EveryDaySpaceStation
                     {
                         i++;
 
-                        PoweredStates.Add(i, PoweredState.ZeroState);
+                        PoweredStates.Add(i, PoweredStateTemplate.ZeroState);
                     }
                 }
 
@@ -273,7 +321,7 @@ namespace EveryDaySpaceStation
                 for (i = 0; i < deviceStates.Length && i < EntityStates.Count; i++)
                 {
                     EveryDaySpaceStation.Json.EntityDeviceStateJson deviceState = deviceStates[i];
-                    DeviceState newState = new DeviceState(deviceState.EntityAcceptedInputTypeNames, deviceState.EntityAcceptedInputCount);
+                    DeviceStateTemplate newState = new DeviceStateTemplate(deviceState.EntityAcceptedInputTypeNames, deviceState.EntityAcceptedInputCount);
 
                     DeviceStates.Add(i, newState);
                 }
@@ -290,7 +338,7 @@ namespace EveryDaySpaceStation
                 for (i = 0; i < craftStates.Length && i < EntityStates.Count; i++)
                 {
                     EveryDaySpaceStation.Json.EntityCraftStateJson craftState = craftStates[i];
-                    CraftState newState = new CraftState();
+                    CraftStateTemplate newState = new CraftStateTemplate();
 
                     for (int j = 0; j < craftState.EntityCraftMaterials.Length; j++)
                     {
@@ -299,6 +347,54 @@ namespace EveryDaySpaceStation
 
                     CraftStates.Add(i, newState);
                 }
+            }
+
+            public void Cleanup()
+            {
+                if (EntityStates != null)
+                {
+                    EntityStates.Clear();
+                }
+                EntityStates = null;
+
+                if (LightStates != null)
+                {
+                    LightStates.Clear();
+                }
+                LightStates = null;
+
+                if (FixedStates != null)
+                {
+                    foreach (KeyValuePair<ushort, FixedStateTemplate> t in FixedStates)
+                    {
+                        t.Value.Clear();
+                    }
+
+                    FixedStates.Clear();
+                }
+                FixedStates = null;
+
+                if (PoweredStates != null)
+                {
+                    PoweredStates.Clear();
+                }
+                PoweredStates = null;
+
+                if (DeviceStates != null)
+                {
+                    DeviceStates.Clear();
+                }
+                DeviceStates = null;
+
+                if (CraftStates != null)
+                {
+                    foreach (KeyValuePair<ushort, CraftStateTemplate> t in CraftStates)
+                    {
+                        t.Value.Clear();
+                    }
+                    CraftStates.Clear();
+                }
+                CraftStates = null;
             }
         }
 
@@ -590,6 +686,12 @@ namespace EveryDaySpaceStation
             return exists;
         }
 
+        public bool GetEntityTemplate(uint uid, out EntityDataTemplate template)
+        {
+            bool exists = _entityDataTemplates.TryGetValue(uid, out template);
+            return exists;
+        }
+
         public bool GetTexture(string name, out Texture2D texture)
         {
             bool exists = _textures.TryGetValue(name, out texture);
@@ -631,17 +733,24 @@ namespace EveryDaySpaceStation
                 GameObject.Destroy(material.Value);
             }
 
+            foreach (KeyValuePair<uint, EntityDataTemplate> template in _entityDataTemplates)
+            {
+                template.Value.Cleanup();
+            }
+
             _sprites.Clear();
             _spriteSheets.Clear();
             _gameBlockData.Clear();
             _textures.Clear();
             _materials.Clear();
+            _entityDataTemplates.Clear();
 
             _sprites = null;
             _spriteSheets = null;
             _gameBlockData = null;
             _textures = null;
             _materials = null;
+            _entityDataTemplates = null;
         }
     }
 }
