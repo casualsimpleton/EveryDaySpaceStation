@@ -43,7 +43,28 @@ public sealed class MapData
         public uint FloorSpriteUID { get; set; }
         public uint WallSpriteUID { get; set; }
 
-        public bool IsVisible { get; set; }
+        [SerializeField]
+        protected bool _isVisible;
+        public bool IsVisible { get { return _isVisible; } }
+        public void SetVisible(bool isVisible)
+        {
+            _isVisible = isVisible;
+
+            if (isVisible)
+            {
+                for (int i = 0; i < _presentEntities.Count; i++)
+                {
+                    EntityBuildManager.Singleton.AddEntityToBuildQueue(_presentEntities[i]);
+                }
+            }
+            else
+            {
+                for(int i = 0; i < _presentEntities.Count; i++)
+                {
+                    EntityBuildManager.Singleton.AddEntityToDeconstruction(_presentEntities[i]);
+                }
+            }
+        }
 
         [SerializeField]
         private List<EntityData> _presentEntities;
@@ -214,6 +235,8 @@ public sealed class MapData
 
             //CS - 12/13/2015 - I know this isn't ideal, but it prevents having to store temporary variables and stuff
             BuildState = new EntityBuildManager.BuildConstructionQueueHelper();
+
+            _currentEntityState = new EntityState(this, 0);
         }
 
         public void ChangeState(ushort newStateUID)
@@ -224,6 +247,11 @@ public sealed class MapData
         public void ChangeTile(MapTileData mapTile)
         {
             _associatedMapTile = mapTile;
+        }
+
+        public void AssignEntitySprite(EntitySpriteGameObject sprite)
+        {
+            _entitySprite = sprite;
         }
     }
 

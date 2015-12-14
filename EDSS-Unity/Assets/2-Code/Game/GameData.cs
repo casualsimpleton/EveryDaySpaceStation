@@ -594,7 +594,9 @@ namespace EveryDaySpaceStation
         Dictionary<uint, GameBlockData> _gameBlockData;
         Dictionary<string, Texture2D> _textures;
         Dictionary<uint, Material> _materials;
-        Dictionary<uint, EntityDataTemplate> _entityDataTemplates;        
+        Dictionary<uint, EntityDataTemplate> _entityDataTemplates;
+
+        public static EDSSSprite DefaultSprite;
 
         private uint _spriteSheetUID = 1;
         private uint _materialUID = 1;
@@ -650,6 +652,12 @@ namespace EveryDaySpaceStation
         public bool GetSprite(uint uid, out EDSSSprite sprite)
         {
             bool exists = _sprites.TryGetValue(uid, out sprite);
+
+            //Return the default sprite
+            if (!exists)
+            {
+                sprite = GameData.DefaultSprite;
+            }
 
             return exists;
         }

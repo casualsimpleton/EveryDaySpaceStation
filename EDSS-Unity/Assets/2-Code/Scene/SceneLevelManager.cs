@@ -217,7 +217,7 @@ public class SceneLevelManager : MonoBehaviour
                 for (int y = _previousVisibleLightBounds.MinPoint.y; y < _previousVisibleLightBounds.MaxPoint.y; y++)
                 {
                     int index = Helpers.IndexFromVec2Int(x, y, mapWidth);
-                    mapData._mapTiles[index].IsVisible = false;
+                    mapData._mapTiles[index].SetVisible(false);
                 }
             }
         }
@@ -233,7 +233,7 @@ public class SceneLevelManager : MonoBehaviour
             {
                 int index = Helpers.IndexFromVec2Int(x, y, mapWidth);
                 mapData._mapTiles[index].LightColor = GameManager.Singleton.Mapdata.AmbientLightColor; //new Color32(10, 10, 10, 255);
-                mapData._mapTiles[index].IsVisible = true;
+                mapData._mapTiles[index].SetVisible(true);
             }
         }
 #if DEBUGCLIENT

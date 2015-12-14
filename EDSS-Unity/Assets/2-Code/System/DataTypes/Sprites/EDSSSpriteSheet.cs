@@ -91,15 +91,19 @@ namespace EveryDaySpaceStation.DataTypes
                 if (disposing)
                 {
                     //Dispose here
-                    for (int i = 0; i < Sprites.Count; i++)
+                    if (Sprites != null)
                     {
-                        if (Sprites[i] != null)
+                        for (int i = 0; i < Sprites.Count; i++)
                         {
-                            Sprites[i].Dispose();
+                            if (Sprites[i] != null)
+                            {
+                                Sprites[i].Dispose();
+                            }
                         }
+
+                        Sprites.Clear();
                     }
 
-                    Sprites.Clear();
                     Sprites = null;
 
                     GameObject.Destroy(Texture);

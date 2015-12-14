@@ -43,7 +43,6 @@ public class EntityBuildManager : MonoBehaviour
         public bool IsBuildingQueued;
         public bool IsBuilt;
         public bool IsDeconstructQueued;
-        public bool IsDeconstructed;
     }
     #endregion
 
@@ -74,7 +73,7 @@ public class EntityBuildManager : MonoBehaviour
     public void AddEntityToDeconstruction(MapData.EntityData entity)
     {
         //If it's already in the queue, don't add it again
-        if (entity.BuildState.IsDeconstructQueued)
+        if (entity.BuildState.IsDeconstructQueued || !entity.BuildState.IsBuilt)
             return;
 
         _entitiesForDeconstruction.Enqueue(entity);
@@ -103,7 +102,13 @@ public class EntityBuildManager : MonoBehaviour
 
     private void BuildEntity(MapData.EntityData entity)
     {
-        //entity.Sprite;
+        if (entity.Sprite == null)
+        {
+            EntitySpriteGameObject esgo = PoolManager.Singleton.RequestEntitySpriteGameObject();
+            entity.AssignEntitySprite(esgo);
+        }
+
+        entity.Sprite.Create(entity);
 
         entity.BuildState.IsBuildingQueued = false;
         entity.BuildState.IsBuilt = true;
@@ -111,5 +116,7 @@ public class EntityBuildManager : MonoBehaviour
 
     private void DeconstructEntity(MapData.EntityData entity)
     {
+        entity.BuildState.IsBuilt = false;
+        entity.BuildState.IsDeconstructQueued = false;
     }
 }

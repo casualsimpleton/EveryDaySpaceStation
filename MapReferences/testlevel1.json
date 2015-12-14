@@ -216,7 +216,7 @@
 			{
 				"x": 4,
 				"y": 1,
-				"facespritesuid" : [ 13, 13, 13, 13, 13, 8],
+				"facespritesuid" : [ 13, 13, 13, 13, 13, 0],
 				"hasscaffold": 1,
 				"floor": 1,
 				"wall": 1,

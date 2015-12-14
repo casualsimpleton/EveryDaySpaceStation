@@ -255,12 +255,31 @@ namespace EveryDaySpaceStation
         #endregion
 
         #region Server Loading
+        /// <summary>
+        /// Not the most elegant process, but it copies the default texture to something in memory, so it can be inserted into the runtime texture diction
+        /// and cleaned up just like the rest at the end of the game
+        /// </summary>
+        private static void PrepareDefaultTextures()
+        {
+            Texture2D defaultCopy = new Texture2D(DefaultFiles.Singleton.defaultTexture.width, DefaultFiles.Singleton.defaultTexture.height, DefaultFiles.Singleton.defaultTexture.format, true);
+            Color[] defColors = DefaultFiles.Singleton.defaultTexture.GetPixels();
+            defaultCopy.SetPixels(defColors);
+            defaultCopy.Apply();
+            defaultCopy.name = DefaultFiles.Singleton.defaultTexture.name;
+            defaultCopy.filterMode = DefaultFiles.Singleton.defaultTexture.filterMode;
+            defaultCopy.wrapMode = DefaultFiles.Singleton.defaultTexture.wrapMode;
+            GameManager.Singleton.Gamedata.AddTexture(defaultCopy.name, defaultCopy);
+        }
+
         private static void ProcessGameManifest()
         {
             if (_gameManifestConfig == null)
             {
                 Debug.LogError(string.Format("Game Manifest is null. Can't proceed."));
             }
+
+            //Adding the default texture to the texture dictionary
+            PrepareDefaultTextures();
 
             //Load all the texture data based on the 
             int artProcessed = 0;
@@ -280,6 +299,9 @@ namespace EveryDaySpaceStation
                 GameManager.Singleton.Gamedata.AddTexture(_gameManifestConfig.ArtFileNames[i], tex);
                 artProcessed++;
             }
+
+            //First create the default Sprite Sheet and Sprite
+            CreateDefaultSpriteSheetAndSprite();
 
             //Load Sprite Data and store it into Gamedata
             int spriteFileProcessed = 0;
@@ -337,6 +359,39 @@ namespace EveryDaySpaceStation
             GameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
 
             return true;
+        }
+
+        public static void CreateDefaultSpriteSheetAndSprite()
+        {
+            EDSSSpriteSheet sheet = new EDSSSpriteSheet();
+            uint uid = GameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
+            uint matUID = GameManager.Singleton.Gamedata.GetNewMaterialUID();
+
+            Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
+
+            Texture2D texture = null;
+            //We'll use the same name since we copied that
+            bool found = GameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
+
+            newMat.name = string.Format("{0}", texture);
+            newMat.SetTexture("_MainTex", texture);
+            GameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
+
+            sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
+
+            GameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
+
+            //Create the default sprite
+            SpriteDataJson defaultSpriteJson = new SpriteDataJson();
+            defaultSpriteJson.UID = 0;
+            defaultSpriteJson.SpriteName = "Default";
+            defaultSpriteJson.SpriteSheetFileName = texture.name;
+            defaultSpriteJson.SpritePosition = new Vec2Int(0, 0);
+            defaultSpriteJson.SpritePosition = new Vec2Int(texture.width, texture.height);
+
+            EDSSSprite newSprite = CreateSprite(defaultSpriteJson);
+            EveryDaySpaceStation.GameData.DefaultSprite = newSprite;
+            GameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
         }
         #endregion
 
@@ -462,43 +517,10 @@ namespace EveryDaySpaceStation
                 {
                     SpriteDataJson spriteData = spriteConfig.SpriteData[j];
 
-                    string sheetTypeName = "world";
-                    EDSSSpriteSheet.ShaderType shaderType = EDSSSpriteSheet.ShaderType.World;
-                    //We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
-                    for (int k = 0; k < spriteData.Flags.Length; k++)
-                    {
-                        string flag = spriteData.Flags[k].ToLower();
+                    EDSSSprite newSprite = CreateSprite(spriteData);
 
-                        switch (flag)
-                        {
-                            case "billboard":
-                                sheetTypeName = "billboard";
-                                shaderType = EDSSSpriteSheet.ShaderType.Billboard;
-                                break;
-                        }
-                    }
-
-                    //First look if there is a EDSSSpriteSheet
-                    EDSSSpriteSheet sheet = null;
-                    string sheetname = string.Format("{0}-{1}", spriteData.SpriteSheetFileName, sheetTypeName);
-                    bool found = GameManager.Singleton.Gamedata.GetSpriteSheet(sheetname, out sheet);
-
-                    //Couldn't find the sheet already created
-                    if (!found)
-                    {
-                        //So attempt to create
-                        found = AttemptCreateSpriteSheet(spriteData, sheetname, shaderType, out sheet);
-                    }
-
-                    //It's still not found, so we need to throw an error and move on
-                    if (!found)
-                    {
-                        Debug.LogError(string.Format("Could not locate a spritesheet for sprite '{0}'. Giving up.", spriteData));
+                    if (newSprite == null)
                         continue;
-                    }
-
-                    //We've got a sheet somehow, so we're ready to make the sprite
-                    EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName, spriteData.Flags);
 
                     GameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
                     spriteProcessed++;
@@ -508,6 +530,52 @@ namespace EveryDaySpaceStation
             }
 
             return spriteProcessed;
+        }
+
+        public static EDSSSprite CreateSprite(SpriteDataJson spriteData)
+        {
+            string sheetTypeName = "world";
+            EDSSSpriteSheet.ShaderType shaderType = EDSSSpriteSheet.ShaderType.World;
+            //We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
+            if(spriteData.Flags != null)
+            {
+                for (int k = 0; k < spriteData.Flags.Length; k++)
+                {
+                    string flag = spriteData.Flags[k].ToLower();
+
+                    switch (flag)
+                    {
+                        case "billboard":
+                            sheetTypeName = "billboard";
+                            shaderType = EDSSSpriteSheet.ShaderType.Billboard;
+                            break;
+                    }
+                }
+            }
+
+            //First look if there is a EDSSSpriteSheet
+            EDSSSpriteSheet sheet = null;
+            string sheetname = string.Format("{0}-{1}", spriteData.SpriteSheetFileName, sheetTypeName);
+            bool found = GameManager.Singleton.Gamedata.GetSpriteSheet(sheetname, out sheet);
+
+            //Couldn't find the sheet already created
+            if (!found)
+            {
+                //So attempt to create
+                found = AttemptCreateSpriteSheet(spriteData, sheetname, shaderType, out sheet);
+            }
+
+            //It's still not found, so we need to throw an error and move on
+            if (!found)
+            {
+                Debug.LogError(string.Format("Could not locate a spritesheet for sprite '{0}'. Giving up.", spriteData));
+                return null;
+            }
+
+            //We've got a sheet somehow, so we're ready to make the sprite
+            EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName, spriteData.Flags);
+            
+            return newSprite;
         }
         #endregion
     }

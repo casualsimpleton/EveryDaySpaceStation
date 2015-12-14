@@ -5,7 +5,7 @@
 		"module" : "default",
 		"maps" :
 		[
-			"testlevel1"
+			{ "map": "testlevel1", "entities": "testlevel1-entities1" }
 		],
 		"defaultmaxroundtime" : 7200
 	}
