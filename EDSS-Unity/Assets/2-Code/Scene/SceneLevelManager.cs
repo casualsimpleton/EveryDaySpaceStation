@@ -73,6 +73,7 @@ public class SceneLevelManager : MonoBehaviour
 
     public void Init()
     {
+        EntityBuildManager.Singleton.Init(5, 5);
         BlocksPerChuck = FileSystem.Optionsconfig.SceneChunkSize;
         _visibleLights = new List<TileLight>();
         _visibleLightBounds = new SquareBounds(new Vec2Int(0, 0), GameManager.Singleton.Mapdata._mapSize);

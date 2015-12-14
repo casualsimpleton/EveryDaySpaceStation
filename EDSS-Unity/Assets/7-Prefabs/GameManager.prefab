@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 467426}
   - 114: {fileID: 11467426}
   - 114: {fileID: 11467424}
+  - 114: {fileID: 11404342}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -29,6 +30,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11404342
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b185a8b175848bd42bed8b2bd52f89dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11467424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -45,6 +57,7 @@ MonoBehaviour:
   _chunkDim:
     x: 0
     y: 0
+  _enableLights: 1
 --- !u!114 &11467426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,6 +69,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af82e3f14d6bae64aafbaefecaebec92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mapData:
+    _mapSize:
+      x: 0
+      y: 0
+    _mapTiles: []
+  playerControl: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

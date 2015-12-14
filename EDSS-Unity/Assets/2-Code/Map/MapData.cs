@@ -160,7 +160,7 @@ public sealed class MapData
         [System.NonSerialized] 
         protected MapTileData _associatedMapTile;
         [SerializeField]
-        protected bool _isBuilt;
+        public EntityBuildManager.BuildConstructionQueueHelper BuildState;
 
         public uint EntityUID
         {
@@ -188,11 +188,6 @@ public sealed class MapData
             get { return _entitySprite; }
         }
 
-        public bool IsEntityBuilt
-        {
-            get { return _isBuilt; }
-        }
-
         public bool IsVisible
         {
             get { return _associatedMapTile.IsVisible; }
@@ -216,6 +211,9 @@ public sealed class MapData
             {
                 EntityName = entityName;
             }
+
+            //CS - 12/13/2015 - I know this isn't ideal, but it prevents having to store temporary variables and stuff
+            BuildState = new EntityBuildManager.BuildConstructionQueueHelper();
         }
 
         public void ChangeState(ushort newStateUID)
