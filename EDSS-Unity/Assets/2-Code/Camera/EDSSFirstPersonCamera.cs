@@ -34,6 +34,8 @@ public class EDSSFirstPersonCamera : MonoBehaviour
     protected EntitySpriteGameObject _curHighLightESGO;
     protected EntitySpriteGameObject _prevHighLightESGO;
 
+    protected BoundsDrawing _lineBoundsDrawer;
+
     void Start()
     {
         _transform = this.gameObject.transform;
@@ -45,6 +47,9 @@ public class EDSSFirstPersonCamera : MonoBehaviour
         }
 
         _cameraTrans = _theCamera.transform;
+
+        _lineBoundsDrawer = PoolManager.Singleton.RequestBoundsDrawer();
+        _lineBoundsDrawer.Detach();
     }
 
     void Update()
@@ -102,6 +107,8 @@ public class EDSSFirstPersonCamera : MonoBehaviour
             if (_curHighLightESGO != _prevHighLightESGO)
             {
                 _curHighLightESGO.Highlight();
+                _lineBoundsDrawer.DrawCube(_curHighLightESGO._transform.position, _curHighLightESGO.Cubecollider.BoxSize);
+                _lineBoundsDrawer.Enable();
                 
                 if (_prevHighLightESGO != null)
                 {
@@ -113,8 +120,14 @@ public class EDSSFirstPersonCamera : MonoBehaviour
         }
         else if (_prevHighLightESGO != null)
         {
+            _lineBoundsDrawer.Disable();
             _prevHighLightESGO.DeHighlight();
             _prevHighLightESGO = null;
         }
+    }
+
+    void OnPostRender()
+    {
+        _lineBoundsDrawer.OnPostRender();
     }
 }

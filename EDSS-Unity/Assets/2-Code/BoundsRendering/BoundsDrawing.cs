@@ -21,6 +21,7 @@ using EveryDaySpaceStation.Utils;
 
 public class BoundsDrawing : MonoBehaviour
 {
+    [SerializeField]
     public static Material LineVertMaterial;
     public Transform _transform { get; private set; }
     [SerializeField]
@@ -49,6 +50,8 @@ public class BoundsDrawing : MonoBehaviour
         {
             _verts.Clear();
         }
+
+        _lineColor = new Color32(128, 255, 128, 255);
     }
 
     public void Reset()
@@ -65,7 +68,7 @@ public class BoundsDrawing : MonoBehaviour
     /// </summary>
     /// <param name="pivotPoint">Anchor point of the object (should be transform.position)</param>
     /// <param name="size">Size</param>
-    public void DrawSquare(Vector3 pivotPoint, Vector3 size)
+    public void DrawCube(Vector3 pivotPoint, Vector3 size)
     {
         //12 lines, 2 points each
         //BOTTOM
@@ -114,18 +117,40 @@ public class BoundsDrawing : MonoBehaviour
 
         _verts.Add(new Vector3(pivotPoint.x - (size.x * 0.5f), 0f, pivotPoint.z - (size.z * 0.5f)));
         _verts.Add(new Vector3(pivotPoint.x - (size.x * 0.5f), size.y, pivotPoint.z - (size.z * 0.5f)));
+
+        _transform.position = pivotPoint;
     }
 
-    void OnPostRender()
+    public void Enable()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public void Disable()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    public void Detach()
+    {
+        _transform.parent = null;
+    }
+
+    void Update()
+    {
+        OnPostRender();
+    }
+
+    public void OnPostRender()
     {
         LineVertMaterial.SetPass(0);
 
         GL.Begin(GL.LINES);
         GL.Color(_lineColor);
-        for (int i = 0; i < _verts.Count; i+=2)
+        for (int i = 0; i < _verts.Count; i += 2)
         {
             GL.Vertex(_verts[i]);
-            GL.Vertex(_verts[i+1]);
+            GL.Vertex(_verts[i + 1]);
         }
 
         GL.End();
