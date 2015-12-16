@@ -33,16 +33,30 @@ namespace EveryDaySpaceStation
                 public ushort StateUID { get; private set; }
                 public string StateName { get; private set; }
                 public uint SpriteUID { get; private set; }
-                public Vector3 StateSize { get; private set; }
+                public Vector3 StateGraphicsSize { get; private set; }
+                public Vector3 StateColliderSize { get; private set; }
                 public Vector3 StatePositionOffset { get; private set; }
 
 
-                public StateTemplate(ushort uid, string name, uint spriteUID, Vector3 size, Vector3 offset)
+                public StateTemplate(ushort uid, string name, uint spriteUID, Vector3 graphicsSize, Vector3 colliderSize, Vector3 offset)
                 {
                     StateUID = uid;
                     StateName = name;
                     SpriteUID = spriteUID;
-                    StateSize = size;
+
+                    if (graphicsSize == Vector3.zero)
+                    {
+                        graphicsSize = Vector3.one;
+                    }
+
+                    StateGraphicsSize = graphicsSize;
+
+                    if (colliderSize == Vector3.zero)
+                    {
+                        colliderSize = Vector3.one;
+                    }
+
+                    StateColliderSize = colliderSize;
                     StatePositionOffset = offset;
                 }
             }
@@ -252,7 +266,7 @@ namespace EveryDaySpaceStation
                 for (int i = 0; i < states.Length; i++)
                 {
                     EveryDaySpaceStation.Json.EntityStateDataJson curState = states[i];
-                    StateTemplate newState = new StateTemplate(curState.StateUID, curState.StateName, curState.SpriteUID, curState.DisplaySize, curState.PositionOffset);
+                    StateTemplate newState = new StateTemplate(curState.StateUID, curState.StateName, curState.SpriteUID, curState.DisplaySize, curState.ColliderSize, curState.PositionOffset);
 
                     EntityStates.Add(newState.StateUID, newState);
                 }

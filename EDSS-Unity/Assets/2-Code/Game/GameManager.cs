@@ -50,7 +50,9 @@ public class GameManager : MonoBehaviour
 
     public EDSSFirstPersonControls playerControl;
     public EDSSFirstPersonCamera playerCamera;
-    
+    public static int WorldLayer;
+    public static int EntityLayer;
+    public static Color32 HighlightColor = new Color32(180, 255, 180, 255);
     #endregion
 
     #region Gets/Sets
@@ -62,6 +64,9 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        WorldLayer = LayerMask.NameToLayer("World");
+        EntityLayer = LayerMask.NameToLayer("Entity");
+
         _timer.Start();
         _gameData = new GameData();
         FileSystem.Init();

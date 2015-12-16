@@ -509,8 +509,11 @@ namespace EveryDaySpaceStation.Json
         /// <summary>
         /// Size of the display plane in world size (1,1,1 is the same size as a world block
         /// </summary>
-        [JsonProperty("size")]
+        [JsonProperty("graphicsize")]
         public Vector3 DisplaySize { get; set; }
+
+        [JsonProperty("collidersize")]
+        public Vector3 ColliderSize { get; set; }
 
         /// <summary>
         /// Position offset for display plane

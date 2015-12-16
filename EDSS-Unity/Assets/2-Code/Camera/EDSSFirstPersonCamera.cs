@@ -31,6 +31,9 @@ public class EDSSFirstPersonCamera : MonoBehaviour
     public float minX = -90f;
     protected float _currentRotation = 0f;
 
+    protected EntitySpriteGameObject _curHighLightESGO;
+    protected EntitySpriteGameObject _prevHighLightESGO;
+
     void Start()
     {
         _transform = this.gameObject.transform;
@@ -46,6 +49,21 @@ public class EDSSFirstPersonCamera : MonoBehaviour
 
     void Update()
     {
+        //Vector3 mousePos = Input.mousePosition;
+        //Vector3 cameraMousePos = _theCamera.ScreenToViewportPoint(mousePos);
+
+        //Debug.Log("Mousepos " + mousePos + " cameramousepos " + cameraMousePos);
+
+        //if (cameraMousePos.x < 0f || cameraMousePos.x > 1f || cameraMousePos.y < 0f || cameraMousePos.y > 1f)
+        //{
+        //    return;
+        //}
+
+        if (Screen.showCursor)
+        {
+            Screen.showCursor = false;
+        }
+
         float xAxis = Input.GetAxis("Mouse X");
         float yAxis = Input.GetAxis("Mouse Y");
 
@@ -55,5 +73,48 @@ public class EDSSFirstPersonCamera : MonoBehaviour
         _transform.Rotate(0, xAxis * MouseSensitivity.x, 0);
 
         _cameraTrans.localRotation = Quaternion.Euler(_currentRotation, 0f, 0f);
+
+        MouseCrossHair();
+    }
+
+    void MouseCrossHair()
+    {
+        Vector3 centerPoint = _cameraTrans.transform.position;
+        Vector3 dir = _cameraTrans.transform.forward;
+
+        int layer = 1 << GameManager.EntityLayer;
+
+        RaycastHit hitInfo;
+
+        bool hit = Physics.Raycast(centerPoint, dir, out hitInfo, 10f, layer);
+
+        if (hit)
+        {
+            //Debug.Log("Hit " + hitInfo.collider.gameObject.transform.root.name);
+
+            _curHighLightESGO = hitInfo.collider.gameObject.transform.root.gameObject.GetComponent<EntitySpriteGameObject>();
+
+            if (_curHighLightESGO == null)
+            {
+                return;
+            }
+
+            if (_curHighLightESGO != _prevHighLightESGO)
+            {
+                _curHighLightESGO.Highlight();
+                
+                if (_prevHighLightESGO != null)
+                {
+                    _prevHighLightESGO.DeHighlight();
+                }
+            }
+
+            _prevHighLightESGO = _curHighLightESGO;
+        }
+        else if (_prevHighLightESGO != null)
+        {
+            _prevHighLightESGO.DeHighlight();
+            _prevHighLightESGO = null;
+        }
     }
 }

@@ -2,11 +2,11 @@
 // Every Day Space Station
 // http://everydayspacestation.tumblr.com
 //////////////////////////////////////////////////////////////////////////////////////////
-// PoolCubeColliders - A pool structure for all the various cube colliders we're going to need
+// PoolLineDrawingGameObject - A pool structure for the line drawing gameobjects
 // It is not thread-safe and thus should only be used within Unity's main thread.
-// Created: December 7 2015
+// Created: December 15 2015
 // CasualSimpleton <casualsimpleton@gmail.com>
-// Last Modified: December 7 2015
+// Last Modified: December 15 2015
 // CasualSimpleton
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,37 +21,29 @@ using EveryDaySpaceStation.Utils;
 
 namespace EveryDaySpaceStation.DataTypes
 {
-    public class PoolCubeCollider : PoolAbstract<CubeCollider>
+    public class PoolBoundsDrawing : PoolAbstract<BoundsDrawing>
     {
-        Vector3 _cubeSize;
-
-        public virtual void Init(int capacity, Vector3 cubeSize, float timerDelta, int overflowDestroyGoal, float overflowRelativeSize = 0.1f)
+        public override void Init(int capacity, float timerDelta, int overflowDestroyGoal, float overflowRelativeSize = 0.1f)
         {
-            _cubeSize = cubeSize;
             base.Init(capacity, timerDelta, overflowDestroyGoal, overflowRelativeSize);
         }
 
-        public override CubeCollider CreateNewObject()
+        public override BoundsDrawing CreateNewObject()
         {
-#if CLIENTDEBUG
-            uint uid = GetUID();
-            GameObject go = new GameObject(string.Format("cubecollider-{0}-{1}", _cubeSize.y, uid));
-#else
-            GameObject go = new GameObject(string.Format("cubecollider-{0}", _cubeSize.y));
-#endif
-            CubeCollider cc = go.AddComponent<CubeCollider>();
+            GameObject go = new GameObject("lineboundsdrawer");
+            BoundsDrawing bd = go.AddComponent<BoundsDrawing>();
 
-            cc.Create(_cubeSize);
-            cc.Reset();
-            
-            return cc;
+            bd.Create();
+            bd.Reset();
+
+            return bd;
         }
 
-        public override void ReturnObject(CubeCollider cc)
+        public override void ReturnObject(BoundsDrawing bd)
         {
-            cc.Reset();
+            bd.Reset();
 
-            base.ReturnObject(cc);
+            base.ReturnObject(bd);
         }
 
         /// <summary>
@@ -67,27 +59,27 @@ namespace EveryDaySpaceStation.DataTypes
             //How much are we from being full?
             int difference = _targetCapacity - _availablePool.Count;
 
-            CubeCollider cc;
+            BoundsDrawing bd;
             //Copy as many from overflow as possible into available
             for (int i = 0; i < difference && _overflowPool.Count > 0; i++)
             {
-                cc = _overflowPool.Dequeue();
-                _availablePool.Enqueue(cc);
+                bd = _overflowPool.Dequeue();
+                _availablePool.Enqueue(bd);
             }
 
             //Now destroy whatever is called for
             for (int i = 0; i < _numToDestroyPerMaintenance && _overflowPool.Count > 0; i++)
             {
-                cc = _overflowPool.Dequeue();
-                Destroy(cc);
+                bd = _overflowPool.Dequeue();
+                Destroy(bd);
             }
 
             _updateTimer = Time.time + _updateTimerDelta;
         }
 
-        protected void Destroy(CubeCollider cc)
+        protected void Destroy(BoundsDrawing bd)
         {
-            GameObject.Destroy(cc.gameObject);
+            GameObject.Destroy(bd.gameObject);
         }
 
         #region Dispose
@@ -121,7 +113,7 @@ namespace EveryDaySpaceStation.DataTypes
             _isDisposed = true;
         }
 
-        ~PoolCubeCollider()
+        ~PoolBoundsDrawing()
         {
             Dispose(false);
         }

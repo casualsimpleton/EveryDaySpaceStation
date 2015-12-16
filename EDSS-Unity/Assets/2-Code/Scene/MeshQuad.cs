@@ -60,12 +60,16 @@ public class MeshQuad : MonoBehaviour
 
     [SerializeField]
     protected int[] _tri;
+
+    [SerializeField]
+    protected Color32 _lastColor;
     #endregion
 
     #region Gets/Sets
     public EntitySpriteGameObject EntitySpriteGO { get { return _entitySpriteGO; } }
     public Material Material { get { return _material; } }
     public MeshRenderer Renderer { get { return _meshRenderer; } }
+    public Color32 LastColor { get { return _lastColor; } }
     #endregion
 
     public virtual void Reset()
@@ -90,7 +94,7 @@ public class MeshQuad : MonoBehaviour
         _mesh.name = "MeshQuad";
 
         #region Verts/Norms/Tris
-        Color32 vC = new Color32(128, 128, 128, 255);
+        _lastColor = new Color32(128, 128, 128, 255);
         int vertIndex = 0;
         int normIndex = 0;
         int uvIndex = 0;
@@ -112,10 +116,10 @@ public class MeshQuad : MonoBehaviour
         _uv[uvIndex++] = new Vector2(0, 0);
         _uv[uvIndex++] = new Vector2(0, 1f);
 
-        _colors[colorIndex++] = vC;
-        _colors[colorIndex++] = vC;
-        _colors[colorIndex++] = vC;
-        _colors[colorIndex++] = vC;
+        _colors[colorIndex++] = _lastColor;
+        _colors[colorIndex++] = _lastColor;
+        _colors[colorIndex++] = _lastColor;
+        _colors[colorIndex++] = _lastColor;
 
         _tri[0] = 0;
         _tri[1] = 1;
@@ -158,10 +162,23 @@ public class MeshQuad : MonoBehaviour
         _uv[uvIndex + 2] = new Vector2(uv.x + uvOffset.x, uv.y - uv.w + uvOffset.y);
         _uv[uvIndex + 3] = new Vector2(uv.x + uvOffset.x, uv.y - uvOffset.y);
     }
-
+    
     public virtual void UpdateUV()
     {
         _mesh.uv = _uv;
+    }
+
+    public virtual void ModifyColor(int colorIndex, Color32 newColor)
+    {
+        _colors[colorIndex] = newColor;
+        _colors[colorIndex+1] = newColor;
+        _colors[colorIndex+2] = newColor;
+        _colors[colorIndex+3] = newColor;
+    }
+
+    public virtual void UpdateColor()
+    {
+        _mesh.colors32 = _colors;
     }
 
     public virtual void AssignMaterial(EDSSSprite sprite)

@@ -47,16 +47,7 @@ public class PoolManager : MonoBehaviour
     protected PoolSceneChunkScaffoldRenderer _sceneChunkScaffoldRendererPool;
     protected PoolEntitySpriteGameObject _entitySpritesPool;
     protected PoolMeshQuad _meshQuadPool;
-    protected PoolCubeCollider _cubeCollider1;
-    protected PoolCubeCollider _cubeCollider2;
-    protected PoolCubeCollider _cubeCollider3;
-    protected PoolCubeCollider _cubeCollider4;
-    protected PoolCubeCollider _cubeCollider5;
-    protected PoolCubeCollider _cubeCollider6;
-    protected PoolCubeCollider _cubeCollider7;
-    protected PoolCubeCollider _cubeCollider8;
-    protected PoolCubeCollider _cubeCollider9;
-    protected PoolCubeCollider _cubeCollider10;
+    protected PoolCubeCollider _cubeCollider;
     #endregion
 
     #region Scene Chunk Renderers
@@ -108,70 +99,14 @@ public class PoolManager : MonoBehaviour
     #endregion
 
     #region Cube Colliders
-    public CubeCollider RequestCubeCollider(int length)
+    public CubeCollider RequestCubeCollider()
     {
-        switch (length)
-        {
-            default:
-            case 1:
-                return _cubeCollider1.RequestObject();
-            case 2:
-                return _cubeCollider2.RequestObject();
-            case 3:
-                return _cubeCollider3.RequestObject();
-            case 4:
-                return _cubeCollider4.RequestObject();
-            case 5:
-                return _cubeCollider5.RequestObject();
-            case 6:
-                return _cubeCollider6.RequestObject();
-            case 7:
-                return _cubeCollider7.RequestObject();
-            case 8:
-                return _cubeCollider8.RequestObject();
-            case 9:
-                return _cubeCollider9.RequestObject();
-            case 10:
-                return _cubeCollider10.RequestObject();
-        }
+        return _cubeCollider.RequestObject();
     }
 
     public void ReturnCubeCollider(CubeCollider cc)
     {
-        switch (cc.BoxSize.y)
-        {
-            default:
-            case 1:
-                _cubeCollider1.ReturnObject(cc);
-                break;
-            case 2:
-                _cubeCollider2.ReturnObject(cc);
-                break;
-            case 3:
-                _cubeCollider3.ReturnObject(cc);
-                break;
-            case 4:
-                _cubeCollider4.ReturnObject(cc);
-                break;
-            case 5:
-                _cubeCollider5.ReturnObject(cc);
-                break;
-            case 6:
-                _cubeCollider6.ReturnObject(cc);
-                break;
-            case 7:
-                _cubeCollider7.ReturnObject(cc);
-                break;
-            case 8:
-                _cubeCollider8.ReturnObject(cc);
-                break;
-            case 9:
-                _cubeCollider9.ReturnObject(cc);
-                break;
-            case 10:
-                _cubeCollider10.ReturnObject(cc);
-                break;
-        }
+        _cubeCollider.ReturnObject(cc);
     }
     #endregion
 
@@ -181,28 +116,9 @@ public class PoolManager : MonoBehaviour
 
     public void Init()
     {
-        _cubeCollider1 = new PoolCubeCollider();
-        _cubeCollider2 = new PoolCubeCollider();
-        _cubeCollider3 = new PoolCubeCollider();
-        _cubeCollider4 = new PoolCubeCollider();
-        _cubeCollider5 = new PoolCubeCollider();
-        _cubeCollider6 = new PoolCubeCollider();
-        _cubeCollider7 = new PoolCubeCollider();
-        _cubeCollider8 = new PoolCubeCollider();
-        _cubeCollider9 = new PoolCubeCollider();
-        _cubeCollider10 = new PoolCubeCollider();
-
-        _cubeCollider1.Init(10, new Vec2Int(1, 1), 0.1f, 2, 0.1f);
-        _cubeCollider2.Init(10, new Vec2Int(1, 2), 0.1f, 2, 0.1f);
-        _cubeCollider3.Init(10, new Vec2Int(1, 3), 0.1f, 2, 0.1f);
-        _cubeCollider4.Init(10, new Vec2Int(1, 4), 0.1f, 2, 0.1f);
-        _cubeCollider5.Init(10, new Vec2Int(1, 5), 0.1f, 2, 0.1f);
-        _cubeCollider6.Init(10, new Vec2Int(1, 6), 0.1f, 2, 0.1f);
-        _cubeCollider7.Init(10, new Vec2Int(1, 7), 0.1f, 2, 0.1f);
-        _cubeCollider8.Init(10, new Vec2Int(1, 8), 0.1f, 2, 0.1f);
-        _cubeCollider9.Init(10, new Vec2Int(1, 9), 0.1f, 2, 0.1f);
-        _cubeCollider10.Init(10, new Vec2Int(1, 10), 0.1f, 2, 0.1f);
-
+        _cubeCollider = new PoolCubeCollider();
+        _cubeCollider.Init(10, Vector3.one, 0.1f, 2, 0.1f);
+        
         _entitySpritesPool = new PoolEntitySpriteGameObject();
         _entitySpritesPool.Init(1, 0.1f, 2, 0.1f);
     }
@@ -230,16 +146,7 @@ public class PoolManager : MonoBehaviour
         _entitySpritesPool.Maintenance();
         _meshQuadPool.Maintenance();
 
-        _cubeCollider1.Maintenance();
-        _cubeCollider2.Maintenance();
-        _cubeCollider3.Maintenance();
-        _cubeCollider4.Maintenance();
-        _cubeCollider5.Maintenance();
-        _cubeCollider6.Maintenance();
-        _cubeCollider7.Maintenance();
-        _cubeCollider8.Maintenance();
-        _cubeCollider9.Maintenance();
-        _cubeCollider10.Maintenance();
+        _cubeCollider.Maintenance();
     }
 
     public void Cleanup()
@@ -251,16 +158,7 @@ public class PoolManager : MonoBehaviour
             _entitySpritesPool.Dispose();
             _meshQuadPool.Dispose();
 
-            _cubeCollider1.Dispose();
-            _cubeCollider2.Dispose();
-            _cubeCollider3.Dispose();
-            _cubeCollider4.Dispose();
-            _cubeCollider5.Dispose();
-            _cubeCollider6.Dispose();
-            _cubeCollider7.Dispose();
-            _cubeCollider8.Dispose();
-            _cubeCollider9.Dispose();
-            _cubeCollider10.Dispose();
+            _cubeCollider.Dispose();
         }
         catch (System.Exception ex)
         {

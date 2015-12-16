@@ -31,6 +31,8 @@ public class EntitySpriteGameObject : MonoBehaviour
     protected LightComponent _lightComponent;
     protected MultiAngleComponent _multiAngleComponent;
 
+    protected CubeCollider _cubeCollider;
+
     public bool IsClown = false;
     #endregion
 
@@ -38,6 +40,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     public MeshQuad Meshquad { get { return _meshQuad; } }
     public EDSSSprite Sprite { get { return _sprite; } }
     public MapData.EntityData EntityData { get { return _entityData; } }
+    public CubeCollider Cubecollider { get { return _cubeCollider; } }
     #endregion
 
     void Start()
@@ -51,6 +54,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         {
             _meshQuad.gameObject.SetActive(true);
         }
+
+        if (_cubeCollider != null)
+        {
+            _cubeCollider.gameObject.SetActive(true);
+        }
     }
 
     void OnDisable()
@@ -58,6 +66,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         if (_meshQuad != null)
         {
             _meshQuad.gameObject.SetActive(false);
+        }
+
+        if (_cubeCollider != null)
+        {
+            _cubeCollider.gameObject.SetActive(false);
         }
     }
 
@@ -78,6 +91,12 @@ public class EntitySpriteGameObject : MonoBehaviour
             //_mesh = GameObject.CreatePrimitive(PrimitiveType.Quad);
             _meshQuad = PoolManager.Singleton.RequestMeshQuad();
             _meshQuad.AssignToEntitySpriteGO(this);
+        }
+
+        if (_cubeCollider == null)
+        {
+            _cubeCollider = PoolManager.Singleton.RequestCubeCollider();
+            _cubeCollider.Attach(this);
         }
 
         //GameManager.Singleton.Gamedata.GetSprite(_entityData.CurrentEntityState.StateTemplate.SpriteUID, out _sprite);
@@ -124,30 +143,18 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     public void UpdateMesh()
     {
-        _transform.localScale = new Vector3(_entityData.CurrentEntityState.StateTemplate.StateSize.x, _entityData.CurrentEntityState.StateTemplate.StateSize.y, _entityData.CurrentEntityState.StateTemplate.StateSize.z);
+        _transform.localScale = new Vector3(_entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.x, _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.y, _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.z);
 
         _meshQuad.UpdateMaterial(_sprite.SpriteSheet.Material, _sprite.SpriteSheet.MaterialUID);
 
         if (_sprite.SpriteSheet.Material.HasProperty("_Scale"))
         {
             Vector4 scale = _meshQuad.Material.GetVector("_Scale");
-            scale.x = _entityData.CurrentEntityState.StateTemplate.StateSize.x;
-            scale.y = _entityData.CurrentEntityState.StateTemplate.StateSize.y;
+            scale.x = _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.x;
+            scale.y = _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.y;
 
             //_meshQuad.renderer.sharedMaterial.SetVector("_Scale", scale);
             _meshQuad.Material.SetVector("_Scale", scale);
-        }
-
-        if (_sprite.SpriteSheet.Material.HasProperty("_MATRIX_MVP"))
-        {
-            Matrix4x4 P = GL.GetGPUProjectionMatrix(GameManager.Singleton.playerCamera._theCamera.projectionMatrix, false);
-            Matrix4x4 V = GameManager.Singleton.playerCamera._theCamera.worldToCameraMatrix;
-            Matrix4x4 M = _meshQuad.Renderer.localToWorldMatrix;
-            Matrix4x4 MV = V * M;
-            Matrix4x4 MVP = P * V * M;
-            //_meshQuad.renderer.sharedMaterial.SetMatrix("_MATRIX_MVP", MVP);
-            _meshQuad.renderer.sharedMaterial.SetMatrix("_MATRIX_MV", MV);
-            _meshQuad.renderer.sharedMaterial.SetMatrix("_MATRIX_P", P);
         }
     }
 
@@ -187,6 +194,18 @@ public class EntitySpriteGameObject : MonoBehaviour
         }
 
         _material.SetColor("_Color", newColor);
+    }
+
+    public void Highlight()
+    {
+        _meshQuad.ModifyColor(0, GameManager.HighlightColor);
+        _meshQuad.UpdateColor();
+    }
+
+    public void DeHighlight()
+    {
+        _meshQuad.ModifyColor(0, _meshQuad.LastColor);
+        _meshQuad.UpdateColor();
     }
 
     public void Detach()

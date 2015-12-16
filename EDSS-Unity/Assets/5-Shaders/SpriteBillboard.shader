@@ -1,4 +1,5 @@
 ﻿//https://en.wikibooks.org/wiki/Cg_Programming/Unity/Billboards
+//CS - This seesm to break if Unity's dynamic batching is turned on. Either figure out how to make the shader work or make sure it's turned off
 Shader "EDSS/SpriteBillboard" {
    Properties {
       _MainTex ("Texture Image", 2D) = "white" {}
@@ -42,7 +43,7 @@ Shader "EDSS/SpriteBillboard" {
 		v2f o;
 		//o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 		o.pos = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_MV, float4(0.0, 0.0, 0.0, 1.0))
-			- float4(v.vertex.x * -_Scale.x * 0.5, v.vertex.y * -_Scale.y * 0.5, 0.0, 0.0));
+			- float4(v.vertex.x * -_Scale.x, v.vertex.y * -_Scale.y, 0.0, 0.0));
 		o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 		o.color = v.color;
 		return o;

@@ -15,8 +15,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Reflection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using EveryDaySpaceStation;
 using EveryDaySpaceStation.Utils;
@@ -41,8 +39,11 @@ public class DefaultFiles : MonoBehaviour
 
     public Texture2D defaultTexture;
     public Texture2D colorTint;
+    public Texture2D crosshairTexture;
     public Material defaultMaterial;
+    public Material crosshairMaterial;
     public Shader defaultShader;
     public Shader billboardShader;
     public Shader twoSidedSpriteShader;
+    public Shader lineDrawingShader;
 }
