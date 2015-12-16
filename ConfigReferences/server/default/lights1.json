@@ -159,6 +159,70 @@
 		"flags": [
 			"Twosided"
 		]
+	},
+	{
+		"uid": 210,
+		"name": "chairfront",
+		"spritesheet": "furniture.png",
+		"spritepos": {
+			"x": 0,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Billboard"
+		]
+	},
+	{
+		"uid": 211,
+		"name": "chairback",
+		"spritesheet": "furniture.png",
+		"spritepos": {
+			"x": 32,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Billboard"
+		]
+	},
+	{
+		"uid": 212,
+		"name": "chairright",
+		"spritesheet": "furniture.png",
+		"spritepos": {
+			"x": 64,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Billboard"
+		]
+	},
+	{
+		"uid": 213,
+		"name": "chairleft",
+		"spritesheet": "furniture.png",
+		"spritepos": {
+			"x": 96,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Billboard"
+		]
 	}
 	]
 }

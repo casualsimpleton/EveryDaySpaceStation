@@ -75,6 +75,7 @@ MonoBehaviour:
       y: 0
     _mapTiles: []
   playerControl: {fileID: 0}
+  playerCamera: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -46,6 +46,7 @@ public class PoolManager : MonoBehaviour
     protected PoolSceneChunkRenderer _sceneChunkRendererPool;
     protected PoolSceneChunkScaffoldRenderer _sceneChunkScaffoldRendererPool;
     protected PoolEntitySpriteGameObject _entitySpritesPool;
+    protected PoolMeshQuad _meshQuadPool;
     protected PoolCubeCollider _cubeCollider1;
     protected PoolCubeCollider _cubeCollider2;
     protected PoolCubeCollider _cubeCollider3;
@@ -91,6 +92,18 @@ public class PoolManager : MonoBehaviour
     public void ReturnEntitySpriteGameObject(EntitySpriteGameObject es)
     {
         _entitySpritesPool.ReturnObject(es);
+    }
+    #endregion
+
+    #region Mesh Quads
+    public MeshQuad RequestMeshQuad()
+    {
+        return _meshQuadPool.RequestObject();
+    }
+
+    public void ReturnMeshQuad(MeshQuad mq)
+    {
+        _meshQuadPool.ReturnObject(mq);
     }
     #endregion
 
@@ -191,16 +204,18 @@ public class PoolManager : MonoBehaviour
         _cubeCollider10.Init(10, new Vec2Int(1, 10), 0.1f, 2, 0.1f);
 
         _entitySpritesPool = new PoolEntitySpriteGameObject();
-        _entitySpritesPool.Init(10, 0.1f, 2, 0.1f);
+        _entitySpritesPool.Init(1, 0.1f, 2, 0.1f);
     }
 
     public void LateInit()
     {
         _sceneChunkRendererPool = new PoolSceneChunkRenderer();
         _sceneChunkScaffoldRendererPool = new PoolSceneChunkScaffoldRenderer();
+        _meshQuadPool = new PoolMeshQuad();
 
         _sceneChunkRendererPool.Init(4, 0.1f, 5, 0.25f);
         _sceneChunkScaffoldRendererPool.Init(4, 0.1f, 5, 0.25f);
+        _meshQuadPool.Init(1, 0.1f, 5, 0.25f);
 
         IsInit = true;
 
@@ -213,6 +228,7 @@ public class PoolManager : MonoBehaviour
         _sceneChunkRendererPool.Maintenance();
         _sceneChunkScaffoldRendererPool.Maintenance();
         _entitySpritesPool.Maintenance();
+        _meshQuadPool.Maintenance();
 
         _cubeCollider1.Maintenance();
         _cubeCollider2.Maintenance();
@@ -233,6 +249,7 @@ public class PoolManager : MonoBehaviour
             _sceneChunkRendererPool.Dispose();
             _sceneChunkScaffoldRendererPool.Dispose();
             _entitySpritesPool.Dispose();
+            _meshQuadPool.Dispose();
 
             _cubeCollider1.Dispose();
             _cubeCollider2.Dispose();

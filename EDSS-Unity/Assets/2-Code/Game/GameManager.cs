@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     protected float _timeSinceGameStarted;
 
     public EDSSFirstPersonControls playerControl;
+    public EDSSFirstPersonCamera playerCamera;
     
     #endregion
 

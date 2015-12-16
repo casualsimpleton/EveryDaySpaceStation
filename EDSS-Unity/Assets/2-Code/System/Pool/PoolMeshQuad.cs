@@ -2,11 +2,11 @@
 // Every Day Space Station
 // http://everydayspacestation.tumblr.com
 //////////////////////////////////////////////////////////////////////////////////////////
-// PoolEntitySpriteGameObject - A pool structure for the entity sprites (Unity's quad)
+// PoolMeshQuad - A pool structure for the entity sprites (Unity's quad)
 // It is not thread-safe and thus should only be used within Unity's main thread.
-// Created: December 13 2015
+// Created: December 14 2015
 // CasualSimpleton <casualsimpleton@gmail.com>
-// Last Modified: December 13 2015
+// Last Modified: December 14 2015
 // CasualSimpleton
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,43 +21,30 @@ using EveryDaySpaceStation.Utils;
 
 namespace EveryDaySpaceStation.DataTypes
 {
-    public class PoolEntitySpriteGameObject : PoolAbstract<EntitySpriteGameObject>
+    public class PoolMeshQuad : PoolAbstract<MeshQuad>
     {
         public override void Init(int capacity, float timerDelta, int overflowDestroyGoal, float overflowRelativeSize = 0.1f)
         {
             base.Init(capacity, timerDelta, overflowDestroyGoal, overflowRelativeSize);
         }
 
-        public override EntitySpriteGameObject CreateNewObject()
+        public override MeshQuad CreateNewObject()
         {
-#if CLIENTDEBUG
-            uint uid = GetUID();
-            GameObject go = new GameObject(string.Format("spriteGO-{0}", uid));
-#else
-            GameObject go = new GameObject(string.Format("spriteGO"));
-#endif
+            GameObject go = new GameObject("MeshQuad");
 
-            EntitySpriteGameObject cc = go.AddComponent<EntitySpriteGameObject>();
+            MeshQuad mq = go.AddComponent<MeshQuad>();
 
-            cc.Create(null);
-            cc.Reset();
+            mq.Create();
+            mq.Reset();
 
-            return cc;
+            return mq;
         }
 
-        public override void ReturnObject(EntitySpriteGameObject es)
+        public override void ReturnObject(MeshQuad mq)
         {
-            es.Reset();
+            mq.Reset();
 
-#if CLIENTDEBUG
-            //es.gameObject.name = string.Format("spriteGO-{0}", uid);
-            //Feeling lazy, but no way of keeping track of previous UID from pool
-            es.gameObject.name = string.Format("spriteGO");
-#else
-            es.gameObject.name = string.Format("spriteGO");
-#endif
-
-            base.ReturnObject(es);
+            base.ReturnObject(mq);
         }
 
         /// <summary>
@@ -73,27 +60,27 @@ namespace EveryDaySpaceStation.DataTypes
             //How much are we from being full?
             int difference = _targetCapacity - _availablePool.Count;
 
-            EntitySpriteGameObject es;
+            MeshQuad mq;
             //Copy as many from overflow as possible into available
             for (int i = 0; i < difference && _overflowPool.Count > 0; i++)
             {
-                es = _overflowPool.Dequeue();
-                _availablePool.Enqueue(es);
+                mq = _overflowPool.Dequeue();
+                _availablePool.Enqueue(mq);
             }
 
             //Now destroy whatever is called for
             for (int i = 0; i < _numToDestroyPerMaintenance && _overflowPool.Count > 0; i++)
             {
-                es = _overflowPool.Dequeue();
-                Destroy(es);
+                mq = _overflowPool.Dequeue();
+                Destroy(mq);
             }
 
             _updateTimer = Time.time + _updateTimerDelta;
         }
 
-        protected void Destroy(EntitySpriteGameObject es)
+        protected void Destroy(MeshQuad mq)
         {
-            GameObject.Destroy(es.gameObject);
+            GameObject.Destroy(mq.gameObject);
         }
 
         #region Dispose
@@ -127,7 +114,7 @@ namespace EveryDaySpaceStation.DataTypes
             _isDisposed = true;
         }
 
-        ~PoolEntitySpriteGameObject()
+        ~PoolMeshQuad()
         {
             Dispose(false);
         }

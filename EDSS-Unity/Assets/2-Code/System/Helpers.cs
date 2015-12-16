@@ -207,5 +207,22 @@ namespace EveryDaySpaceStation.Utils
 
         }
         #endregion
+
+        public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
+        {
+            Vector3 perp = Vector3.Cross(fwd, targetDir);
+            float dir = Vector3.Dot(perp, up);
+
+            if(dir > 0f)
+            {
+                return 1f;
+            }
+            else if (dir < 0)
+            {
+                return -1f;
+            }
+            
+            return 0f;
+        }
     }
 }

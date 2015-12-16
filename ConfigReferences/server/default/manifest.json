@@ -5,7 +5,8 @@
 		"test1.png",
 		"clown1.png",
 		"underlayer1.png",
-		"lights1.png"
+		"lights1.png",
+		"furniture.png"
 	],
 	"spritedata" :
 	[
@@ -16,10 +17,11 @@
 	],
 	"blockdata" :
 	[
-		"blockdata.json",
+		"blockdata.json"
 	],
 	"entitydata" :
 	[
 		"lightentities.json",
+		"chair.json"
 	]
 }

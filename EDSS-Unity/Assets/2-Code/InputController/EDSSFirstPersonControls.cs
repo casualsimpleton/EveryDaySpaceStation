@@ -20,7 +20,7 @@ using EveryDaySpaceStation.Utils;
 
 public class EDSSFirstPersonControls : MonoBehaviour
 {
-    Transform _transform;
+    public Transform _transform;
 
     [SerializeField]
     CharacterController _charController;
@@ -38,7 +38,7 @@ public class EDSSFirstPersonControls : MonoBehaviour
     Vec2Int _currentTile = new Vec2Int(0,0);
 
     TileLightGameObject _playerLight;
-
+    
     void Awake()
     {
         _transform = this.gameObject.transform;

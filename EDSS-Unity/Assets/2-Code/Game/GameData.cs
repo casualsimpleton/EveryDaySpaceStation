@@ -125,6 +125,64 @@ namespace EveryDaySpaceStation
                     Materials.Clear();
                 }
             }
+
+            public class MultiAngleTemplate
+            {
+                public ushort AngleUID { get; private set; }
+                public string AngleName { get; private set; }
+                public float AngleMinC1 { get; private set; }
+                public float AngleMaxC1 { get; private set; }
+                public float AngleMinC2 { get; private set; }
+                public float AngleMaxC2 { get; private set; }
+                public uint SpriteUID { get; private set; }
+
+                public MultiAngleTemplate(ushort angleUID, string angleName, float angleMin, float angleMax, uint spriteUID)
+                {
+                    AngleUID = angleUID;
+                    AngleName = angleName;
+                    SpriteUID = spriteUID;
+
+                    //C1 are the values ranging from 0-360
+                    #region C1
+                    AngleMinC1 = angleMin;
+                    AngleMaxC1 = angleMax;
+                    #endregion
+
+                    //C2 are the values ranging from 0->180 and -179.99999->0 (neg values)
+                    #region C2
+                    //if ((angleMax > 0 && angleMax < 180f) && angleMin > 180f)
+                    {
+                        int modMin = (int)((float)angleMin / 360f);
+                        float newMin = angleMin;
+
+                        if (angleMin < -180f)
+                        {
+                            newMin = angleMin + (360f * (modMin + 1));
+                        }
+                        else if (angleMin > 180f)
+                        {
+                            newMin = angleMin - (360f * (modMin + 1));
+                        }
+                        AngleMinC2 = newMin;
+
+                        int modMax = (int)((float)angleMax / 360f);
+                        float newMax = angleMax;
+
+                        if (angleMax < -180f)
+                        {
+                            newMin = angleMax + (360f * (modMax + 1));
+                        }
+                        else if (angleMax > 180f)
+                        {
+                            newMax = angleMax - (360f * (modMax + 1));
+                        }
+                        AngleMaxC2 = newMax;
+                    }
+                    #endregion
+
+                    Debug.Log("uid " + angleUID + " minC1 " + AngleMinC1 + " maxC1 " + AngleMaxC1 + " minc2 " + AngleMinC2 + " maxc2 " + AngleMaxC2);
+                }
+            }
             #endregion
 
             public uint UID { get; private set; }
@@ -137,6 +195,8 @@ namespace EveryDaySpaceStation
             public Dictionary<ushort, PoweredStateTemplate> PoweredStates { get; private set; }
             public Dictionary<ushort, DeviceStateTemplate> DeviceStates { get; private set; }
             public Dictionary<ushort, CraftStateTemplate> CraftStates { get; private set; }
+            public Dictionary<ushort, MultiAngleTemplate> MultiAngleStates { get; private set; }
+
 
             public bool GetEntityStateTemplate(ushort uid, out StateTemplate template)
             {
@@ -172,6 +232,12 @@ namespace EveryDaySpaceStation
             {
                 template = null;
                 return CraftStates.TryGetValue(uid, out template);
+            }
+
+            public bool GetMultiAngleStateTemplate(ushort uid, out MultiAngleTemplate template)
+            {
+                template = null;
+                return MultiAngleStates.TryGetValue(uid, out template); 
             }
 
             public EntityDataTemplate(uint uid, string name, string[] typeFlags, EveryDaySpaceStation.Json.EntityStateDataJson[] states)
@@ -222,6 +288,10 @@ namespace EveryDaySpaceStation
 
                         case "craftable":
                             CraftStates = new Dictionary<ushort, CraftStateTemplate>(EntityStates.Count);
+                            break;
+
+                        case "multiangle":
+                            MultiAngleStates = new Dictionary<ushort, MultiAngleTemplate>(EntityStates.Count);
                             break;
                     }
                 }
@@ -348,6 +418,25 @@ namespace EveryDaySpaceStation
                     }
 
                     CraftStates.Add(i, newState);
+                }
+            }
+
+            public void ParseMultiAngleStates(EveryDaySpaceStation.Json.EntityMultiAngleJson[] multiAngleStates)
+            {
+                if (multiAngleStates == null)
+                {
+                    return;
+                }
+
+                ushort i = 0;
+                for (i = 0; i < multiAngleStates.Length; i++)
+                {
+                    EveryDaySpaceStation.Json.EntityMultiAngleJson multiAngleState = multiAngleStates[i];
+                    MultiAngleTemplate newState = new MultiAngleTemplate(multiAngleState.AngleStateUID,
+                        multiAngleState.AngleStateName, multiAngleState.AngleStateMinAngle,
+                        multiAngleState.AngleStateMaxAngle, multiAngleState.AngleSpriteUID);
+
+                    MultiAngleStates.Add(i, newState);
                 }
             }
 

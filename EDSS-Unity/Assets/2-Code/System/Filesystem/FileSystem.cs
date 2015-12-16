@@ -481,6 +481,7 @@ namespace EveryDaySpaceStation
                     newEntity.ParsePoweredStates(entityData.EntityPoweredStates);
                     newEntity.ParseDeviceStates(entityData.EntityDeviceStates);
                     newEntity.ParseCraftStates(entityData.EntityCraftStates);
+                    newEntity.ParseMultiAngleStates(entityData.EntityMultiAngleStates);
 
                     GameManager.Singleton.Gamedata.AddEntityTemplate(newEntity.UID, newEntity);
 

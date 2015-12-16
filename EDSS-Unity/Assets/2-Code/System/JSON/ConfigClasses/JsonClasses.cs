@@ -485,6 +485,9 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("craftstates")]
         public EntityCraftStateJson[] EntityCraftStates { get; set; }
 
+        [JsonProperty("multianglestates")]
+        public EntityMultiAngleJson[] EntityMultiAngleStates { get; set; }
+
         public override string ToString()
         {
             return string.Format("Entity UID: {0} Name: {1} State#: {2}", UID, EntityName, EntityStates.Length);
@@ -618,6 +621,50 @@ namespace EveryDaySpaceStation.Json
             [JsonProperty("count")]
             public int MaterialCraftingCount { get; set; }
         }
+    }
+
+    public class EntityMultiAngleJson : EntityTypeComponentBaseJson
+    {
+        public EntityMultiAngleJson()
+            : base("multianglestates")
+        { }
+
+        //[JsonProperty("anglestates")]
+        //public AngleState AngleStates { get; set; }
+
+        //public class AngleState
+        //{
+        //    [JsonProperty("stateuid")]
+        //    public ushort AngleStateUID { get; set; }
+
+        //    [JsonProperty("anglename")]
+        //    public string AngleStateName { get; set; }
+
+        //    [JsonProperty("anglemin")]
+        //    public float AngleStateMinAngle { get; set; }
+
+        //    [JsonProperty("anglemax")]
+        //    public float AngleStateMaxAngle { get; set; }
+
+        //    [JsonProperty("spriteuid")]
+        //    public uint AngleSpriteUID { get; set; }
+        //}
+                
+        [JsonProperty("stateuid")]
+        public ushort AngleStateUID { get; set; }
+
+        [JsonProperty("anglename")]
+        public string AngleStateName { get; set; }
+
+        [JsonProperty("anglemin")]
+        public float AngleStateMinAngle { get; set; }
+
+        [JsonProperty("anglemax")]
+        public float AngleStateMaxAngle { get; set; }
+
+        [JsonProperty("spriteuid")]
+        public uint AngleSpriteUID { get; set; }
+        
     }
     #endregion
 

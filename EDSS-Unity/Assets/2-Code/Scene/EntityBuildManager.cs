@@ -13,7 +13,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 using EveryDaySpaceStation;
 using EveryDaySpaceStation.DataTypes;
@@ -110,12 +109,19 @@ public class EntityBuildManager : MonoBehaviour
 
         entity.Sprite.Create(entity);
         //If it has light states, then it must emit light at some point
-        if (entity.Template.LightStates != null)
+        if (entity.Template.LightStates != null && entity.Template.LightStates.Count > 0)
         {
             LightComponent lc = entity.Sprite.gameObject.AddComponent<LightComponent>();
             lc.Create(entity.Sprite, entity.Template.LightStates[entity.CurrentStateUID]);
-            entity.Sprite.UpdateLightComponent();
         }
+
+        if (entity.Template.MultiAngleStates != null && entity.Template.MultiAngleStates.Count > 0)
+        {
+            MultiAngleComponent mac = entity.Sprite.gameObject.AddComponent<MultiAngleComponent>();
+            mac.Create(entity.Sprite, entity.Template.MultiAngleStates[entity.CurrentStateUID]);
+        }
+
+        entity.Sprite.UpdateComponents();
 
         entity.BuildState.IsBuildingQueued = false;
         entity.BuildState.IsBuilt = true;

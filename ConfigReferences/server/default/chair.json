@@ -1,0 +1,59 @@
+{
+	"entitydata": [
+	{
+		"uid": 2,
+		"name": "Standard Chair",
+		"typeflags" : [ "Fixed", "Multiangle", "Device", "Craftable"],
+		"states": [
+		{
+			"stateuid": 0,
+			"statename": "Chair",
+			"spriteuid": 210,
+			"size": { "x": 1, "y": 1, "z": 1 },
+			"positionoffset" : { "x": 0, "y": 0, "z": 0 }
+		}],
+		"multianglestates": 
+		[
+			{
+				"stateuid": 0,
+				"anglename" : "front",
+				"anglemin" : 315,
+				"anglemax" : 45,
+				"spriteuid" : 210
+			},
+			{
+				"stateuid": 1,
+				"anglename" : "right",
+				"anglemin" : 45,
+				"anglemax" : 135,
+				"spriteuid" : 212
+			},
+			{
+				"stateuid": 2,
+				"anglename" : "back",
+				"anglemin" : 135,
+				"anglemax" : 225,
+				"spriteuid" : 211
+			},
+			{
+				"stateuid": 3,
+				"anglename" : "left",
+				"anglemin" : 225,
+				"anglemax" : 315,
+				"spriteuid" : 213
+			}
+		]
+		,
+		"fixedstates" : [{
+			"toggletooltype" : [ 1 ],
+			"breakabletooltype" : [ 0 ],
+			"repairtooltype" : [ 1 ]
+		}],	
+		"craftstates" :
+		[{
+			"materials" : [ 
+			{"name" : "metal", "count": 1 }
+			]
+		}]
+	}]
+}
