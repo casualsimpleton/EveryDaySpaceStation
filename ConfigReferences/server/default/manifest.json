@@ -6,14 +6,15 @@
 		"clown1.png",
 		"underlayer1.png",
 		"lights1.png",
-		"furniture.png"
+		"furniture.png",
+		"door1.png"
 	],
 	"spritedata" :
 	[
 		"spritedata.json",
 		"clown.json",
 		"underlayer-spritedata.json",
-		"lights1.json"
+		"lights1.json",
 	],
 	"blockdata" :
 	[
@@ -22,6 +23,7 @@
 	"entitydata" :
 	[
 		"lightentities.json",
-		"chair.json"
+		"chair.json",
+		"door1.json"
 	]
 }

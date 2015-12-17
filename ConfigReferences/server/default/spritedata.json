@@ -294,5 +294,510 @@
 			"World"
 		]
 	}
+	,
+	{
+		"uid": 20,
+		"name": "door1-unpowered-1",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 21,
+		"name": "door1-unpowered-2",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 32,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 22,
+		"name": "door1-unpowered-3",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 23,
+		"name": "door1-unpowered-4",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 96,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 24,
+		"name": "door1-unpowered-5",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 25,
+		"name": "door1-unpowered-6",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 26,
+		"name": "door1-unpowered-welded",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 0
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 27,
+		"name": "door1-powered-1",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 28,
+		"name": "door1-powered-2",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 32,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 29,
+		"name": "door1-powered-3",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 30,
+		"name": "door1-powered-4",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 96,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 31,
+		"name": "door1-powered-5",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 32,
+		"name": "door1-powered-6",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 33,
+		"name": "door1-powered-welded",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 32
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 34,
+		"name": "door1-locked-1",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 64
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 35,
+		"name": "door1-locked-welded",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 64
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 36,
+		"name": "door1-hacked-1",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 37,
+		"name": "door1-hacked-2",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 32,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 38,
+		"name": "door1-hacked-3",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 39,
+		"name": "door1-hacked-4",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 96,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 40,
+		"name": "door1-hacked-5",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 41,
+		"name": "door1-hacked-6",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 42,
+		"name": "door1-hacked-welded",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 96
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	},
+	{
+		"uid": 43,
+		"name": "door1-malfunc-1",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 0,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 44,
+		"name": "door1-malfunc-2",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 32,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 45,
+		"name": "door1-malfunc-3",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 64,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 46,
+		"name": "door1-malfunc-4",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 96,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 47,
+		"name": "door1-malfunc-5",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 128,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 48,
+		"name": "door1-malfunc-6",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 160,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
+	,
+	{
+		"uid": 49,
+		"name": "door1-malfunc-welded",
+		"spritesheet": "door1.png",
+		"spritepos": {
+			"x": 192,
+			"y": 128
+		},
+		"spritewidthheight": {
+			"x": 32,
+			"y": 32
+		},
+		"flags": [
+			"Twosided"
+		]
+	}
 	]
 }

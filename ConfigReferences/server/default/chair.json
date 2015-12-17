@@ -9,7 +9,8 @@
 			"stateuid": 0,
 			"statename": "Chair",
 			"spriteuid": 210,
-			"size": { "x": 1, "y": 1, "z": 1 },
+			"graphicsize": { "x": 0.5, "y": 0.5, "z": 0.5 },
+			"collidersize": { "x": 0.5, "y": 1, "z": 0.5 },
 			"positionoffset" : { "x": 0, "y": 0, "z": 0 }
 		}],
 		"multianglestates": 

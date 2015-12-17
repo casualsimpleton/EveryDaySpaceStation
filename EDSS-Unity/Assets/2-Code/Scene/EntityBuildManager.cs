@@ -121,6 +121,12 @@ public class EntityBuildManager : MonoBehaviour
             mac.Create(entity.Sprite, entity.Template.MultiAngleStates[entity.CurrentStateUID]);
         }
 
+        if (entity.Template.DoorState != null)
+        {
+            DoorComponent door = entity.Sprite.gameObject.AddComponent<DoorComponent>();
+            door.Create(entity.Sprite, entity.Template.DoorState);
+        }
+
         entity.Sprite.UpdateComponents();
 
         entity.BuildState.IsBuildingQueued = false;

@@ -78,21 +78,21 @@
 			"entitytemplateuid": 2,
 			"tilepos": { "x": 6, "y": 5},
 			"anchor": "floor",
-			"rotation": { "x": 0.5, "y": 0, "z": 0}			
+			"rotation": { "x": 0, "y": 0, "z": 0}			
 		},
 		{
 			"mapentityuid": 12,
 			"entitytemplateuid": 2,
 			"tilepos": { "x": 7, "y": 5},
 			"anchor": "floor",
-			"rotation": { "x": 0.5, "y": 0, "z": 0}			
+			"rotation": { "x": 0, "y": 0, "z": 0}			
 		},
 		{
 			"mapentityuid": 13,
 			"entitytemplateuid": 2,
 			"tilepos": { "x": 5, "y": 14},
 			"anchor": "floor",
-			"rotation": { "x": 0.5, "y": 180, "z": 0}			
+			"rotation": { "x": 0, "y": 180, "z": 0}			
 		},
 		{
 			"mapentityuid": 14,
@@ -100,6 +100,13 @@
 			"tilepos": { "x": 6, "y": 14},
 			"anchor": "floor",
 			"rotation": { "x": 0.5, "y": 180, "z": 0}			
+		},
+		{
+			"mapentityuid": 15,
+			"entitytemplateuid": 3,
+			"tilepos": {"x":6, "y": 10},
+			"anchor": "floor",
+			"rotation": { "x": 0, "y": 0, "z": 0}
 		}
 	]
 }

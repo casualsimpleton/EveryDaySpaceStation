@@ -29,15 +29,13 @@ namespace EveryDaySpaceStation
             #region Classes
             public class StateTemplate
             {
-
                 public ushort StateUID { get; private set; }
                 public string StateName { get; private set; }
                 public uint SpriteUID { get; private set; }
                 public Vector3 StateGraphicsSize { get; private set; }
                 public Vector3 StateColliderSize { get; private set; }
                 public Vector3 StatePositionOffset { get; private set; }
-
-
+                
                 public StateTemplate(ushort uid, string name, uint spriteUID, Vector3 graphicsSize, Vector3 colliderSize, Vector3 offset)
                 {
                     StateUID = uid;
@@ -140,7 +138,7 @@ namespace EveryDaySpaceStation
                 }
             }
 
-            public class MultiAngleTemplate
+            public class MultiAngleStateTemplate
             {
                 public ushort AngleUID { get; private set; }
                 public string AngleName { get; private set; }
@@ -150,7 +148,7 @@ namespace EveryDaySpaceStation
                 public float AngleMaxC2 { get; private set; }
                 public uint SpriteUID { get; private set; }
 
-                public MultiAngleTemplate(ushort angleUID, string angleName, float angleMin, float angleMax, uint spriteUID)
+                public MultiAngleStateTemplate(ushort angleUID, string angleName, float angleMin, float angleMax, uint spriteUID)
                 {
                     AngleUID = angleUID;
                     AngleName = angleName;
@@ -194,7 +192,68 @@ namespace EveryDaySpaceStation
                     }
                     #endregion
 
-                    Debug.Log("uid " + angleUID + " minC1 " + AngleMinC1 + " maxC1 " + AngleMaxC1 + " minc2 " + AngleMinC2 + " maxc2 " + AngleMaxC2);
+                    //Debug.Log("uid " + angleUID + " minC1 " + AngleMinC1 + " maxC1 " + AngleMaxC1 + " minc2 " + AngleMinC2 + " maxc2 " + AngleMaxC2);
+                }
+            }
+
+            public class DoorStateTemplate
+            {
+                public class DoorConditionTemplate
+                {
+                    public ushort ConditionUID { get; private set; }
+                    public string ConditionName { get; private set; }
+                    public ushort[] ReferencedStates { get; private set; }
+                    public float ConditionDefaultSpeed { get; private set; }
+                    public Vector3[] ConditionTranslations { get; private set; }
+                    public Vector3[] ConditionRotations { get; private set; }
+                    public bool[] ConditionHasColliders { get; private set; }
+
+                    public DoorConditionTemplate(ushort conditionUID, string conditionName, ushort[] referenceStates, float defStateSpeed, Vector3[] conditionTranslations,
+                        Vector3[] conditionRotations, bool[] conditionColliders)
+                    {
+                        ConditionUID = conditionUID;
+                        ConditionName = conditionName;
+                        ReferencedStates = referenceStates;
+                        ConditionDefaultSpeed = defStateSpeed;
+                        ConditionTranslations = conditionTranslations;
+                        ConditionRotations = conditionRotations;
+                        ConditionHasColliders = conditionColliders;
+                    }
+
+                    public void Clear()
+                    {
+                        ReferencedStates = null;
+                        ConditionTranslations = null;
+                        ConditionRotations = null;
+                    }
+                }
+
+                public bool IsDoubleDoors { get; private set; }
+                public bool IsHorizontal { get; private set; }
+
+                public Dictionary<ushort, DoorConditionTemplate> DoorConditions { get; private set; }
+
+                public void AddCondition(ushort conditionUID, DoorConditionTemplate cond)
+                {
+                    DoorConditions.Add(conditionUID, cond);
+                }
+
+                public DoorStateTemplate(bool isDoubleDoor, bool isHorizontal)
+                {
+                    IsDoubleDoors = isDoubleDoor;
+                    IsHorizontal = isHorizontal;
+
+                    DoorConditions = new Dictionary<ushort,DoorConditionTemplate>();
+                }
+
+                public void Cleanup()
+                {
+                    foreach (KeyValuePair<ushort, DoorConditionTemplate> t in DoorConditions)
+                    {
+                        t.Value.Clear();
+                    }
+
+                    DoorConditions.Clear();
                 }
             }
             #endregion
@@ -209,8 +268,13 @@ namespace EveryDaySpaceStation
             public Dictionary<ushort, PoweredStateTemplate> PoweredStates { get; private set; }
             public Dictionary<ushort, DeviceStateTemplate> DeviceStates { get; private set; }
             public Dictionary<ushort, CraftStateTemplate> CraftStates { get; private set; }
-            public Dictionary<ushort, MultiAngleTemplate> MultiAngleStates { get; private set; }
+            public Dictionary<ushort, MultiAngleStateTemplate> MultiAngleStates { get; private set; }
+            public DoorStateTemplate DoorState { get; private set; }
 
+            public override string ToString()
+            {
+                return string.Format("Entity Template: {0} UID: {1}", Name, UID);
+            }
 
             public bool GetEntityStateTemplate(ushort uid, out StateTemplate template)
             {
@@ -248,7 +312,7 @@ namespace EveryDaySpaceStation
                 return CraftStates.TryGetValue(uid, out template);
             }
 
-            public bool GetMultiAngleStateTemplate(ushort uid, out MultiAngleTemplate template)
+            public bool GetMultiAngleStateTemplate(ushort uid, out MultiAngleStateTemplate template)
             {
                 template = null;
                 return MultiAngleStates.TryGetValue(uid, out template); 
@@ -305,7 +369,7 @@ namespace EveryDaySpaceStation
                             break;
 
                         case "multiangle":
-                            MultiAngleStates = new Dictionary<ushort, MultiAngleTemplate>(EntityStates.Count);
+                            MultiAngleStates = new Dictionary<ushort, MultiAngleStateTemplate>(EntityStates.Count);
                             break;
                     }
                 }
@@ -318,30 +382,37 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < lightstates.Length && i < EntityStates.Count; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityLightStateJson lightState = lightstates[i];
-                    LightStateTemplate newState = new LightStateTemplate(lightState.EntityLightValue);
-
-                    LightStates.Add(i, newState);
-                }
-
-                //We need to have as many light states as we do states, so if there's any missing, pad them out
-                if (i < EntityStates.Count)
-                {
-                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has less light states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, lightstates.Length, EntityStates.Count));
-                    while (i < EntityStates.Count)
+                    ushort i = 0;
+                    for (i = 0; i < lightstates.Length && i < EntityStates.Count; i++)
                     {
-                        i++;
+                        EveryDaySpaceStation.Json.EntityLightStateJson lightState = lightstates[i];
+                        LightStateTemplate newState = new LightStateTemplate(lightState.EntityLightValue);
 
-                        LightStates.Add(i, LightStateTemplate.ZeroState);
+                        LightStates.Add(i, newState);
+                    }
+
+                    //We need to have as many light states as we do states, so if there's any missing, pad them out
+                    if (i < EntityStates.Count)
+                    {
+                        Debug.LogWarning(string.Format("Entity {0}, '{1}' has less light states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, lightstates.Length, EntityStates.Count));
+                        while (i < EntityStates.Count)
+                        {
+                            i++;
+
+                            LightStates.Add(i, LightStateTemplate.ZeroState);
+                        }
+                    }
+
+                    if (lightstates.Length > EntityStates.Count)
+                    {
+                        Debug.LogWarning(string.Format("Entity {0}, '{1}' has more light states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, lightstates.Length, EntityStates.Count));
                     }
                 }
-
-                if (lightstates.Length > EntityStates.Count)
+                catch (System.Exception ex)
                 {
-                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has more light states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, lightstates.Length, EntityStates.Count));
+                    Debug.LogError(string.Format("Exception on parsing Light State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
                 }
             }
 
@@ -352,13 +423,20 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < fixedStates.Length && i < EntityStates.Count; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityFixedStateJson fixedState = fixedStates[i];
-                    FixedStateTemplate newState = new FixedStateTemplate(fixedState.EntityFixedToggleToolType, fixedState.EntityFixedBreakbleToolType, fixedState.EntityFixedRepairToolType);
+                    ushort i = 0;
+                    for (i = 0; i < fixedStates.Length && i < EntityStates.Count; i++)
+                    {
+                        EveryDaySpaceStation.Json.EntityFixedStateJson fixedState = fixedStates[i];
+                        FixedStateTemplate newState = new FixedStateTemplate(fixedState.EntityFixedToggleToolType, fixedState.EntityFixedBreakbleToolType, fixedState.EntityFixedRepairToolType);
 
-                     FixedStates.Add(i, newState);
+                         FixedStates.Add(i, newState);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(string.Format("Exception on parsing Fixed State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
                 }
             }
 
@@ -369,30 +447,37 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < poweredStates.Length && i < EntityStates.Count; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityPoweredStateJson poweredState = poweredStates[i];
-                    PoweredStateTemplate newState = new PoweredStateTemplate(poweredState.EntityPowerResourceName, poweredState.EntityPowerCost);
-
-                    PoweredStates.Add(i, newState);
-                }
-
-                //We need to have as many light states as we do states, so if there's any missing, pad them out
-                if (i < EntityStates.Count)
-                {
-                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has less powered states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, poweredStates.Length, EntityStates.Count));
-                    while (i < EntityStates.Count)
+                    ushort i = 0;
+                    for (i = 0; i < poweredStates.Length && i < EntityStates.Count; i++)
                     {
-                        i++;
+                        EveryDaySpaceStation.Json.EntityPoweredStateJson poweredState = poweredStates[i];
+                        PoweredStateTemplate newState = new PoweredStateTemplate(poweredState.EntityPowerResourceName, poweredState.EntityPowerCost);
 
-                        PoweredStates.Add(i, PoweredStateTemplate.ZeroState);
+                        PoweredStates.Add(i, newState);
+                    }
+
+                    //We need to have as many light states as we do states, so if there's any missing, pad them out
+                    if (i < EntityStates.Count)
+                    {
+                        Debug.LogWarning(string.Format("Entity {0}, '{1}' has less powered states ({2}) than entity states ({3}). Padding with defaults.", UID, Name, poweredStates.Length, EntityStates.Count));
+                        while (i < EntityStates.Count)
+                        {
+                            i++;
+
+                            PoweredStates.Add(i, PoweredStateTemplate.ZeroState);
+                        }
+                    }
+
+                    if (poweredStates.Length > EntityStates.Count)
+                    {
+                        Debug.LogWarning(string.Format("Entity {0}, '{1}' has more powered states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, poweredStates.Length, EntityStates.Count));
                     }
                 }
-
-                if (poweredStates.Length > EntityStates.Count)
+                catch (System.Exception ex)
                 {
-                    Debug.LogWarning(string.Format("Entity {0}, '{1}' has more powered states ({2}) than entity states ({3}). Might want to check that out. Ideally they should match.", UID, Name, poweredStates.Length, EntityStates.Count));
+                    Debug.LogError(string.Format("Exception on parsing Powered State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
                 }
             }
 
@@ -403,13 +488,20 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < deviceStates.Length && i < EntityStates.Count; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityDeviceStateJson deviceState = deviceStates[i];
-                    DeviceStateTemplate newState = new DeviceStateTemplate(deviceState.EntityAcceptedInputTypeNames, deviceState.EntityAcceptedInputCount);
+                    ushort i = 0;
+                    for (i = 0; i < deviceStates.Length && i < EntityStates.Count; i++)
+                    {
+                        EveryDaySpaceStation.Json.EntityDeviceStateJson deviceState = deviceStates[i];
+                        DeviceStateTemplate newState = new DeviceStateTemplate(deviceState.EntityAcceptedInputTypeNames, deviceState.EntityAcceptedInputCount);
 
-                    DeviceStates.Add(i, newState);
+                        DeviceStates.Add(i, newState);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(string.Format("Exception on parsing Device State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
                 }
             }
 
@@ -420,18 +512,25 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < craftStates.Length && i < EntityStates.Count; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityCraftStateJson craftState = craftStates[i];
-                    CraftStateTemplate newState = new CraftStateTemplate();
-
-                    for (int j = 0; j < craftState.EntityCraftMaterials.Length; j++)
+                    ushort i = 0;
+                    for (i = 0; i < craftStates.Length && i < EntityStates.Count; i++)
                     {
-                        newState.AddMaterial(craftState.EntityCraftMaterials[j].MaterialCraftingName, craftState.EntityCraftMaterials[j].MaterialCraftingCount);
-                    }
+                        EveryDaySpaceStation.Json.EntityCraftStateJson craftState = craftStates[i];
+                        CraftStateTemplate newState = new CraftStateTemplate();
 
-                    CraftStates.Add(i, newState);
+                        for (int j = 0; j < craftState.EntityCraftMaterials.Length; j++)
+                        {
+                            newState.AddMaterial(craftState.EntityCraftMaterials[j].MaterialCraftingName, craftState.EntityCraftMaterials[j].MaterialCraftingCount);
+                        }
+
+                        CraftStates.Add(i, newState);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(string.Format("Exception on parsing Craft State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
                 }
             }
 
@@ -442,15 +541,47 @@ namespace EveryDaySpaceStation
                     return;
                 }
 
-                ushort i = 0;
-                for (i = 0; i < multiAngleStates.Length; i++)
+                try
                 {
-                    EveryDaySpaceStation.Json.EntityMultiAngleJson multiAngleState = multiAngleStates[i];
-                    MultiAngleTemplate newState = new MultiAngleTemplate(multiAngleState.AngleStateUID,
-                        multiAngleState.AngleStateName, multiAngleState.AngleStateMinAngle,
-                        multiAngleState.AngleStateMaxAngle, multiAngleState.AngleSpriteUID);
+                    ushort i = 0;
+                    for (i = 0; i < multiAngleStates.Length; i++)
+                    {
+                        EveryDaySpaceStation.Json.EntityMultiAngleJson multiAngleState = multiAngleStates[i];
+                        MultiAngleStateTemplate newState = new MultiAngleStateTemplate(multiAngleState.AngleStateUID,
+                            multiAngleState.AngleStateName, multiAngleState.AngleStateMinAngle,
+                            multiAngleState.AngleStateMaxAngle, multiAngleState.AngleSpriteUID);
 
-                    MultiAngleStates.Add(i, newState);
+                        MultiAngleStates.Add(i, newState);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(string.Format("Exception on parsing Multi Angle State for {0} with msg: {1}", ToString(), ex.Message.ToString()));
+                }
+            }
+
+            public void ParseDoorStates(EveryDaySpaceStation.Json.EntityDoorJson doorState)
+            {
+                if (doorState == null)
+                {
+                    return;
+                }
+
+                if (DoorState != null)
+                {
+                    Debug.LogError(string.Format("Attempting to set another door state for template with one already. Template UID: {0} Name: {1}", UID, Name));
+                }
+
+                DoorState = new DoorStateTemplate(doorState.DoorDoubleDoors, doorState.DoorHorizontal);
+
+                for (int i = 0; i < doorState.DoorConditions.Length; i++)
+                {
+                    Json.EntityDoorJson.EntityDoorConditionsJson doorJson = doorState.DoorConditions[i];
+                    DoorStateTemplate.DoorConditionTemplate newCondition = new DoorStateTemplate.DoorConditionTemplate(
+                        doorJson.EntityDoorConditionUID, doorJson.EntityDoorConditionName, doorJson.EntityDoorConditionStates, doorJson.EntityDoorConditionAnimDelta,
+                        doorJson.EntityDoorConditionTranslations, doorJson.EntityDoorConditionRotations, doorJson.EntityDoorConditionHasColliders);
+
+                    DoorState.AddCondition(newCondition.ConditionUID, newCondition);
                 }
             }
 
@@ -500,6 +631,12 @@ namespace EveryDaySpaceStation
                     CraftStates.Clear();
                 }
                 CraftStates = null;
+
+                if (DoorState != null)
+                {
+                    DoorState.Cleanup();
+                }
+                DoorState = null;
             }
         }
 

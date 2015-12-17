@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 // Created: December 3 2015
 // CasualSimpleton <casualsimpleton@gmail.com>
-// Last Modified: December 5 2015
+// Last Modified: December 16 2015
 // CasualSimpleton
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -488,6 +488,9 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("multianglestates")]
         public EntityMultiAngleJson[] EntityMultiAngleStates { get; set; }
 
+        [JsonProperty("doorstates")]
+        public EntityDoorJson EntityDoorState { get; set; } 
+
         public override string ToString()
         {
             return string.Format("Entity UID: {0} Name: {1} State#: {2}", UID, EntityName, EntityStates.Length);
@@ -507,6 +510,12 @@ namespace EveryDaySpaceStation.Json
         public uint SpriteUID { get; set; }
 
         /// <summary>
+        /// Position offset for display plane
+        /// </summary>
+        [JsonProperty("positionoffset")]
+        public Vector3 PositionOffset { get; set; }
+
+        /// <summary>
         /// Size of the display plane in world size (1,1,1 is the same size as a world block
         /// </summary>
         [JsonProperty("graphicsize")]
@@ -514,12 +523,6 @@ namespace EveryDaySpaceStation.Json
 
         [JsonProperty("collidersize")]
         public Vector3 ColliderSize { get; set; }
-
-        /// <summary>
-        /// Position offset for display plane
-        /// </summary>
-        [JsonProperty("positionoffset")]
-        public Vector3 PositionOffset { get; set; }
     }
 
     /// <summary>
@@ -668,6 +671,46 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("spriteuid")]
         public uint AngleSpriteUID { get; set; }
         
+    }
+
+    public class EntityDoorJson : EntityTypeComponentBaseJson
+    {
+        public EntityDoorJson()
+            : base("doorstates")
+        { }
+
+        [JsonProperty("doubledoors")]
+        public bool DoorDoubleDoors { get; set; }
+
+        [JsonProperty("horizontal")]
+        public bool DoorHorizontal { get; set; }
+
+        [JsonProperty("doorconditions")]
+        public EntityDoorConditionsJson[] DoorConditions { get; set; }
+
+        public class EntityDoorConditionsJson
+        {
+            [JsonProperty("conditionuid")]
+            public ushort EntityDoorConditionUID { get; set; }
+
+            [JsonProperty("name")]
+            public string EntityDoorConditionName { get; set; }
+
+            [JsonProperty("states")]
+            public ushort[] EntityDoorConditionStates { get; set; }
+
+            [JsonProperty("defspeed")]
+            public float EntityDoorConditionAnimDelta { get; set; }
+
+            [JsonProperty("translations")]
+            public Vector3[] EntityDoorConditionTranslations { get; set; }
+
+            [JsonProperty("rotations")]
+            public Vector3[] EntityDoorConditionRotations { get; set; }
+
+            [JsonProperty("hascolliders")]
+            public bool[] EntityDoorConditionHasColliders { get; set; }
+        }
     }
     #endregion
 

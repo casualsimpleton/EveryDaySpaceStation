@@ -1,0 +1,155 @@
+{
+	"entitydata": [
+	{
+		"uid": 3,
+		"name": "Door",
+		"typeflags" : [ "Light", "Powered", "Door", "Craftable"],
+		"states": [
+		{
+			"stateuid": 0,
+			"statename": "DoorUnpoweredClosed",
+			"spriteuid": 20,
+			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 1,
+			"statename": "DoorUnpoweredMoving1",
+			"spriteuid": 21,
+			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 2,
+			"statename": "DoorUnpoweredMoving2",
+			"spriteuid": 22,
+			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 3,
+			"statename": "DoorUnpoweredMoving3",
+			"spriteuid": 23,
+			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 4,
+			"statename": "DoorUnpoweredMoving4",
+			"spriteuid": 24,
+			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 5,
+			"statename": "DoorUnpoweredOpen",
+			"spriteuid": 25,
+			"graphicsize": { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid": 6,
+			"statename": "DoorUnpoweredWelded",
+			"spriteuid": 26,
+			"graphicsize": { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		}
+		],
+		"doorstates" : 
+		{
+			"doubledoors" : true,
+			"horizontal" : true,
+			
+			"doorconditions" : [
+			{
+				"conditionuid": 0,
+				"name": "UnpoweredClosed",
+				"states": [ 0 ],
+				"hascolliders": [ true ]
+			},
+			{
+				"conditionuid": 1,
+				"name": "UnpoweredOpening",
+				"states": [ 1, 2, 3, 4 ],
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders": [
+					true, false, false, false
+				]
+			},
+			{
+				"conditionuid": 2,
+				"name": "UnpoweredOpened",
+				"states": [ 5 ],
+				"hascolliders": [ false ]
+			},
+			{
+				"conditionuid": 3,
+				"name": "UnpoweredWelded",
+				"states": [ 6 ],
+				"hascolliders": [ true ]
+			}
+			]
+		}		
+		,
+		"lightstates": [
+		{
+			"light": 1
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		}
+		],	
+		"poweredstates" : [
+		{
+			"resourcename": "electricity",
+			"cost": 10
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 2
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		}
+		],
+		"craftstates" :
+		[{
+			"materials" : [ 
+			{"name" : "metal", "count": 1 }
+			]
+		}]
+	}]
+}

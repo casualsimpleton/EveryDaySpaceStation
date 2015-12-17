@@ -29,6 +29,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     protected float _updateTimerDelta;
     protected MapData.EntityData _entityData { get; private set; }
     protected LightComponent _lightComponent;
+    protected DoorComponent _doorComponent;
     protected MultiAngleComponent _multiAngleComponent;
 
     protected CubeCollider _cubeCollider;
@@ -123,6 +124,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     {
         _lightComponent = this.gameObject.GetComponent<LightComponent>();
         _multiAngleComponent = this.gameObject.GetComponent<MultiAngleComponent>();
+        _doorComponent = this.gameObject.GetComponent<DoorComponent>();
     }
 
     public void Reset()

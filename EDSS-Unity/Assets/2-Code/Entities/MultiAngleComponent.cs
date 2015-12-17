@@ -22,19 +22,19 @@ using EveryDaySpaceStation.Utils;
 public class MultiAngleComponent : MonoBehaviour
 {
     protected EntitySpriteGameObject _entitySpriteObject;
-    protected GameData.EntityDataTemplate.MultiAngleTemplate _currentMultiAngleTemplate;
+    protected GameData.EntityDataTemplate.MultiAngleStateTemplate _currentMultiAngleTemplate;
     protected float _updateTimer;
     protected float _updateTimerDelta = 1f / 15f;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
 
-    public void Create(EntitySpriteGameObject entitySpriteGO, GameData.EntityDataTemplate.MultiAngleTemplate initialMultiAngleTemplate)
+    public void Create(EntitySpriteGameObject entitySpriteGO, GameData.EntityDataTemplate.MultiAngleStateTemplate initialMultiAngleTemplate)
     {
         _entitySpriteObject = entitySpriteGO;
         UpdateMultiAngleTemplate(initialMultiAngleTemplate);
     }
 
-    public void UpdateMultiAngleTemplate(GameData.EntityDataTemplate.MultiAngleTemplate newState)
+    public void UpdateMultiAngleTemplate(GameData.EntityDataTemplate.MultiAngleStateTemplate newState)
     {
         _currentMultiAngleTemplate = newState;
 
@@ -67,8 +67,8 @@ public class MultiAngleComponent : MonoBehaviour
 
         //Debug.Log("Ang " + ang + " andDir " + angDir + " angMod " + angMod);
 
-        GameData.EntityDataTemplate.MultiAngleTemplate template = null;
-        foreach (KeyValuePair<ushort, GameData.EntityDataTemplate.MultiAngleTemplate> t in _entitySpriteObject.EntityData.Template.MultiAngleStates)
+        GameData.EntityDataTemplate.MultiAngleStateTemplate template = null;
+        foreach (KeyValuePair<ushort, GameData.EntityDataTemplate.MultiAngleStateTemplate> t in _entitySpriteObject.EntityData.Template.MultiAngleStates)
         {
             float minC1 = t.Value.AngleMinC1;
             float maxC1 = t.Value.AngleMaxC1;
