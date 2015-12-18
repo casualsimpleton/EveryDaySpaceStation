@@ -37,6 +37,8 @@ public class EDSSFirstPersonControls : MonoBehaviour
     [SerializeField]
     Vec2Int _currentTile = new Vec2Int(0,0);
 
+    EDSSFirstPersonCamera _edssCamera;
+
     TileLightGameObject _playerLight;
     
     void Awake()
@@ -47,10 +49,17 @@ public class EDSSFirstPersonControls : MonoBehaviour
     void Start()
     {        
         _charController = this.gameObject.GetComponentInChildren<CharacterController>();
-
+        
         if (_charController == null)
         {
             Debug.LogError("Can't find charactercontroller for FPS controls");
+        }
+
+        _edssCamera = this.gameObject.GetComponent<EDSSFirstPersonCamera>();
+
+        if (_edssCamera == null)
+        {
+            Debug.LogError("Can't find edssfirstpersoncamera");
         }
     }
 
@@ -80,6 +89,14 @@ public class EDSSFirstPersonControls : MonoBehaviour
         }
 
         UpdateTilePosition();
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            if (_edssCamera.CurrentHighlitedESGO != null)
+            {
+                GameManager.Singleton.Client_AttemptInput(_edssCamera.CurrentHighlitedESGO);
+            }
+        }
     }
 
     public void SpawnTileLight()

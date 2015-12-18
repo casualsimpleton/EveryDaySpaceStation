@@ -36,6 +36,8 @@ public class EDSSFirstPersonCamera : MonoBehaviour
 
     protected BoundsDrawing _lineBoundsDrawer;
 
+    public EntitySpriteGameObject CurrentHighlitedESGO { get { return _curHighLightESGO; } }
+
     void Start()
     {
         _transform = this.gameObject.transform;

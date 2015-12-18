@@ -264,4 +264,12 @@ public class EntitySpriteGameObject : MonoBehaviour
         _transform.position = _entityData.MapTile.GetWorldPosition() + _entityData.CurrentEntityState.StateTemplate.StatePositionOffset + new Vector3(xOffSet, 0f, zOffset);
         
     }
+
+    public void Activate()
+    {
+        if (_doorComponent != null)
+        {
+            _doorComponent.Activate();
+        }
+    }
 }

@@ -228,6 +228,7 @@ namespace EveryDaySpaceStation
                     }
                 }
 
+                public EntityDataTemplate ReferencedEntityDataTemplate { get; private set; }
                 public bool IsDoubleDoors { get; private set; }
                 public bool IsHorizontal { get; private set; }
 
@@ -238,8 +239,9 @@ namespace EveryDaySpaceStation
                     DoorConditions.Add(conditionUID, cond);
                 }
 
-                public DoorStateTemplate(bool isDoubleDoor, bool isHorizontal)
+                public DoorStateTemplate(EntityDataTemplate parentTemplate, bool isDoubleDoor, bool isHorizontal)
                 {
+                    ReferencedEntityDataTemplate = parentTemplate;
                     IsDoubleDoors = isDoubleDoor;
                     IsHorizontal = isHorizontal;
 
@@ -572,7 +574,7 @@ namespace EveryDaySpaceStation
                     Debug.LogError(string.Format("Attempting to set another door state for template with one already. Template UID: {0} Name: {1}", UID, Name));
                 }
 
-                DoorState = new DoorStateTemplate(doorState.DoorDoubleDoors, doorState.DoorHorizontal);
+                DoorState = new DoorStateTemplate(this, doorState.DoorDoubleDoors, doorState.DoorHorizontal);
 
                 for (int i = 0; i < doorState.DoorConditions.Length; i++)
                 {

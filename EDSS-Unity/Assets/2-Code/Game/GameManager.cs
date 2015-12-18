@@ -110,4 +110,12 @@ public class GameManager : MonoBehaviour
 
         _mapData.LoadEntities(mapEntityConfig);
     }
+    
+    public void Client_AttemptInput(EntitySpriteGameObject esgo)
+    {
+        if (esgo != null)
+        {
+            esgo.Activate();
+        }
+    }
 }
