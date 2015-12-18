@@ -200,6 +200,29 @@ namespace EveryDaySpaceStation
             {
                 public class DoorConditionTemplate
                 {
+                    public class DoorTransitionTemplate
+                    {
+                        public string TransitionName { get; private set; }
+                        /// <summary>
+                        /// Condition UID to use should this transition be satisfied
+                        /// </summary>
+                        public ushort TransitionTargetConditionUID { get; private set; }
+                        public List<Tuple<EntityTransitionVariables, string>> TransitionRequirements { get; private set; }
+
+                        public DoorTransitionTemplate(string transitionName, ushort targetConditionUID)
+                        {
+                            TransitionName = transitionName;
+                            TransitionTargetConditionUID = targetConditionUID;
+
+                            TransitionRequirements = new List<Tuple<EntityTransitionVariables, string>>();
+                        }
+
+                        public void AddTransitionRequirements(EntityTransitionVariables variableType, string requiredValue)
+                        {
+                            TransitionRequirements.Add(new Tuple<EntityTransitionVariables, string>(variableType, requiredValue.ToLower()));
+                        }
+                    }
+
                     public ushort ConditionUID { get; private set; }
                     public string ConditionName { get; private set; }
                     public ushort[] ReferencedStates { get; private set; }
@@ -207,9 +230,10 @@ namespace EveryDaySpaceStation
                     public Vector3[] ConditionTranslations { get; private set; }
                     public Vector3[] ConditionRotations { get; private set; }
                     public bool[] ConditionHasColliders { get; private set; }
+                    public DoorTransitionTemplate[] ConditionTransitions { get; private set; }
 
                     public DoorConditionTemplate(ushort conditionUID, string conditionName, ushort[] referenceStates, float defStateSpeed, Vector3[] conditionTranslations,
-                        Vector3[] conditionRotations, bool[] conditionColliders)
+                        Vector3[] conditionRotations, bool[] conditionColliders, Json.EntityDoorJson.EntityTransitions[] transitions)
                     {
                         ConditionUID = conditionUID;
                         ConditionName = conditionName;
@@ -218,6 +242,27 @@ namespace EveryDaySpaceStation
                         ConditionTranslations = conditionTranslations;
                         ConditionRotations = conditionRotations;
                         ConditionHasColliders = conditionColliders;
+                    }
+
+                    public void ParseTransitions(Json.EntityDoorJson.EntityTransitions[] transitions)
+                    {
+                        ConditionTransitions = new DoorTransitionTemplate[transitions.Length];
+
+                        for(int i = 0; i < transitions.Length; i++)
+                        {
+                            Json.EntityDoorJson.EntityTransitions curTransJson = transitions[i];
+
+                            DoorTransitionTemplate newTrans = new DoorTransitionTemplate(curTransJson.TransitionName, curTransJson.TransitionNextConditionUID);
+
+                            for (int j = 0; j < curTransJson.Transitionrequirements.Length; j++)
+                            {
+                                newTrans.AddTransitionRequirements(
+                                    (EntityTransitionVariables)System.Enum.Parse(typeof(EntityTransitionVariables), curTransJson.Transitionrequirements[j].TransitionRequirementVariable, true),
+                                    curTransJson.Transitionrequirements[j].TransitionRequirementValue);
+                            }
+
+                            ConditionTransitions[i] = newTrans;
+                        }
                     }
 
                     public void Clear()
@@ -581,7 +626,8 @@ namespace EveryDaySpaceStation
                     Json.EntityDoorJson.EntityDoorConditionsJson doorJson = doorState.DoorConditions[i];
                     DoorStateTemplate.DoorConditionTemplate newCondition = new DoorStateTemplate.DoorConditionTemplate(
                         doorJson.EntityDoorConditionUID, doorJson.EntityDoorConditionName, doorJson.EntityDoorConditionStates, doorJson.EntityDoorConditionAnimDelta,
-                        doorJson.EntityDoorConditionTranslations, doorJson.EntityDoorConditionRotations, doorJson.EntityDoorConditionHasColliders);
+                        doorJson.EntityDoorConditionTranslations, doorJson.EntityDoorConditionRotations, doorJson.EntityDoorConditionHasColliders,
+                        doorJson.EntityDoorTransitions);
 
                     DoorState.AddCondition(newCondition.ConditionUID, newCondition);
                 }

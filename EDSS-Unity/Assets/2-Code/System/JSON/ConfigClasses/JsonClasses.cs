@@ -530,6 +530,30 @@ namespace EveryDaySpaceStation.Json
     /// </summary>
     public abstract class EntityTypeComponentBaseJson
     {
+        public class EntityTransitions
+        {
+            [JsonProperty("transitionname")]
+            public string TransitionName { get; set; }
+
+            /// <summary>
+            /// Condition UID if all requirements are fulfilled
+            /// </summary>
+            [JsonProperty("nextconditionuid")]
+            public ushort TransitionNextConditionUID { get; set; }
+
+            [JsonProperty("requirements")]
+            public TransitionRequirements[] Transitionrequirements { get; set; }
+
+            public class TransitionRequirements
+            {
+                [JsonProperty("variable")]
+                public string TransitionRequirementVariable { get; set; }
+
+                [JsonProperty("value")]
+                public string TransitionRequirementValue { get; set; }
+            }
+        }
+
         public string EntityTypeComponentName { get; set; }
 
         public EntityTypeComponentBaseJson(string componentType)
@@ -710,6 +734,9 @@ namespace EveryDaySpaceStation.Json
 
             [JsonProperty("hascolliders")]
             public bool[] EntityDoorConditionHasColliders { get; set; }
+
+            [JsonProperty("transitions")]
+            public EntityTransitions[] EntityDoorTransitions { get; set; }
         }
     }
     #endregion

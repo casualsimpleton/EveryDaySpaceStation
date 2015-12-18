@@ -65,7 +65,32 @@
 				"conditionuid": 0,
 				"name": "UnpoweredClosed",
 				"states": [ 0 ],
-				"hascolliders": [ true ]
+				"hascolliders": [ true ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Unpoweredopening",
+						"nextconditionuid" : 1,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					}
+				]
 			},
 			{
 				"conditionuid": 1,
@@ -121,6 +146,9 @@
 		},
 		{
 			"light": 0
+		},
+		{
+			"light": 0
 		}
 		],	
 		"poweredstates" : [
@@ -139,6 +167,10 @@
 		{
 			"resourcename": "electricity",
 			"cost": 2
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
 		},
 		{
 			"resourcename": "electricity",
