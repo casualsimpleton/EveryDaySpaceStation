@@ -90,7 +90,7 @@ public class EDSSFirstPersonControls : MonoBehaviour
 
         UpdateTilePosition();
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (_edssCamera.CurrentHighlitedESGO != null)
             {

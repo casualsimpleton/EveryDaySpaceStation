@@ -709,6 +709,9 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("horizontal")]
         public bool DoorHorizontal { get; set; }
 
+        [JsonProperty("initialcondition")]
+        public ushort InitialConditionUID { get; set; }
+
         [JsonProperty("doorconditions")]
         public EntityDoorConditionsJson[] DoorConditions { get; set; }
 
@@ -737,6 +740,9 @@ namespace EveryDaySpaceStation.Json
 
             [JsonProperty("transitions")]
             public EntityTransitions[] EntityDoorTransitions { get; set; }
+
+            [JsonProperty("duration")]
+            public float EntityDoorTransitionDuration { get; set; }
         }
     }
     #endregion

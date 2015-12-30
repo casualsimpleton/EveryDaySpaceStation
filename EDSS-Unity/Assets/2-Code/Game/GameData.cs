@@ -306,6 +306,42 @@ namespace EveryDaySpaceStation
                                             }
                                         }
                                         break;
+
+                                    case EntityTransitionVariables.NextAction:
+                                        string desiredAction = curTransRequirement.Second.ToLower();
+
+                                        switch (desiredAction)
+                                        {
+                                            case "open":
+                                                if (!door.IsActivated)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                        }
+                                        break;
+
+                                    case EntityTransitionVariables.DurationMet:
+                                        bool desiredDurationValue = curTransRequirement.Second.ToBoolean();
+
+                                        //Should be met
+                                        if (desiredDurationValue == true)
+                                        {
+                                            //Should be met, but isn't
+                                            if (!door.IsDurationExceeded)
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //Should not be met, but is
+                                            if (door.IsDurationExceeded)
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        break;
                                 }
                             }
 
@@ -321,9 +357,10 @@ namespace EveryDaySpaceStation
                     public Vector3[] ConditionRotations { get; private set; }
                     public bool[] ConditionHasColliders { get; private set; }
                     public DoorTransitionTemplate[] ConditionTransitions { get; private set; }
+                    public float ConditionDuration { get; private set; }
 
                     public DoorConditionTemplate(ushort conditionUID, string conditionName, ushort[] referenceStates, float defStateSpeed, Vector3[] conditionTranslations,
-                        Vector3[] conditionRotations, bool[] conditionColliders, Json.EntityDoorJson.EntityTransitions[] transitions)
+                        Vector3[] conditionRotations, bool[] conditionColliders, Json.EntityDoorJson.EntityTransitions[] transitions, float duration)
                     {
                         ConditionUID = conditionUID;
                         ConditionName = conditionName;
@@ -332,6 +369,7 @@ namespace EveryDaySpaceStation
                         ConditionTranslations = conditionTranslations;
                         ConditionRotations = conditionRotations;
                         ConditionHasColliders = conditionColliders;
+                        ConditionDuration = duration;
 
                         if (transitions != null)
                         {
@@ -400,6 +438,8 @@ namespace EveryDaySpaceStation
                 public EntityDataTemplate ReferencedEntityDataTemplate { get; private set; }
                 public bool IsDoubleDoors { get; private set; }
                 public bool IsHorizontal { get; private set; }
+                public ushort InitialConditionUID { get; private set; }
+
 
                 public Dictionary<ushort, DoorConditionTemplate> DoorConditions { get; private set; }
 
@@ -408,11 +448,12 @@ namespace EveryDaySpaceStation
                     DoorConditions.Add(conditionUID, cond);
                 }
 
-                public DoorStateTemplate(EntityDataTemplate parentTemplate, bool isDoubleDoor, bool isHorizontal)
+                public DoorStateTemplate(EntityDataTemplate parentTemplate, bool isDoubleDoor, bool isHorizontal, ushort initialConditionUID)
                 {
                     ReferencedEntityDataTemplate = parentTemplate;
                     IsDoubleDoors = isDoubleDoor;
                     IsHorizontal = isHorizontal;
+                    InitialConditionUID = initialConditionUID;
 
                     DoorConditions = new Dictionary<ushort,DoorConditionTemplate>();
                 }
@@ -743,7 +784,7 @@ namespace EveryDaySpaceStation
                     Debug.LogError(string.Format("Attempting to set another door state for template with one already. Template UID: {0} Name: {1}", UID, Name));
                 }
 
-                DoorState = new DoorStateTemplate(this, doorState.DoorDoubleDoors, doorState.DoorHorizontal);
+                DoorState = new DoorStateTemplate(this, doorState.DoorDoubleDoors, doorState.DoorHorizontal, doorState.InitialConditionUID);
 
                 for (int i = 0; i < doorState.DoorConditions.Length; i++)
                 {
@@ -751,7 +792,7 @@ namespace EveryDaySpaceStation
                     DoorStateTemplate.DoorConditionTemplate newCondition = new DoorStateTemplate.DoorConditionTemplate(
                         doorJson.EntityDoorConditionUID, doorJson.EntityDoorConditionName, doorJson.EntityDoorConditionStates, doorJson.EntityDoorConditionAnimDelta,
                         doorJson.EntityDoorConditionTranslations, doorJson.EntityDoorConditionRotations, doorJson.EntityDoorConditionHasColliders,
-                        doorJson.EntityDoorTransitions);
+                        doorJson.EntityDoorTransitions, doorJson.EntityDoorTransitionDuration);
 
                     DoorState.AddCondition(newCondition.ConditionUID, newCondition);
                 }

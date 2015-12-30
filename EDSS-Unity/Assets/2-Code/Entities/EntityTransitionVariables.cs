@@ -28,5 +28,6 @@ namespace EveryDaySpaceStation
         IsPowered = 1,
         IsWelded = 2,
         NextAction = 3,
+        DurationMet = 4,
     }
 }

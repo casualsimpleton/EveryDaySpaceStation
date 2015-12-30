@@ -59,12 +59,14 @@
 		{
 			"doubledoors" : true,
 			"horizontal" : true,
+			"initialcondition" : 0,
 			
 			"doorconditions" : [
 			{
 				"conditionuid": 0,
 				"name": "UnpoweredClosed",
 				"states": [ 0 ],
+				"duration": -1,
 				"hascolliders": [ true ],
 				"transitions":
 				[
@@ -96,6 +98,7 @@
 				"conditionuid": 1,
 				"name": "UnpoweredOpening",
 				"states": [ 1, 2, 3, 4 ],
+				"duration": -1,
 				"defspeed" : 0.2,
 				"translations" : [
 					{ "x" : 0.1, "y" : 0, "z" : 0 },
@@ -142,12 +145,85 @@
 				"conditionuid": 2,
 				"name": "UnpoweredOpened",
 				"states": [ 5 ],
-				"hascolliders": [ false ]
+				"duration": 2.0,
+				"hascolliders": [ false ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Unpoweredclosing",
+						"nextconditionuid" : 3,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "durationmet",
+								"value" : true
+							}
+						]
+					}
+				]
 			},
 			{
 				"conditionuid": 3,
+				"name": "UnpoweredClosing",
+				"states": [ 4, 3, 2, 1],
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders": [
+					false, false, false, true
+				],
+				"transitions":
+				[
+					{
+						"transitionname" : "Unpoweredclosed",
+						"nextconditionuid" : 0,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid": 4,
 				"name": "UnpoweredWelded",
 				"states": [ 6 ],
+				"duration": -1,
 				"hascolliders": [ true ]
 			}
 			]
