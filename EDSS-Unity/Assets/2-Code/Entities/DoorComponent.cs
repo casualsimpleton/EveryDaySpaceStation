@@ -124,6 +124,43 @@ public class DoorComponent : MonoBehaviour
         if (_currentCondition == null)
             return;
 
+        ////Check for bounds, as we may be waiting on time even though we haven't exhausted all the frames
+        //if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1)
+        //    return;
+
+        if (_currentConditionStateIndex < _currentCondition.ReferencedStates.Length)
+        {
+
+            ushort stateUID = 0;
+
+#if DEBUGCLIENT
+            try
+            {
+                stateUID = _currentCondition.ReferencedStates[_currentConditionStateIndex];
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError("Exception " + ex.Message);
+            }
+#else
+        stateUID = _currentCondition.ReferencedStates[_currentConditionStateIndex];
+#endif
+
+            GameData.EntityDataTemplate.StateTemplate state = _entitySpriteObject.EntityData.Template.EntityStates[stateUID];
+
+            _entitySpriteObject.UpdateSprite(state.SpriteUID);
+            _entitySpriteObject.UpdateMaterial();
+
+            _entitySpriteObject.UpdateMesh();
+            _entitySpriteObject.UpdateUVs();
+
+            _entitySpriteObject.SetColliderState(_currentCondition.ConditionHasColliders[_currentConditionStateIndex]);
+
+            _animTime = Time.time + _currentCondition.ConditionDefaultSpeed;
+
+            _currentConditionStateIndex++;
+        }
+
         //Either completed number of states (frames)
         //Or duration
         if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1 ||
@@ -146,39 +183,6 @@ public class DoorComponent : MonoBehaviour
                 return;
             }
         }
-
-        //Check for bounds, as we may be waiting on time even though we haven't exhausted all the frames
-        if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1)
-            return;
-
-        ushort stateUID = 0;
-
-#if DEBUGCLIENT
-        try
-        {
-        stateUID = _currentCondition.ReferencedStates[_currentConditionStateIndex];
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("Exception " + ex.Message);
-        }
-#else
-        stateUID = _currentCondition.ReferencedStates[_currentConditionStateIndex];
-#endif
-
-        GameData.EntityDataTemplate.StateTemplate state = _entitySpriteObject.EntityData.Template.EntityStates[stateUID];
-
-        _entitySpriteObject.UpdateSprite(state.SpriteUID);
-        _entitySpriteObject.UpdateMaterial();
-
-        _entitySpriteObject.UpdateMesh();
-        _entitySpriteObject.UpdateUVs();
-
-        _entitySpriteObject.SetColliderState(_currentCondition.ConditionHasColliders[_currentConditionStateIndex]);
-
-        _animTime = Time.time + _currentCondition.ConditionDefaultSpeed;
-
-        _currentConditionStateIndex++;
     }
 
     public void Activate()
