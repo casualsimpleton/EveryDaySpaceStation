@@ -111,6 +111,31 @@
 				],
 				"hascolliders": [
 					true, false, false, false
+				],
+				"transitions":
+				[
+					{
+						"transitionname" : "Unpoweredopened",
+						"nextconditionuid" : 2,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					}
 				]
 			},
 			{

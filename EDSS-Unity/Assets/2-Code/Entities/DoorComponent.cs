@@ -115,13 +115,30 @@ public class DoorComponent : MonoBehaviour
         _entitySpriteObject.UpdateMesh();
         _entitySpriteObject.UpdateUVs();
 
+        _entitySpriteObject.SetColliderState(_currentCondition.ConditionHasColliders[_currentConditionStateIndex]);
+
         _animTime = Time.time + _currentCondition.ConditionDefaultSpeed;
 
         _currentConditionStateIndex++;
 
         if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1)
         {
-            _currentConditionStateIndex = 0;
+
+            if (_currentCondition.ConditionTransitions == null)
+            {
+                Debug.Log(string.Format("Condition: {0} has no transitions. Looping...", _currentCondition.ToString()));
+                _currentConditionStateIndex = 0;
+                return;
+            }
+
+            //Check to see if transitions are satisified           
+            bool isTransitionSatisified = _currentCondition.CheckConditionTransitions(this);
+
+            //Transition was met, we're moving on to another one via TransitionSatisifed()
+            if (isTransitionSatisified)
+            {
+                return;
+            }
         }
     }
 
@@ -184,5 +201,10 @@ public class DoorComponent : MonoBehaviour
             case DoorPoweredState.Hacked:
                 break;
         }
+    }
+
+    public void TransitionSatisfied(GameData.EntityDataTemplate.DoorStateTemplate.DoorConditionTemplate.DoorTransitionTemplate transitionSatisified)
+    {
+        ChangeCondition(_currentDoorTemplate.DoorConditions[transitionSatisified.TransitionTargetConditionUID]);
     }
 }

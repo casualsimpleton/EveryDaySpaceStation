@@ -66,4 +66,12 @@ public class CubeCollider : MonoBehaviour
             new Vector3(0, _entitySpriteGO.EntityData.CurrentEntityState.StateTemplate.StateColliderSize.y * 0.5f, 0));
         this.gameObject.layer = GameManager.EntityLayer;
     }
+
+    public void SetActive(bool newState)
+    {
+        if (newState != gameObject.activeSelf)
+        {
+            gameObject.SetActive(newState);
+        }
+    }
 }

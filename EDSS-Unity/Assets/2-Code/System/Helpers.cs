@@ -124,6 +124,33 @@ namespace EveryDaySpaceStation.Utils
 
             return input;
         }
+
+        //http://stackoverflow.com/questions/9742724/how-to-convert-a-string-to-a-bool
+        /// <summary>
+        /// Attempts to convert a string to a bool
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool ToBoolean(this string value)
+        {
+            switch (value.ToLower())
+            {
+                case "true":
+                    return true;
+                case "t":
+                    return true;
+                case "1":
+                    return true;
+                case "0":
+                    return false;
+                case "false":
+                    return false;
+                case "f":
+                    return false;
+                default:
+                    throw new System.InvalidCastException("You can't cast a weird value to a bool!");
+            }
+        }
         #endregion
 
         #region Lights

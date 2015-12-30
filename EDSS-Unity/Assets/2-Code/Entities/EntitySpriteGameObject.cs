@@ -272,4 +272,9 @@ public class EntitySpriteGameObject : MonoBehaviour
             _doorComponent.Activate();
         }
     }
+
+    public void SetColliderState(bool colliderState)
+    {
+        _cubeCollider.SetActive(colliderState);
+    }
 }

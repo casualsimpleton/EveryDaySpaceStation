@@ -221,6 +221,96 @@ namespace EveryDaySpaceStation
                         {
                             TransitionRequirements.Add(new Tuple<EntityTransitionVariables, string>(variableType, requiredValue.ToLower()));
                         }
+
+                        /// <summary>
+                        /// Check transition requirements against supplied door. Returns true if all conditions are met
+                        /// </summary>
+                        /// <param name="door"></param>
+                        /// <returns></returns>
+                        public bool AreTransitionConditionsMet(DoorComponent door)
+                        {
+                            //We loop through all the requirements. If we find one failure, we return false, other we reach end, and everything must therefor
+                            //be satisfied
+                            for (int i = 0; i < TransitionRequirements.Count; i++)
+                            {
+                                Tuple<EntityTransitionVariables, string> curTransRequirement = TransitionRequirements[i];
+
+                                switch (curTransRequirement.First)
+                                {
+                                    case EntityTransitionVariables.IsLocked:
+                                        bool desiredLockValue = curTransRequirement.Second.ToBoolean();
+
+                                        //Should be locked
+                                        if (desiredLockValue == true)
+                                        {
+                                            //Should be locked, but isn't
+                                            if (door.LockState != DoorComponent.DoorLockState.Locked)
+                                            {
+                                                return false;
+                                            }
+
+                                            //TODO handle restricted doors
+                                        }
+                                        else //Should not be locked
+                                        {
+                                            //It's any state but unlocked
+                                            if (door.LockState != DoorComponent.DoorLockState.Unlocked)
+                                            {
+                                                return false;
+                                            }
+                                        }
+
+                                        break;
+
+                                    case EntityTransitionVariables.IsPowered:
+                                        bool desiredPowerValue = curTransRequirement.Second.ToBoolean();
+
+                                        //Should be powered
+                                        if (desiredPowerValue == true)
+                                        {
+                                            //Should be powered, but is unpowered
+                                            if (door.PowerState == DoorComponent.DoorPoweredState.Unpowered)
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //Should be unpowered, but isn't
+                                            if (door.PowerState != DoorComponent.DoorPoweredState.Unpowered)
+                                            {
+                                                return false;
+                                            }
+                                        }
+
+                                        break;
+
+                                    case EntityTransitionVariables.IsWelded:
+                                        bool desiredWeldValue = curTransRequirement.Second.ToBoolean();
+
+                                        //Should be welded
+                                        if (desiredWeldValue == true)
+                                        {
+                                            //Should be welded but isn't
+                                            if (!door.IsWelded)
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //Should not be welded, but is
+                                            if (door.IsWelded)
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+
+                            return true;
+                        }
                     }
 
                     public ushort ConditionUID { get; private set; }
@@ -242,6 +332,11 @@ namespace EveryDaySpaceStation
                         ConditionTranslations = conditionTranslations;
                         ConditionRotations = conditionRotations;
                         ConditionHasColliders = conditionColliders;
+
+                        if (transitions != null)
+                        {
+                            ParseTransitions(transitions);
+                        }
                     }
 
                     public void ParseTransitions(Json.EntityDoorJson.EntityTransitions[] transitions)
@@ -270,6 +365,35 @@ namespace EveryDaySpaceStation
                         ReferencedStates = null;
                         ConditionTranslations = null;
                         ConditionRotations = null;
+                    }
+
+                    public override string ToString()
+                    {
+                        return string.Format("DoorConditionTemplate: {0} UID: {1}", ConditionName, ConditionUID);
+                    }
+
+                    /// <summary>
+                    /// Check all conditions to see if their transition requirements are met. Returns true if all are met
+                    /// </summary>
+                    /// <param name="door"></param>
+                    /// <returns></returns>
+                    public bool CheckConditionTransitions(DoorComponent door)
+                    {
+                        for (int i = 0; i < ConditionTransitions.Length; i++)
+                        {
+                            bool results = ConditionTransitions[i].AreTransitionConditionsMet(door);
+
+                            if (!results)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                door.TransitionSatisfied(ConditionTransitions[i]);
+                            }
+                        }
+
+                        return true;
                     }
                 }
 
