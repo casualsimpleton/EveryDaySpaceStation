@@ -58,13 +58,23 @@ public class CubeCollider : MonoBehaviour
         _transform.parent = PoolManager.Singleton._transform;
     }
 
-    public void Attach(EntitySpriteGameObject esgo)
+    public void Attach(EntitySpriteGameObject esgo, bool isTrigger = false)
     {
         _transform.parent = esgo._transform;
         _entitySpriteGO = esgo;
         UpdateSize(_entitySpriteGO.EntityData.CurrentEntityState.StateTemplate.StateColliderSize, 
             new Vector3(0, _entitySpriteGO.EntityData.CurrentEntityState.StateTemplate.StateColliderSize.y * 0.5f, 0));
-        this.gameObject.layer = GameManager.EntityLayer;
+
+        if (isTrigger)
+        {
+            this.gameObject.layer = GameManager.TriggerLayer;
+        }
+        else
+        {
+            this.gameObject.layer = GameManager.EntityLayer;
+        }
+
+        _boxCollider.isTrigger = isTrigger;
     }
 
     public void SetActive(bool newState)

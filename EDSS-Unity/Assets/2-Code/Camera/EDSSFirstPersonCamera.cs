@@ -100,7 +100,7 @@ public class EDSSFirstPersonCamera : MonoBehaviour
         Vector3 centerPoint = _cameraTrans.transform.position;
         Vector3 dir = _cameraTrans.transform.forward;
 
-        int layer = 1 << GameManager.EntityLayer;
+        int layer = 1 << GameManager.TriggerLayer;
 
         RaycastHit hitInfo;
 

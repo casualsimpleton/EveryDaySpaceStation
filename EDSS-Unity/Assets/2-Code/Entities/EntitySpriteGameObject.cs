@@ -33,6 +33,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     protected MultiAngleComponent _multiAngleComponent;
 
     protected CubeCollider _cubeCollider;
+    protected CubeCollider _triggerCollider;
 
     public bool IsClown = false;
     #endregion
@@ -42,6 +43,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     public EDSSSprite Sprite { get { return _sprite; } }
     public MapData.EntityData EntityData { get { return _entityData; } }
     public CubeCollider Cubecollider { get { return _cubeCollider; } }
+    public CubeCollider Triggercollider { get { return _triggerCollider; } }
     #endregion
 
     void Start()
@@ -60,6 +62,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         {
             _cubeCollider.gameObject.SetActive(true);
         }
+
+        if (_triggerCollider != null)
+        {
+            _triggerCollider.gameObject.SetActive(true);
+        }
     }
 
     void OnDisable()
@@ -72,6 +79,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         if (_cubeCollider != null)
         {
             _cubeCollider.gameObject.SetActive(false);
+        }
+
+        if (_triggerCollider != null)
+        {
+            _triggerCollider.gameObject.SetActive(false);
         }
     }
 
@@ -98,6 +110,12 @@ public class EntitySpriteGameObject : MonoBehaviour
         {
             _cubeCollider = PoolManager.Singleton.RequestCubeCollider();
             _cubeCollider.Attach(this);
+        }
+
+        if (_triggerCollider == null)
+        {
+            _triggerCollider = PoolManager.Singleton.RequestCubeCollider();
+            _triggerCollider.Attach(this, true);
         }
 
         //GameManager.Singleton.Gamedata.GetSprite(_entityData.CurrentEntityState.StateTemplate.SpriteUID, out _sprite);
@@ -276,5 +294,10 @@ public class EntitySpriteGameObject : MonoBehaviour
     public void SetColliderState(bool colliderState)
     {
         _cubeCollider.SetActive(colliderState);
+    }
+
+    public void SetTriggerState(bool triggerState)
+    {
+        _triggerCollider.SetActive(triggerState);
     }
 }
