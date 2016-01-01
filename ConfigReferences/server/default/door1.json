@@ -141,7 +141,7 @@
 				"conditionuid": 2,
 				"name": "UnpoweredOpened",
 				"states": [ 5 ],
-				"duration": 2.0,
+				"duration": 20.0,
 				"hascolliders": [ false ],
 				"transitions":
 				[
@@ -164,6 +164,28 @@
 							{
 								"variable" : "durationmet",
 								"value" : true
+							}
+						]
+					},
+					{
+						"transitionname" : "Unpoweredclosingactivated",
+						"nextconditionuid" : 3,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "close"
 							}
 						]
 					}
