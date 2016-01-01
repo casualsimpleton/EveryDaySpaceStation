@@ -188,6 +188,8 @@ public class DoorComponent : MonoBehaviour
     public void Activate()
     {
         _isActivated = true;
+
+        _currentCondition.CheckConditionTransitions(this);
         //Door is welded, so do something welded related?
         //if (_isWelded)
         //{

@@ -318,6 +318,13 @@ namespace EveryDaySpaceStation
                                                     return false;
                                                 }
                                                 break;
+
+                                            case "close":
+                                                if (!door.IsActivated)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
                                         }
                                         break;
 
@@ -421,17 +428,14 @@ namespace EveryDaySpaceStation
                         {
                             bool results = ConditionTransitions[i].AreTransitionConditionsMet(door);
 
-                            if (!results)
-                            {
-                                return false;
-                            }
-                            else
+                            if (results)
                             {
                                 door.TransitionSatisfied(ConditionTransitions[i]);
+                                return true;
                             }
                         }
 
-                        return true;
+                        return false;
                     }
                 }
 
