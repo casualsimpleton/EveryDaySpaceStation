@@ -291,6 +291,22 @@ public class EntitySpriteGameObject : MonoBehaviour
         }
     }
 
+    public void TEMP_AltActivate()
+    {
+        if (_doorComponent != null)
+        {
+            _doorComponent.HackActivate();
+        }
+    }
+
+    public void TEMP_TertiaryActivate()
+    {
+        if (_doorComponent != null)
+        {
+            _doorComponent.WeldActivate();
+        }
+    }
+
     public void SetColliderState(bool colliderState)
     {
         _cubeCollider.SetActive(colliderState);

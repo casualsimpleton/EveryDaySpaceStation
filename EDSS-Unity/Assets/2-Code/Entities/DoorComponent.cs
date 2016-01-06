@@ -53,6 +53,8 @@ public class DoorComponent : MonoBehaviour
     protected float _curDurationLength;
     [SerializeField]
     protected bool _isActivated;
+    [SerializeField]
+    protected bool _isHackActivated;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public DoorLockState LockState { get { return _lockState; } }
@@ -60,7 +62,9 @@ public class DoorComponent : MonoBehaviour
     public bool IsWelded { get { return _isWelded; } }
     public bool IsDurationExceeded { get { return (_curDurationLength < Time.time ? true : false); } }
     public bool IsActivated { get { return _isActivated; } }
-    public void ConsumeActivation() { _isActivated = false; } 
+    public bool IsHackActivated { get { return _isHackActivated; } }
+    public void ConsumeActivation() { _isActivated = false; }
+    public void ConsumeHackActivation() { _isHackActivated = false; }
 
     public void Create(EntitySpriteGameObject entitySpriteGo, GameData.EntityDataTemplate.DoorStateTemplate template)
     {
@@ -247,6 +251,20 @@ public class DoorComponent : MonoBehaviour
         //    case DoorPoweredState.Hacked:
         //        break;
         //}
+    }
+
+    public void HackActivate()
+    {
+        _isHackActivated = true;
+
+        _currentCondition.CheckConditionTransitions(this);
+    }
+
+    public void WeldActivate()
+    {
+        _isWelded = !IsWelded;
+
+        _currentCondition.CheckConditionTransitions(this);
     }
 
     public void TransitionSatisfied(GameData.EntityDataTemplate.DoorStateTemplate.DoorConditionTemplate.DoorTransitionTemplate transitionSatisified)

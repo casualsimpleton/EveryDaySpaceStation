@@ -120,4 +120,20 @@ public class GameManager : MonoBehaviour
             esgo.Activate();
         }
     }
+
+    public void Client_AttemptAltInput(EntitySpriteGameObject esgo)
+    {
+        if (esgo != null)
+        {
+            esgo.TEMP_AltActivate();
+        }
+    }
+
+    public void Client_AttemptTertiaryInput(EntitySpriteGameObject esgo)
+    {
+        if (esgo != null)
+        {
+            esgo.TEMP_TertiaryActivate();
+        }
+    }
 }
