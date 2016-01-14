@@ -57,6 +57,8 @@ public class DoorComponent : MonoBehaviour
     protected bool _isHackActivated;
     [SerializeField]
     protected bool _isWeldActivated;
+    [SerializeField]
+    protected bool _isLockActivated;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public DoorLockState LockState { get { return _lockState; } }
@@ -66,9 +68,11 @@ public class DoorComponent : MonoBehaviour
     public bool IsActivated { get { return _isActivated; } }
     public bool IsHackActivated { get { return _isHackActivated; } }
     public bool IsWeldActivated { get { return _isWeldActivated; } }
+    public bool IsLockActivated { get { return _isLockActivated; } }
     public void ConsumeActivation() { _isActivated = false; }
     public void ConsumeHackActivation() { _isHackActivated = false; }
     public void ConsumeWeldActivation() { _isWeldActivated = false; }
+    public void ConsumeLockActivation() { _isLockActivated = false; }
 
     public void Create(EntitySpriteGameObject entitySpriteGo, GameData.EntityDataTemplate.DoorStateTemplate template)
     {
@@ -221,6 +225,13 @@ public class DoorComponent : MonoBehaviour
         _currentCondition.CheckConditionTransitions(this);
     }
 
+    public void LockActivate()
+    {
+        _isLockActivated = true;
+
+        _currentCondition.CheckConditionTransitions(this);
+    }
+
     public void TransitionSatisfied(GameData.EntityDataTemplate.DoorStateTemplate.DoorConditionTemplate.DoorTransitionTemplate transitionSatisified)
     {
         ChangeCondition(_currentDoorTemplate.DoorConditions[transitionSatisified.TransitionTargetConditionUID]);
@@ -233,6 +244,7 @@ public class DoorComponent : MonoBehaviour
                 ConsumeActivation();
                 ConsumeWeldActivation();
                 ConsumeHackActivation();
+                ConsumeLockActivation();
 
                 switch (transitionSatisified.TransitionRequirements[i].Second)
                 {
@@ -242,6 +254,14 @@ public class DoorComponent : MonoBehaviour
 
                     case "unweld":
                         _isWelded = false;
+                        break;
+
+                    case "lock":
+                        ChangeLockState(DoorLockState.Locked);
+                        break;
+
+                    case "unlock":
+                        ChangeLockState(DoorLockState.Unlocked);
                         break;
                 }
 

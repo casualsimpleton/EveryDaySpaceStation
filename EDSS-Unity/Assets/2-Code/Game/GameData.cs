@@ -339,6 +339,25 @@ namespace EveryDaySpaceStation
                                                     return false;
                                                 }
                                                 break;
+
+                                            case "lock":
+                                                //Try to lock door
+
+                                                //Is door already locked?
+                                                if (!door.IsLockActivated)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case "unlock":
+                                                //Is door already unlocked?
+                                                if (!door.IsLockActivated)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
                                         }
                                         break;
 

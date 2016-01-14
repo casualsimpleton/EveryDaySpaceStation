@@ -113,6 +113,14 @@ public class EDSSFirstPersonControls : MonoBehaviour
                 GameManager.Singleton.Client_AttemptTertiaryInput(_edssCamera.CurrentHighlitedESGO);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (_edssCamera.CurrentHighlitedESGO != null)
+            {
+                GameManager.Singleton.Client_AttempLockInput(_edssCamera.CurrentHighlitedESGO);
+            }
+        }
     }
 
     public void SpawnTileLight()

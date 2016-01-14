@@ -136,4 +136,12 @@ public class GameManager : MonoBehaviour
             esgo.TEMP_TertiaryActivate();
         }
     }
+
+    public void Client_AttempLockInput(EntitySpriteGameObject esgo)
+    {
+        if (esgo != null)
+        {
+            esgo.TEMP_ToggleLockState();
+        }
+    }
 }
