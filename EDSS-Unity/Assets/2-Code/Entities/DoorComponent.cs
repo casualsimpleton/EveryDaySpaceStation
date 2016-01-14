@@ -55,6 +55,8 @@ public class DoorComponent : MonoBehaviour
     protected bool _isActivated;
     [SerializeField]
     protected bool _isHackActivated;
+    [SerializeField]
+    protected bool _isWeldActivated;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public DoorLockState LockState { get { return _lockState; } }
@@ -63,8 +65,10 @@ public class DoorComponent : MonoBehaviour
     public bool IsDurationExceeded { get { return (_curDurationLength < Time.time ? true : false); } }
     public bool IsActivated { get { return _isActivated; } }
     public bool IsHackActivated { get { return _isHackActivated; } }
+    public bool IsWeldActivated { get { return _isWeldActivated; } }
     public void ConsumeActivation() { _isActivated = false; }
     public void ConsumeHackActivation() { _isHackActivated = false; }
+    public void ConsumeWeldActivation() { _isWeldActivated = false; }
 
     public void Create(EntitySpriteGameObject entitySpriteGo, GameData.EntityDataTemplate.DoorStateTemplate template)
     {
@@ -194,76 +198,26 @@ public class DoorComponent : MonoBehaviour
         _isActivated = true;
 
         _currentCondition.CheckConditionTransitions(this);
-        //Door is welded, so do something welded related?
-        //if (_isWelded)
-        //{
-        //    Debug.Log("Door is welded");
-        //    return;
-        //}
-
-        //switch (_poweredState)
-        //{
-        //    case DoorPoweredState.Powered:
-        //        if (_lockState == DoorLockState.Unlocked)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is powered and unlocked", 
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-        //        }
-        //        else if (_lockState == DoorLockState.Locked)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is powered and locked", 
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-        //        }
-        //        else if (_lockState == DoorLockState.Restricted)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is powered and restricted",
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-        //        }
-        //        else
-        //        {
-        //            Debug.LogWarning(string.Format("Door {0} UID {1} (template {2}) is powered and unhandled: {3}",
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID, _lockState));
-        //        }
-
-        //        break;
-
-        //    case DoorPoweredState.Unpowered:
-        //        if (_lockState == DoorLockState.Unlocked)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is unpowered and unlocked",
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-
-        //            GameData.EntityDataTemplate.DoorStateTemplate.DoorConditionTemplate newCond = _currentDoorTemplate.DoorConditions[1];
-        //            ChangeCondition(newCond);
-        //        }
-        //        else if (_lockState == DoorLockState.Locked)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is unpowered and locked",
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-        //        }
-        //        else if (_lockState == DoorLockState.Restricted)
-        //        {
-        //            Debug.Log(string.Format("Door {0} UID {1} (template {2}) is unpowered and restricted",
-        //                _entitySpriteObject.EntityData.EntityName, _entitySpriteObject.EntityData.EntityUID, _entitySpriteObject.EntityData.TemplateUID));
-        //        }
-        //        break;
-
-        //    case DoorPoweredState.Hacked:
-        //        break;
-        //}
     }
 
     public void HackActivate()
     {
         _isHackActivated = true;
 
+        _poweredState++;
+
+        if (_poweredState > DoorPoweredState.Hacked)
+        {
+            _poweredState = DoorPoweredState.Unpowered;
+        }
+
         _currentCondition.CheckConditionTransitions(this);
     }
 
     public void WeldActivate()
     {
-        _isWelded = !IsWelded;
-
+        _isWeldActivated = true;
+        
         _currentCondition.CheckConditionTransitions(this);
     }
 
@@ -277,8 +231,28 @@ public class DoorComponent : MonoBehaviour
             if (transitionSatisified.TransitionRequirements[i].First == EntityTransitionVariables.NextAction)
             {
                 ConsumeActivation();
+                ConsumeWeldActivation();
+                ConsumeHackActivation();
+
+                switch (transitionSatisified.TransitionRequirements[i].Second)
+                {
+                    case "weld":
+                        _isWelded = true;
+                        break;
+
+                    case "unweld":
+                        _isWelded = false;
+                        break;
+                }
+
                 break;
             }
+            //else if (transitionSatisified.TransitionRequirements[i].First == EntityTransitionVariables.IsWelded)
+            //{
+            //    _isWelded = transitionSatisified.TransitionRequirements[i].Second.ToBoolean();
+            //    ConsumeWeldActivation();
+            //    break;
+            //}
         }
     }
 }

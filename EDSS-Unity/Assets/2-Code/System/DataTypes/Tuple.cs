@@ -36,6 +36,11 @@ namespace EveryDaySpaceStation.DataTypes
             First = default(T1);
             Second = default(T2);
         }
+
+        public override string ToString()
+        {
+            return string.Format("First: {0} Second: {1}", First, Second);
+        }
     }
 
     public class Tuple<T1, T2, T3>
@@ -55,6 +60,11 @@ namespace EveryDaySpaceStation.DataTypes
             First = default(T1);
             Second = default(T2);
             Third = default(T3);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("First: {0} Second: {1} Third: {2}", First, Second, Third);
         }
     }
 

@@ -53,6 +53,55 @@
 			"spriteuid": 26,
 			"graphicsize": { "x" : 1, "y" : 1, "z": 0.15 },
 			"collidersize": { "x": 1, "y": 1, "z": 1 }
+		},
+		{
+			"stateuid" : 7,
+			"statename" : "DoorPoweredClosed",
+			"spriteuid" : 27,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 8,
+			"statename" : "DoorPoweredMoving1",
+			"spriteuid" : 28,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 9,
+			"statename" : "DoorPoweredMoving2",
+			"spriteuid" : 29,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 10,
+			"statename" : "DoorPoweredMoving3",
+			"spriteuid" : 30,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 11,
+			"statename" : "DoorPoweredMoving4",
+			"spriteuid" : 31,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 12,
+			"statename" : "DoorPoweredOpen",
+			"spriteuid" : 32,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+		},
+		{
+			"stateuid" : 13,
+			"statename" : "DoorPoweredWelded",
+			"spriteuid" : 33,
+			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
 		}
 		],
 		"doorstates" : 
@@ -91,7 +140,75 @@
 								"value" : "open"
 							}
 						]
-					}
+					},
+					{
+						"transitionname" : " Unpoweredweld",
+						"nextconditionuid" : 4,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					},
+					{
+						"transitionname" : "Poweredclosed",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
+					},
+					{
+						"transitionname" : "Poweredopening",
+						"nextconditionuid" : 6,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					},
+					{
+						"transitionname" : " Poweredweld",
+						"nextconditionuid" : 9,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					},
 				]
 			},
 			{
@@ -238,7 +355,259 @@
 				"name": "UnpoweredWelded",
 				"states": [ 6 ],
 				"duration": -1,
-				"hascolliders": [ true ]
+				"hascolliders": [ true ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Unpoweredunweld",
+						"nextconditionuid" : 0,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid": 5,
+				"name": "PoweredClosed",
+				"states": [ 7 ],
+				"duration": -1,
+				"hascolliders": [ true ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Poweredopening",
+						"nextconditionuid" : 6,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					},
+					{
+						"transitionname" : "Poweredweld",
+						"nextconditionuid" : 9,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					},
+					{
+						"transitionname" : "Unpoweredclosed",
+						"nextconditionuid" : 0,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							}
+						]
+					}
+				]
+			},		
+			{
+				"conditionuid": 6,
+				"name": "PoweredOpening",
+				"states": [ 8, 9, 10, 11 ],
+				"duration": -1,
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders": [
+					true, false, false, false
+				],
+				"transitions":
+				[
+					{
+						"transitionname" : "Poweredopened",
+						"nextconditionuid" : 7,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid": 7,
+				"name": "PoweredOpened",
+				"states": [ 12 ],
+				"duration": 20.0,
+				"hascolliders": [ false ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Poweredclosing",
+						"nextconditionuid" : 8,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "durationmet",
+								"value" : true
+							}
+						]
+					},
+					{
+						"transitionname" : "Poweredclosingactivated",
+						"nextconditionuid" : 8,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "close"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid": 8,
+				"name": "PoweredClosing",
+				"states": [ 11, 10, 9, 8],
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders": [
+					false, false, false, true
+				],
+				"transitions":
+				[
+					{
+						"transitionname" : "Poweredclosed",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid": 9,
+				"name": "PoweredWelded",
+				"states": [ 13 ],
+				"duration": -1,
+				"hascolliders": [ true ],
+				"transitions":
+				[
+					{
+						"transitionname" : "Poweredunweld",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					}
+				]
 			}
 			]
 		}		
@@ -264,9 +633,60 @@
 		},
 		{
 			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
 		}
 		],	
 		"poweredstates" : [
+		{
+			"resourcename": "electricity",
+			"cost": 10
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 2
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
 		{
 			"resourcename": "electricity",
 			"cost": 10

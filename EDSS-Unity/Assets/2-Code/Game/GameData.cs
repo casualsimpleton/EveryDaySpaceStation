@@ -325,6 +325,20 @@ namespace EveryDaySpaceStation
                                                     return false;
                                                 }
                                                 break;
+
+                                            case "weld":
+                                                if (!door.IsWeldActivated)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case "unweld":
+                                                if (!door.IsWeldActivated || !door.IsWelded)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
                                         }
                                         break;
 
