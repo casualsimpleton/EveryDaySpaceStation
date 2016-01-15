@@ -315,6 +315,14 @@ public class EntitySpriteGameObject : MonoBehaviour
         }
     }
 
+    public void TEMP_PowerActivate()
+    {
+        if (_doorComponent != null)
+        {
+            _doorComponent.PowerActivate();
+        }
+    }
+
     public void SetColliderState(bool colliderState)
     {
         _cubeCollider.SetActive(colliderState);

@@ -46,11 +46,13 @@ public class DoorComponent : MonoBehaviour
     [SerializeField]
     protected bool _isWelded;
     [SerializeField]
+    protected bool _isPanelOpen;
+    [SerializeField]
     protected float _animTime;
     [SerializeField]
     protected ushort _currentConditionStateIndex;
     [SerializeField]
-    protected float _curDurationLength;
+    protected float _timeWhenLastConditionChange;
     [SerializeField]
     protected bool _isActivated;
     [SerializeField]
@@ -59,20 +61,26 @@ public class DoorComponent : MonoBehaviour
     protected bool _isWeldActivated;
     [SerializeField]
     protected bool _isLockActivated;
+    [SerializeField]
+    protected bool _isPowerActivated;
+        
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public DoorLockState LockState { get { return _lockState; } }
     public DoorPoweredState PowerState { get { return _poweredState; } }
     public bool IsWelded { get { return _isWelded; } }
-    public bool IsDurationExceeded { get { return (_curDurationLength < Time.time ? true : false); } }
+    public float DurationLastStateChange { get { return (Time.time - _timeWhenLastConditionChange); } }
+    public bool IsPanelOpen { get { return _isPanelOpen; } }
     public bool IsActivated { get { return _isActivated; } }
     public bool IsHackActivated { get { return _isHackActivated; } }
     public bool IsWeldActivated { get { return _isWeldActivated; } }
     public bool IsLockActivated { get { return _isLockActivated; } }
+    public bool IsPowerActivated { get { return _isPowerActivated; } }
     public void ConsumeActivation() { _isActivated = false; }
     public void ConsumeHackActivation() { _isHackActivated = false; }
     public void ConsumeWeldActivation() { _isWeldActivated = false; }
     public void ConsumeLockActivation() { _isLockActivated = false; }
+    public void ConsumePowerActivation() { _isPowerActivated = false; }
 
     public void Create(EntitySpriteGameObject entitySpriteGo, GameData.EntityDataTemplate.DoorStateTemplate template)
     {
@@ -116,14 +124,7 @@ public class DoorComponent : MonoBehaviour
         _currentCondition = newCondition;
         _animTime = Time.time + _currentCondition.ConditionDefaultSpeed;
         _currentConditionStateIndex = 0;
-        if (_currentCondition.ConditionDuration > 0f)
-        {
-            _curDurationLength = Time.time + _currentCondition.ConditionDuration;
-        }
-        else
-        {
-            _curDurationLength = 0f;
-        }
+        _timeWhenLastConditionChange = Time.time;
     }
 
     void Update()
@@ -135,10 +136,6 @@ public class DoorComponent : MonoBehaviour
 
         if (_currentCondition == null)
             return;
-
-        ////Check for bounds, as we may be waiting on time even though we haven't exhausted all the frames
-        //if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1)
-        //    return;
 
         if (_currentConditionStateIndex < _currentCondition.ReferencedStates.Length)
         {
@@ -175,8 +172,7 @@ public class DoorComponent : MonoBehaviour
 
         //Either completed number of states (frames)
         //Or duration
-        if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1 ||
-            (_currentCondition.ConditionDuration > 0f && Time.time > _curDurationLength))
+        if (_currentConditionStateIndex > _currentCondition.ReferencedStates.Length - 1)
         {
 
             if (_currentCondition.ConditionTransitions == null)
@@ -206,14 +202,7 @@ public class DoorComponent : MonoBehaviour
 
     public void HackActivate()
     {
-        _isHackActivated = true;
-
-        _poweredState++;
-
-        if (_poweredState > DoorPoweredState.Hacked)
-        {
-            _poweredState = DoorPoweredState.Unpowered;
-        }
+        _isHackActivated = true;        
 
         _currentCondition.CheckConditionTransitions(this);
     }
@@ -232,6 +221,20 @@ public class DoorComponent : MonoBehaviour
         _currentCondition.CheckConditionTransitions(this);
     }
 
+    public void PowerActivate()
+    {
+        _isPowerActivated = true;
+
+        _poweredState++;
+
+        if (_poweredState > DoorPoweredState.Hacked)
+        {
+            _poweredState = DoorPoweredState.Unpowered;
+        }
+
+        _currentCondition.CheckConditionTransitions(this);
+    }
+
     public void TransitionSatisfied(GameData.EntityDataTemplate.DoorStateTemplate.DoorConditionTemplate.DoorTransitionTemplate transitionSatisified)
     {
         ChangeCondition(_currentDoorTemplate.DoorConditions[transitionSatisified.TransitionTargetConditionUID]);
@@ -245,6 +248,7 @@ public class DoorComponent : MonoBehaviour
                 ConsumeWeldActivation();
                 ConsumeHackActivation();
                 ConsumeLockActivation();
+                ConsumePowerActivation();
 
                 switch (transitionSatisified.TransitionRequirements[i].Second)
                 {
@@ -262,6 +266,14 @@ public class DoorComponent : MonoBehaviour
 
                     case "unlock":
                         ChangeLockState(DoorLockState.Unlocked);
+                        break;
+
+                    case "hack":
+                        _isPanelOpen = true;
+                        break;
+
+                    case "unhack":
+                        _isPanelOpen = false;
                         break;
                 }
 

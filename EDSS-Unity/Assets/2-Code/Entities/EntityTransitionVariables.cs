@@ -27,7 +27,9 @@ namespace EveryDaySpaceStation
         IsLocked = 0,
         IsPowered = 1,
         IsWelded = 2,
-        NextAction = 3,
-        DurationMet = 4,
+        IsPanelOpen = 3,
+        NextAction = 4,
+        GDuration = 5,
+        LDuration = 6
     }
 }

@@ -358,29 +358,66 @@ namespace EveryDaySpaceStation
                                                 }
                                                 break;
 
+                                            case "hack":
+                                                if (!door.IsHackActivated || door.IsPanelOpen)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case "unhack":
+                                                if (!door.IsHackActivated || !door.IsPanelOpen)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
                                         }
                                         break;
 
-                                    case EntityTransitionVariables.DurationMet:
-                                        bool desiredDurationValue = curTransRequirement.Second.ToBoolean();
+                                    case EntityTransitionVariables.GDuration:
+                                        float desiredGreaterDurationValue = float.Parse(curTransRequirement.Second);
 
-                                        //Should be met
-                                        if (desiredDurationValue == true)
+                                        //Time since last state change should be greater than value
+                                        if (door.DurationLastStateChange <= desiredGreaterDurationValue)
                                         {
-                                            //Should be met, but isn't
-                                            if (!door.IsDurationExceeded)
+                                            return false;
+                                        }
+                                        break;
+
+                                    case EntityTransitionVariables.LDuration:
+                                        float desiredLesserDurationValue = float.Parse(curTransRequirement.Second);
+
+                                        //Time since last state change should be greater than value
+                                        if (door.DurationLastStateChange >= desiredLesserDurationValue)
+                                        {
+                                            return false;
+                                        }
+                                        break;
+
+                                    case EntityTransitionVariables.IsPanelOpen:
+                                        bool desiredPanelValue = curTransRequirement.Second.ToBoolean();
+
+                                        //Should be locked
+                                        if (desiredPanelValue == true)
+                                        {
+                                            //Should be hacked, but isn't
+                                            if (!door.IsHackActivated)
+                                            {
+                                                return false;
+                                            }
+
+                                            //TODO handle restricted doors
+                                        }
+                                        else //Should not be hacked
+                                        {
+                                            //It's any state but unlocked
+                                            if (!door.IsHackActivated)
                                             {
                                                 return false;
                                             }
                                         }
-                                        else
-                                        {
-                                            //Should not be met, but is
-                                            if (door.IsDurationExceeded)
-                                            {
-                                                return false;
-                                            }
-                                        }
+
                                         break;
                                 }
                             }

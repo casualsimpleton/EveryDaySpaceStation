@@ -144,4 +144,12 @@ public class GameManager : MonoBehaviour
             esgo.TEMP_ToggleLockState();
         }
     }
+
+    public void Client_AttemptPowerInput(EntitySpriteGameObject esgo)
+    {
+        if (esgo != null)
+        {
+            esgo.TEMP_PowerActivate();
+        }
+    }
 }

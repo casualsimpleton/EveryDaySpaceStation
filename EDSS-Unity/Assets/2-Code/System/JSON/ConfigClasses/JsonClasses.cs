@@ -375,7 +375,7 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("uid")]
         public uint UID { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty("spritename")]
         public string SpriteName { get; set; }
 
         [JsonProperty("spritesheet")]
@@ -720,7 +720,7 @@ namespace EveryDaySpaceStation.Json
             [JsonProperty("conditionuid")]
             public ushort EntityDoorConditionUID { get; set; }
 
-            [JsonProperty("name")]
+            [JsonProperty("conditionname")]
             public string EntityDoorConditionName { get; set; }
 
             [JsonProperty("states")]

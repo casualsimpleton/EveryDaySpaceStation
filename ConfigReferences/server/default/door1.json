@@ -59,56 +59,210 @@
 			"statename" : "DoorPoweredClosed",
 			"spriteuid" : 27,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 8,
 			"statename" : "DoorPoweredMoving1",
 			"spriteuid" : 28,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 9,
 			"statename" : "DoorPoweredMoving2",
 			"spriteuid" : 29,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 10,
 			"statename" : "DoorPoweredMoving3",
 			"spriteuid" : 30,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 11,
 			"statename" : "DoorPoweredMoving4",
 			"spriteuid" : 31,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 12,
 			"statename" : "DoorPoweredOpen",
 			"spriteuid" : 32,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 13,
 			"statename" : "DoorPoweredWelded",
 			"spriteuid" : 33,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
 		},
 		{
 			"stateuid" : 14,
 			"statename" : "DoorPoweredLocked",
 			"spriteuid" : 34,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 },
+			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+		},
+		{
+			"stateuid" : 15,
+			"statename" : "DoorPoweredLockedWelded",
+			"spriteuid" : 35,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 16,
+			"statename" : "DoorUnpoweredAccessedClosed",
+			"spriteuid" : 36,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 17,
+			"statename" : "DoorUnpoweredAccessedOpen1",
+			"spriteuid" : 37,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 18,
+			"statename" : "DoorUnpoweredAccessedOpen2",
+			"spriteuid" : 38,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 19,
+			"statename" : "DoorUnpoweredAccessedOpen3",
+			"spriteuid" : 39,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 20,
+			"statename" : "DoorUnpoweredAccessedOpen4",
+			"spriteuid" : 40,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 21,
+			"statename" : "DoorUnpoweredAccessedOpen5",
+			"spriteuid" : 41,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 22,
+			"statename" : "DoorUnpoweredAccessedWelded",
+			"spriteuid" : 42,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 23,
+			"statename" : "DoorMalfunction1",
+			"spriteuid" : 43,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 24,
+			"statename" : "DoorMalfunction2",
+			"spriteuid" : 44,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 25,
+			"statename" : "DoorMalfunction3",
+			"spriteuid" : 45,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 26,
+			"statename" : "DoorMalfunction4",
+			"spriteuid" : 46,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 27,
+			"statename" : "DoorMalfunction5",
+			"spriteuid" : 47,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 28,
+			"statename" : "DoorMalfunction6",
+			"spriteuid" : 48,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 29,
+			"statename" : "DoorMalfunctionWelded",
+			"spriteuid" : 49,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 30,
+			"statename" : "DoorPoweredAccessClosed",
+			"spriteuid" : 50,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 31,
+			"statename" : "DoorPoweredAccessOpen1",
+			"spriteuid" : 51,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 32,
+			"statename" : "DoorPoweredAccessOpen2",
+			"spriteuid" : 52,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 33,
+			"statename" : "DoorPoweredAccessOpen3",
+			"spriteuid" : 53,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 34,
+			"statename" : "DoorPoweredAccessOpen4",
+			"spriteuid" : 54,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 35,
+			"statename" : "DoorPoweredAccessOpen5",
+			"spriteuid" : 55,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+		},
+		{
+			"stateuid" : 36,
+			"statename" : "DoorPoweredAccessWelded",
+			"spriteuid" : 56,
+			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
+			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
 		}
 		],
 		"doorstates" : 
@@ -117,17 +271,18 @@
 			"horizontal" : true,
 			"initialcondition" : 0,
 			
-			"doorconditions" : [
+			"doorconditions" :
+			[
 			{
-				"conditionuid": 0,
-				"name": "UnpoweredClosed",
-				"states": [ 0 ],
-				"duration": -1,
-				"hascolliders": [ true ],
-				"transitions":
+				"conditionuid" : 0,
+				"conditionname" : "Unpowered - Door Closed",
+				"states" : [ 0 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Unpoweredopening",
+						"transitionname" : "UPDoorOpen",
 						"nextconditionuid" : 1,
 						"requirements" : [
 							{
@@ -149,7 +304,7 @@
 						]
 					},
 					{
-						"transitionname" : " Unpoweredweld",
+						"transitionname" : "UPDoorWeld",
 						"nextconditionuid" : 4,
 						"requirements" : [
 							{
@@ -157,13 +312,21 @@
 								"value" : false
 							},
 							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
 								"variable" : "nextaction",
 								"value" : "weld"
 							}
 						]
 					},
 					{
-						"transitionname" : "Poweredclosed",
+						"transitionname" : "UPDoorPowerOn",
 						"nextconditionuid" : 5,
 						"requirements" : [
 							{
@@ -171,14 +334,18 @@
 								"value" : false
 							},
 							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
 								"variable" : "ispowered",
 								"value" : true
 							}
 						]
 					},
 					{
-						"transitionname" : "Poweredopening",
-						"nextconditionuid" : 6,
+						"transitionname" : "UPPanelOpen",
+						"nextconditionuid" : 12,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
@@ -190,61 +357,21 @@
 							},
 							{
 								"variable" : "ispowered",
-								"value" : true
-							},
-							{
-								"variable" : "nextaction",
-								"value" : "open"
-							}
-						]
-					},
-					{
-						"transitionname" : "Poweredweld",
-						"nextconditionuid" : 9,
-						"requirements" : [
-							{
-								"variable" : "iswelded",
 								"value" : false
 							},
 							{
-								"variable" : "ispowered",
-								"value" : true
-							},
-							{
 								"variable" : "nextaction",
-								"value" : "weld"
-							}
-						]
-					},
-					{
-						"transitionname" : "Poweredlock",
-						"nextconditionuid" : 10,
-						"requirements" : [
-							{
-								"variable" : "iswelded",
-								"value" : false
-							},
-							{
-								"variable" : "islocked",
-								"value" : false
-							},
-							{
-								"variable" : "ispowered",
-								"value" : true
-							},
-							{
-								"variable" : "nextaction",
-								"value" : "lock"
+								"value" : "hack"
 							}
 						]
 					}
 				]
 			},
 			{
-				"conditionuid": 1,
-				"name": "UnpoweredOpening",
-				"states": [ 1, 2, 3, 4 ],
-				"duration": -1,
+				"conditionuid" : 1,
+				"conditionname" : "Unpowered - Door Opening",
+				"states" : [ 1, 2, 3, 4 ],
+				"duration" : -1,
 				"defspeed" : 0.2,
 				"translations" : [
 					{ "x" : 0.1, "y" : 0, "z" : 0 },
@@ -258,13 +385,11 @@
 					{ "x" : 0, "y" : 0, "z" : 0 },
 					{ "x" : 0, "y" : 0, "z" : 0 }
 				],
-				"hascolliders": [
-					true, false, false, false
-				],
-				"transitions":
+				"hascolliders" : [ true, false, false, false ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Unpoweredopened",
+						"transitionname" : "UPDoorOpened",
 						"nextconditionuid" : 2,
 						"requirements" : [
 							{
@@ -284,15 +409,15 @@
 				]
 			},
 			{
-				"conditionuid": 2,
-				"name": "UnpoweredOpened",
-				"states": [ 5 ],
-				"duration": 20.0,
-				"hascolliders": [ false ],
-				"transitions":
+				"conditionuid" : 2,
+				"conditionname" : "Unpowered - Door Opened",
+				"states" : [ 5 ],
+				"duration" : -1,
+				"hascolliders" : [ false ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Unpoweredclosing",
+						"transitionname" : "UPDoorCloseTime",
 						"nextconditionuid" : 3,
 						"requirements" : [
 							{
@@ -308,13 +433,13 @@
 								"value" : false
 							},
 							{
-								"variable" : "durationmet",
-								"value" : true
+								"variable" : "gduration",
+								"value" : 20
 							}
 						]
 					},
 					{
-						"transitionname" : "Unpoweredclosingactivated",
+						"transitionname" : "UPDoorCloseActivate",
 						"nextconditionuid" : 3,
 						"requirements" : [
 							{
@@ -338,9 +463,10 @@
 				]
 			},
 			{
-				"conditionuid": 3,
-				"name": "UnpoweredClosing",
-				"states": [ 4, 3, 2, 1],
+				"conditionuid" : 3,
+				"conditionname" : "Unpowered - Door Closing",
+				"states" : [ 4, 3, 2, 1],
+				"duration" : -1,
 				"defspeed" : 0.2,
 				"translations" : [
 					{ "x" : 0.1, "y" : 0, "z" : 0 },
@@ -354,13 +480,11 @@
 					{ "x" : 0, "y" : 0, "z" : 0 },
 					{ "x" : 0, "y" : 0, "z" : 0 }
 				],
-				"hascolliders": [
-					false, false, false, true
-				],
-				"transitions":
+				"hascolliders" : [ false, false, false, true],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Unpoweredclosed",
+						"transitionname" : "UPDoorClosed",
 						"nextconditionuid" : 0,
 						"requirements" : [
 							{
@@ -380,15 +504,15 @@
 				]
 			},
 			{
-				"conditionuid": 4,
-				"name": "UnpoweredWelded",
-				"states": [ 6 ],
-				"duration": -1,
-				"hascolliders": [ true ],
-				"transitions":
+				"conditionuid" : 4,
+				"conditionname" : "Unpowered - Door Welded",
+				"states" : [ 6 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Unpoweredunweld",
+						"transitionname" : "UPDoorUnweld",
 						"nextconditionuid" : 0,
 						"requirements" : [
 							{
@@ -400,19 +524,33 @@
 								"value" : "unweld"
 							}
 						]
+					},
+					{
+						"transitionname" : "UPDoorWeldPower",
+						"nextconditionuid" : 9,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
 					}
 				]
 			},
 			{
-				"conditionuid": 5,
-				"name": "PoweredClosed",
-				"states": [ 7 ],
-				"duration": -1,
-				"hascolliders": [ true ],
-				"transitions":
+				"conditionuid" : 5,
+				"conditionname" : "Powered - Door Closed",
+				"states" : [ 7 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredopening",
+						"transitionname" : "PODoorOpen",
 						"nextconditionuid" : 6,
 						"requirements" : [
 							{
@@ -434,11 +572,15 @@
 						]
 					},
 					{
-						"transitionname" : "Poweredweld",
+						"transitionname" : "PODoorWeld",
 						"nextconditionuid" : 9,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
 								"value" : false
 							},
 							{
@@ -452,11 +594,15 @@
 						]
 					},
 					{
-						"transitionname" : "Unpoweredclosed",
+						"transitionname" : "PODoorPowerOff",
 						"nextconditionuid" : 0,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
 								"value" : false
 							},
 							{
@@ -466,8 +612,8 @@
 						]
 					},
 					{
-						"transitionname" : "Poweredlocked",
-						"nextconditionuid" : 10,
+						"transitionname" : "POPanelOpen",
+						"nextconditionuid" : 19,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
@@ -483,17 +629,39 @@
 							},
 							{
 								"variable" : "nextaction",
+								"value" : "hack"
+							}
+						]
+					},
+					{
+						"transitionname" : "PODoorLock",
+						"nextconditionuid" : 10,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
 								"value" : "lock"
 							}
 						]
 					}
 				]
-			},		
+			},
 			{
-				"conditionuid": 6,
-				"name": "PoweredOpening",
-				"states": [ 8, 9, 10, 11 ],
-				"duration": -1,
+				"conditionuid" : 6,
+				"conditionname" : "Powered - Door Opening",
+				"states" : [ 8, 9, 10, 11],
+				"duration" : -1,
 				"defspeed" : 0.2,
 				"translations" : [
 					{ "x" : 0.1, "y" : 0, "z" : 0 },
@@ -507,13 +675,11 @@
 					{ "x" : 0, "y" : 0, "z" : 0 },
 					{ "x" : 0, "y" : 0, "z" : 0 }
 				],
-				"hascolliders": [
-					true, false, false, false
-				],
-				"transitions":
+				"hascolliders" : [ true, false, false, false],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredopened",
+						"transitionname" : "PODoorOpened",
 						"nextconditionuid" : 7,
 						"requirements" : [
 							{
@@ -527,25 +693,21 @@
 							{
 								"variable" : "ispowered",
 								"value" : true
-							},
-							{
-								"variable" : "ispowered",
-								"value" : true
 							}
 						]
 					}
 				]
 			},
 			{
-				"conditionuid": 7,
-				"name": "PoweredOpened",
-				"states": [ 12 ],
-				"duration": 20.0,
-				"hascolliders": [ false ],
-				"transitions":
+				"conditionuid" : 7,
+				"conditionname" : "Powered - Door Opened",
+				"states" : [ 12 ],
+				"duration" : -1,
+				"hascolliders" : [ false ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredclosing",
+						"transitionname" : "PODoorCloseTime",
 						"nextconditionuid" : 8,
 						"requirements" : [
 							{
@@ -561,13 +723,13 @@
 								"value" : true
 							},
 							{
-								"variable" : "durationmet",
-								"value" : true
+								"variable" : "gduration",
+								"value" : 20
 							}
 						]
 					},
 					{
-						"transitionname" : "Poweredclosingactivated",
+						"transitionname" : "PODoorCloseActivate",
 						"nextconditionuid" : 8,
 						"requirements" : [
 							{
@@ -591,9 +753,10 @@
 				]
 			},
 			{
-				"conditionuid": 8,
-				"name": "PoweredClosing",
-				"states": [ 11, 10, 9, 8],
+				"conditionuid" : 8,
+				"conditionname" : "Powered - Door Closing",
+				"states" : [ 11, 10, 9, 8],
+				"duration" : -1,
 				"defspeed" : 0.2,
 				"translations" : [
 					{ "x" : 0.1, "y" : 0, "z" : 0 },
@@ -607,13 +770,11 @@
 					{ "x" : 0, "y" : 0, "z" : 0 },
 					{ "x" : 0, "y" : 0, "z" : 0 }
 				],
-				"hascolliders": [
-					false, false, false, true
-				],
-				"transitions":
+				"hascolliders" : [ false, false, false, true ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredclosed",
+						"transitionname" : "PODoorClosed",
 						"nextconditionuid" : 5,
 						"requirements" : [
 							{
@@ -633,15 +794,15 @@
 				]
 			},
 			{
-				"conditionuid": 9,
-				"name": "PoweredWelded",
-				"states": [ 13 ],
-				"duration": -1,
-				"hascolliders": [ true ],
-				"transitions":
+				"conditionuid" : 9,
+				"conditionname" : "Powered - Door Welded",
+				"states" : [ 13 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredunweld",
+						"transitionname" : "PODoorUnweld",
 						"nextconditionuid" : 5,
 						"requirements" : [
 							{
@@ -649,7 +810,95 @@
 								"value" : true
 							},
 							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					},
+					{
+						"transitionname" : "PODoorWeldPowerOff",
+						"nextconditionuid" : 4,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
 								"variable" : "ispowered",
+								"value" : false
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 10,
+				"conditionname" : "Powered - Door Locked Close",
+				"states" : [ 14 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PODoorUnlock",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unlock"
+							}
+						]
+					},
+					{
+						"transitionname" : "PODoorLockWeld",
+						"nextconditionuid" : 11,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : true
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 11,
+				"conditionname" : "Powered - Door Lock Welded",
+				"states" : [ 15 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PODoorLockUnweld",
+						"nextconditionuid" : 10,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
 								"value" : true
 							},
 							{
@@ -661,37 +910,45 @@
 				]
 			},
 			{
-				"conditionuid" : 10,
-				"name" : "PoweredLocked",
-				"states" : [ 14 ],
+				"conditionuid" : 12,
+				"conditionname" : "Unpowered - Door Closed - AP Open",
+				"states" : [ 16 ],
 				"duration" : -1,
 				"hascolliders" : [ true ],
 				"transitions" :
 				[
 					{
-						"transitionname" : "Poweredclosed",
-						"nextcondition" : 5,
+						"transitionname" : "UPAPDoorOpen",
+						"nextconditionuid" : 13,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
 								"value" : false
 							},
 							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
 								"variable" : "ispowered",
-								"value" : true
+								"value" : false
 							},
 							{
 								"variable" : "nextaction",
-								"value" : "unlock"
+								"value" : "open"
 							}
 						]
 					},
 					{
-						"transitionname" : "Unpoweredclosed",
-						"nextcondition" : 0,
+						"transitionname" : "UPAPDoorWeld",
+						"nextconditionuid" : 16,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
 								"value" : false
 							},
 							{
@@ -700,17 +957,39 @@
 							},
 							{
 								"variable" : "nextaction",
-								"value" : "unlock"
+								"value" : "weld"
 							}
 						]
 					},
 					{
-						"transitionname" : "Unpoweredwelded",
-						"nextcondition" : 4,
+						"transitionname" : "UPAPDoorMalfunction",
+						"nextconditionuid" : 17,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
 								"value" : true
+							}
+						]
+					},
+					{
+						"transitionname" : "UPAPPanelClose",
+						"nextconditionuid" : 0,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
 							},
 							{
 								"variable" : "ispowered",
@@ -718,13 +997,173 @@
 							},
 							{
 								"variable" : "nextaction",
-								"value" : "unlock"
+								"value" : "unhack"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 13,
+				"conditionname" : "Unpowered - Door Opening - AP Open",
+				"states" : [ 17, 18, 19, 20 ],
+				"duration" : -1,
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders" : [ true, false, false, false ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPAPDoorOpened",
+						"nextconditionuid" : 14,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 14,
+				"conditionname" : "Unpowered - Door Opened - AP Open",
+				"states" : [ 21 ],
+				"duration" : -1,
+				"hascolliders" : [ false ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPAPDoorCloseTime",
+						"nextconditionuid" : 15,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "gduration",
+								"value" : 20
 							}
 						]
 					},
 					{
-						"transitionname" : "Poweredwelded",
-						"nextcondition" : 9,
+						"transitionname" : "UPAPDoorCloseActivate",
+						"nextconditionuid" : 15,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "close"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 15,
+				"conditionname" : "Unpowered - Door Closing - AP Open",
+				"states" : [ 20, 19, 18, 17 ],
+				"duration" : -1,
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders" : [ false, false, false, true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPAPDoorClose",
+						"nextconditionuid" : 12,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 16,
+				"conditionname" : "Unpowered - Door Welded - AP Open",
+				"states" : [ 22 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPAPDoorUnweld",
+						"nextconditionuid" : 12,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					},
+					{
+						"transitionname" : "UPAPDoorWeldPower",
+						"nextconditionuid" : 23,
 						"requirements" : [
 							{
 								"variable" : "iswelded",
@@ -733,10 +1172,366 @@
 							{
 								"variable" : "ispowered",
 								"value" : true
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 17,
+				"conditionname" : "Unpowered - Door Malfunction",
+				"states" : [ 23, 24, 25, 26, 27, 28 ],
+				"duration" : -1,
+				"hascolliders" : [ true, true, true, true, true, true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPMDoorUnpowerRepair",
+						"nextconditionuid" : 0,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
 							},
 							{
 								"variable" : "nextaction",
-								"value" : "unlock"
+								"value" : "repair"
+							}
+						]
+					},
+					{
+						"transitionname" : "UPMDoorPowerRepair",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "repair"
+							}
+						]
+					},
+					{
+						"transitionname" : "UPMDoorWeld",
+						"nextconditionuid" : 18,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 18,
+				"conditionname" : "Unpowered - Door Malfunction - Welded",
+				"states" : [ 29 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "UPMDoorWeld",
+						"nextconditionuid" : 17,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 19,
+				"conditionname" : "Powered - Door Closed - AP Open",
+				"states" : [ 30 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PAPDoorOpen",
+						"nextconditionuid" : 20,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "open"
+							}
+						]
+					},
+					{
+						"transitionname" : "PAPDoorWeld",
+						"nextconditionuid" : 23,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "weld"
+							}
+						]
+					},
+					{
+						"transitionname" : "PAPDoorMalfunction",
+						"nextconditionuid" : 17,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : false
+							}
+						]
+					},
+					{
+						"transitionname" : "PAPPanelClose",
+						"nextconditionuid" : 5,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unhack"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 20,
+				"conditionname" : "Powered - Door Opening - AP Open",
+				"states" : [ 31, 32, 33, 34 ],
+				"duration" : -1,
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders" : [ true, false, false, false ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PAPDoorOpened",
+						"nextconditionuid" : 21,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 21,
+				"conditionname" : "Powered - Door Opened - AP Open",
+				"states" : [ 35 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PAPDoorCloseTime",
+						"nextconditionuid" : 22,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "gduration",
+								"value" : 20
+							}
+						]
+					},
+					{
+						"transitionname" : "PAPDoorCloseActivate",
+						"nextconditionuid" : 22,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "close"
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 22,
+				"conditionname" : "Powered - Door Closing - AP Open",
+				"states" : [ 34, 33, 32, 31 ],
+				"duration" : -1,
+				"defspeed" : 0.2,
+				"translations" : [
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 },
+					{ "x" : 0.1, "y" : 0, "z" : 0 }
+				],
+				"rotations": [
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 },
+					{ "x" : 0, "y" : 0, "z" : 0 }
+				],
+				"hascolliders" : [ false, false, false, true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PAPDoorClosed",
+						"nextconditionuid" : 19,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : false
+							},
+							{
+								"variable" : "islocked",
+								"value" : false
+							},
+							{
+								"variable" : "ispowered",
+								"value" : true
+							}
+						]
+					}
+				]
+			},
+			{
+				"conditionuid" : 23,
+				"conditionname" : "Powered - Door Welded - AP Open",
+				"states" : [ 36 ],
+				"duration" : -1,
+				"hascolliders" : [ true ],
+				"transitions" :
+				[
+					{
+						"transitionname" : "PAPDoorUnwelded",
+						"nextconditionuid" : 19,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : "unweld"
+							}
+						]
+					},
+					{
+						"transitionname" : "PAPDoorWeldedPowerOff",
+						"nextconditionuid" : 16,
+						"requirements" : [
+							{
+								"variable" : "iswelded",
+								"value" : true
+							},
+							{
+								"variable" : "nextaction",
+								"value" : false
 							}
 						]
 					}
@@ -748,6 +1543,36 @@
 		"lightstates": [
 		{
 			"light": 1
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
+		},
+		{
+			"light": 0
 		},
 		{
 			"light": 0
@@ -812,10 +1637,6 @@
 		},
 		{
 			"resourcename": "electricity",
-			"cost": 0
-		},
-		{
-			"resourcename": "electricity",
 			"cost": 10
 		},
 		{
@@ -829,6 +1650,50 @@
 		{
 			"resourcename": "electricity",
 			"cost": 2
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
+		},
+		{
+			"resourcename": "electricity",
+			"cost": 0
 		},
 		{
 			"resourcename": "electricity",
