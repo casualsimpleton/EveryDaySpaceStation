@@ -107,6 +107,13 @@
 			"tilepos": {"x":6, "y": 10},
 			"anchor": "floor",
 			"rotation": { "x": 0, "y": 0, "z": 0}
+		},
+		{
+			"mapentityuid": 16,
+			"entitytemplateuid" : 4,
+			"tilepos" : { "x" : 4, "y" : 12},
+			"anchor" : "floor",
+			"rotation" : { "x" : 0, "y" : 180, "z" : 0 }
 		}
 	]
 }

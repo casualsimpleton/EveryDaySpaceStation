@@ -918,5 +918,73 @@
 			"Twosided"
 		]
 	}
+	,
+	{
+		"uid" : 57,
+		"spritename" : "locker-generic-front",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 0,
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32,
+		},
+		"flags" : [	
+			"Billboard"
+		]
+	}
+	,
+	{
+		"uid" : 58,
+		"spritename" : "locker-generic-left",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 0,
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32,
+		},
+		"flags" : [	
+			"Billboard"
+		]
+	}
+	,
+	{
+		"uid" : 59,
+		"spritename" : "locker-generic-right",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 0,
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32,
+		},
+		"flags" : [	
+			"Billboard"
+		]
+	}
+	,
+	{
+		"uid" : 60,
+		"spritename" : "locker-generic-back",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 0,
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32,
+		},
+		"flags" : [	
+			"Billboard"
+		]
+	}
 	]
 }

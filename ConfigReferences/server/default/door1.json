@@ -1,8 +1,8 @@
 {
 	"entitydata": [
 	{
-		"uid": 3,
-		"name": "Door",
+		"entitytemplateuid": 3,
+		"entitytemplatename": "Door",
 		"typeflags" : [ "Light", "Powered", "Door", "Craftable"],
 		"states": [
 		{

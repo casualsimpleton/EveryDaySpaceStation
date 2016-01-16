@@ -7,7 +7,8 @@
 		"underlayer1.png",
 		"lights1.png",
 		"furniture.png",
-		"door1.png"
+		"door1.png",
+		"lockers.png"
 	],
 	"spritedata" :
 	[
@@ -24,6 +25,7 @@
 	[
 		"lightentities.json",
 		"chair.json",
-		"door1.json"
+		"door1.json",
+		"lockerentity.json"
 	]
 }

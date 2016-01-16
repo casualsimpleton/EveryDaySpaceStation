@@ -1,18 +1,27 @@
 {
 	"entitydata": [
 	{
-		"entitytemplateuid": 2,
-		"entitytemplatename": "Standard Chair",
+		"entitytemplateuid": 4,
+		"entitytemplatename": "Locker",
 		"typeflags" : [ "Fixed", "Multiangle", "Device", "Craftable"],
 		"states": [
 		{
 			"stateuid": 0,
-			"statename": "Chair",
-			"spriteuid": 210,
-			"graphicsize": { "x": 0.5, "y": 0.5, "z": 0.5 },
+			"statename": "LockerClosed",
+			"spriteuid": 57,
+			"graphicsize": { "x": 0.8, "y": 0.8, "z": 0.8 },
 			"collidersize": { "x": 0.5, "y": 1, "z": 0.5 },
 			"positionoffset" : { "x": 0, "y": 0, "z": 0 }
-		}],
+		},
+		{
+			"stateuid": 1,
+			"statename": "LockerOpen",
+			"spriteuid": 57,
+			"graphicsize": { "x": 0.8, "y": 0.8, "z": 0.8 },
+			"collidersize": { "x": 0.5, "y": 1, "z": 0.5 },
+			"positionoffset" : { "x": 0, "y": 0, "z": 0 }
+		}
+		],
 		"multianglestates": 
 		[
 			{
@@ -20,28 +29,28 @@
 				"anglename" : "front",
 				"anglemin" : 315,
 				"anglemax" : 45,
-				"spriteuid" : 210
+				"spriteuid" : 57
 			},
 			{
 				"stateuid": 1,
 				"anglename" : "right",
 				"anglemin" : 45,
 				"anglemax" : 135,
-				"spriteuid" : 212
+				"spriteuid" : 59
 			},
 			{
 				"stateuid": 2,
 				"anglename" : "back",
 				"anglemin" : 135,
 				"anglemax" : 225,
-				"spriteuid" : 211
+				"spriteuid" : 60
 			},
 			{
 				"stateuid": 3,
 				"anglename" : "left",
 				"anglemin" : 225,
 				"anglemax" : 315,
-				"spriteuid" : 213
+				"spriteuid" : 58
 			}
 		]
 		,

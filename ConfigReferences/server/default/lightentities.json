@@ -1,8 +1,8 @@
 {
 	"entitydata": [
 	{
-		"uid": 1,
-		"name": "Tube Light",
+		"entitytemplateuid": 1,
+		"entitytemplatename": "Tube Light",
 		"typeflags" : [ "Light", "Fixed", "Powered", "Device", "Craftable"],
 		"states": [
 		{

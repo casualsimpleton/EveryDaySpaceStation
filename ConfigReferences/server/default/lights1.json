@@ -2,7 +2,7 @@
 	"spritedata": [
 	{
 		"uid": 200,
-		"name": "tubelifeoff",
+		"spritename": "tubelifeoff",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 4,
@@ -18,7 +18,7 @@
 	},
 	{
 		"uid": 201,
-		"name": "tubelighton",
+		"spritename": "tubelighton",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 36,
@@ -34,7 +34,7 @@
 	},
 	{
 		"uid": 202,
-		"name": "tubelightbroken",
+		"spritename": "tubelightbroken",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 64,
@@ -50,7 +50,7 @@
 	},
 	{
 		"uid": 203,
-		"name": "tubelightburntout",
+		"spritename": "tubelightburntout",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 0,
@@ -66,7 +66,7 @@
 	},
 	{
 		"uid": 204,
-		"name": "tubelightempty",
+		"spritename": "tubelightempty",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 128,
@@ -82,7 +82,7 @@
 	},
 	{
 		"uid": 205,
-		"name": "lightbulboff",
+		"spritename": "lightbulboff",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 160,
@@ -98,7 +98,7 @@
 	},
 	{
 		"uid": 206,
-		"name": "lightbulbon",
+		"spritename": "lightbulbon",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 192,
@@ -114,7 +114,7 @@
 	},
 	{
 		"uid": 207,
-		"name": "lightbulbbroken",
+		"spritename": "lightbulbbroken",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 224,
@@ -130,7 +130,7 @@
 	},
 	{
 		"uid": 208,
-		"name": "lightbulburntout",
+		"spritename": "lightbulburntout",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 256,
@@ -146,7 +146,7 @@
 	},
 	{
 		"uid": 209,
-		"name": "lightbulbempty",
+		"spritename": "lightbulbempty",
 		"spritesheet": "lights1.png",
 		"spritepos": {
 			"x": 288,
@@ -162,7 +162,7 @@
 	},
 	{
 		"uid": 210,
-		"name": "chairfront",
+		"spritename": "chairfront",
 		"spritesheet": "furniture.png",
 		"spritepos": {
 			"x": 0,
@@ -178,7 +178,7 @@
 	},
 	{
 		"uid": 211,
-		"name": "chairback",
+		"spritename": "chairback",
 		"spritesheet": "furniture.png",
 		"spritepos": {
 			"x": 32,
@@ -194,7 +194,7 @@
 	},
 	{
 		"uid": 212,
-		"name": "chairright",
+		"spritename": "chairright",
 		"spritesheet": "furniture.png",
 		"spritepos": {
 			"x": 64,
@@ -210,7 +210,7 @@
 	},
 	{
 		"uid": 213,
-		"name": "chairleft",
+		"spritename": "chairleft",
 		"spritesheet": "furniture.png",
 		"spritepos": {
 			"x": 96,
