@@ -127,6 +127,12 @@ public class EntityBuildManager : MonoBehaviour
             door.Create(entity.Sprite, entity.Template.DoorState);
         }
 
+        if (entity.Template.ContainerState != null)
+        {
+            ContainerComponent container = entity.Sprite.gameObject.AddComponent<ContainerComponent>();
+            container.Create(entity.Sprite, entity.Template.ContainerState);
+        }
+
         entity.Sprite.UpdateComponents();
 
         entity.BuildState.IsBuildingQueued = false;

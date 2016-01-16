@@ -489,7 +489,11 @@ namespace EveryDaySpaceStation.Json
         public EntityMultiAngleJson[] EntityMultiAngleStates { get; set; }
 
         [JsonProperty("doorstates")]
-        public EntityDoorJson EntityDoorState { get; set; } 
+        public EntityDoorJson EntityDoorState { get; set; }
+
+        [JsonProperty("containerstates")]
+        public EntityContainerStateJson EntityContainerState { get; set; }
+
 
         public override string ToString()
         {
@@ -658,28 +662,7 @@ namespace EveryDaySpaceStation.Json
         public EntityMultiAngleJson()
             : base("multianglestates")
         { }
-
-        //[JsonProperty("anglestates")]
-        //public AngleState AngleStates { get; set; }
-
-        //public class AngleState
-        //{
-        //    [JsonProperty("stateuid")]
-        //    public ushort AngleStateUID { get; set; }
-
-        //    [JsonProperty("anglename")]
-        //    public string AngleStateName { get; set; }
-
-        //    [JsonProperty("anglemin")]
-        //    public float AngleStateMinAngle { get; set; }
-
-        //    [JsonProperty("anglemax")]
-        //    public float AngleStateMaxAngle { get; set; }
-
-        //    [JsonProperty("spriteuid")]
-        //    public uint AngleSpriteUID { get; set; }
-        //}
-                
+   
         [JsonProperty("stateuid")]
         public ushort AngleStateUID { get; set; }
 
@@ -744,6 +727,21 @@ namespace EveryDaySpaceStation.Json
             [JsonProperty("duration")]
             public float EntityDoorTransitionDuration { get; set; }
         }
+    }
+
+    public class EntityContainerStateJson : EntityTypeComponentBaseJson
+    {
+        public EntityContainerStateJson()
+            : base("containerstates")
+        {
+            Debug.Log("HEY");
+        }
+
+        /// <summary>
+        /// Maximum volume that the container can hold
+        /// </summary>
+        [JsonProperty("maxvolume")]
+        public float ContainerMaxVolume { get; set; }
     }
     #endregion
 

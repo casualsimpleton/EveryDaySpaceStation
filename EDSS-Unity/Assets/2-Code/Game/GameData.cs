@@ -196,6 +196,22 @@ namespace EveryDaySpaceStation
                 }
             }
 
+            public class ContainerStateTemplate
+            {
+                public EntityDataTemplate ReferencedEntityDataTemplate { get; private set; }
+                public float MaxVolume { get; private set; }
+
+                public ContainerStateTemplate(EntityDataTemplate parentTemplate, float maxVolume)
+                {
+                    ReferencedEntityDataTemplate = parentTemplate;
+                    MaxVolume = maxVolume;
+                }
+
+                public void Cleanup()
+                {
+                }
+            }
+
             public class DoorStateTemplate
             {
                 public class DoorConditionTemplate
@@ -555,6 +571,7 @@ namespace EveryDaySpaceStation
             public Dictionary<ushort, DeviceStateTemplate> DeviceStates { get; private set; }
             public Dictionary<ushort, CraftStateTemplate> CraftStates { get; private set; }
             public Dictionary<ushort, MultiAngleStateTemplate> MultiAngleStates { get; private set; }
+            public ContainerStateTemplate ContainerState { get; private set; }
             public DoorStateTemplate DoorState { get; private set; }
 
             public override string ToString()
@@ -656,6 +673,10 @@ namespace EveryDaySpaceStation
 
                         case "multiangle":
                             MultiAngleStates = new Dictionary<ushort, MultiAngleStateTemplate>(EntityStates.Count);
+                            break;
+
+                        case "container":
+
                             break;
                     }
                 }
@@ -872,6 +893,21 @@ namespace EveryDaySpaceStation
                 }
             }
 
+            public void ParseContainerStates(EveryDaySpaceStation.Json.EntityContainerStateJson containerState)
+            {
+                if (containerState == null)
+                {
+                    return;
+                }
+
+                if (ContainerState != null)
+                {
+                    Debug.LogError(string.Format("Attempting to set another container state for template with one already. Template UID: {0} Name: {1}", UID, Name));
+                }
+
+                ContainerState = new ContainerStateTemplate(this, containerState.ContainerMaxVolume);
+            }
+
             public void Cleanup()
             {
                 if (EntityStates != null)
@@ -924,6 +960,12 @@ namespace EveryDaySpaceStation
                     DoorState.Cleanup();
                 }
                 DoorState = null;
+
+                if (ContainerState != null)
+                {
+                    ContainerState.Cleanup();
+                }
+                ContainerState = null;
             }
         }
 

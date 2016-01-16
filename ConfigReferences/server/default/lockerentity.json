@@ -3,7 +3,7 @@
 	{
 		"entitytemplateuid": 4,
 		"entitytemplatename": "Locker",
-		"typeflags" : [ "Fixed", "Multiangle", "Device", "Craftable"],
+		"typeflags" : [ "Fixed", "Multiangle", "Device", "Craftable", "Container"],
 		"states": [
 		{
 			"stateuid": 0,
@@ -64,6 +64,10 @@
 			"materials" : [ 
 			{"name" : "metal", "count": 1 }
 			]
-		}]
+		}],
+		"containerstates" :
+		{
+			"maxvolume" : 40,
+		}
 	}]
 }

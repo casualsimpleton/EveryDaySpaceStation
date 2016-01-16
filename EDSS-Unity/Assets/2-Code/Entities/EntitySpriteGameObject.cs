@@ -31,6 +31,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     protected LightComponent _lightComponent;
     protected DoorComponent _doorComponent;
     protected MultiAngleComponent _multiAngleComponent;
+    protected ContainerComponent _containerComponent;
 
     protected CubeCollider _cubeCollider;
     protected CubeCollider _triggerCollider;
@@ -143,6 +144,7 @@ public class EntitySpriteGameObject : MonoBehaviour
         _lightComponent = this.gameObject.GetComponent<LightComponent>();
         _multiAngleComponent = this.gameObject.GetComponent<MultiAngleComponent>();
         _doorComponent = this.gameObject.GetComponent<DoorComponent>();
+        _containerComponent = this.gameObject.GetComponent<ContainerComponent>();
     }
 
     public void Reset()
@@ -288,6 +290,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         if (_doorComponent != null)
         {
             _doorComponent.Activate();
+        }
+
+        if (_containerComponent != null)
+        {
+            _containerComponent.Activate();
         }
     }
 
