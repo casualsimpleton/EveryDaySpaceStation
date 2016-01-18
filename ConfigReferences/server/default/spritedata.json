@@ -986,5 +986,39 @@
 			"Billboard"
 		]
 	}
+	,
+	{
+		"uid" : 61,
+		"spritename" : "lockerdoor-generic-front",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 16,
+			"y" : 36,
+		},
+		"spritewidthheight" : {
+			"x" : 12,
+			"y" : 25,
+		},
+		"flags" : [
+			"Billboard"
+		]
+	}
+	,
+	{
+		"uid" : 62,
+		"spritename" : "lockerdoor-generic-back",
+		"spritesheet" : "lockers.png",
+		"spritepos" : {
+			"x" : 4,
+			"y" : 36,
+		},
+		"spritewidthheight" : {
+			"x" : 12,
+			"y" : 25,
+		},
+		"flags" : [
+			"Billboard"
+		]
+	}
 	]
 }

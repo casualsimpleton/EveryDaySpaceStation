@@ -21,10 +21,8 @@ using EveryDaySpaceStation.Utils;
 public class EntitySpriteGameObject : MonoBehaviour
 {
     #region Vars
-    protected MeshQuad _meshQuad;
-    protected EDSSSprite _sprite;
     public Transform _transform { get; private set; }
-    public Material _material { get; private set; }
+    protected EntitySpriteGraphics _spriteGraphics;
     protected float _updateTimer;
     protected float _updateTimerDelta;
     protected MapData.EntityData _entityData { get; private set; }
@@ -40,8 +38,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     #endregion
 
     #region Gets/Sets
-    public MeshQuad Meshquad { get { return _meshQuad; } }
-    public EDSSSprite Sprite { get { return _sprite; } }
+    public EntitySpriteGraphics SpriteGraphics { get { return _spriteGraphics; } }
     public MapData.EntityData EntityData { get { return _entityData; } }
     public CubeCollider Cubecollider { get { return _cubeCollider; } }
     public CubeCollider Triggercollider { get { return _triggerCollider; } }
@@ -54,11 +51,6 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     void OnEnable()
     {
-        if (_meshQuad != null)
-        {
-            _meshQuad.gameObject.SetActive(true);
-        }
-
         if (_cubeCollider != null)
         {
             _cubeCollider.gameObject.SetActive(true);
@@ -72,11 +64,6 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     void OnDisable()
     {
-        if (_meshQuad != null)
-        {
-            _meshQuad.gameObject.SetActive(false);
-        }
-
         if (_cubeCollider != null)
         {
             _cubeCollider.gameObject.SetActive(false);
@@ -100,12 +87,13 @@ public class EntitySpriteGameObject : MonoBehaviour
         if (_entityData == null)
             return;
 
-        if (_meshQuad == null)
+        if (_spriteGraphics == null)
         {
-            //_mesh = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            _meshQuad = PoolManager.Singleton.RequestMeshQuad();
-            _meshQuad.AssignToEntitySpriteGO(this);
+            _spriteGraphics = PoolManager.Singleton.RequestEntitySpriteGraphics();
+            _spriteGraphics.Detach();
         }
+
+        _spriteGraphics.Create(this);
 
         if (_cubeCollider == null)
         {
@@ -119,24 +107,7 @@ public class EntitySpriteGameObject : MonoBehaviour
             _triggerCollider.Attach(this, true);
         }
 
-        //GameManager.Singleton.Gamedata.GetSprite(_entityData.CurrentEntityState.StateTemplate.SpriteUID, out _sprite);
-        UpdateSprite(_entityData.CurrentEntityState.StateTemplate.SpriteUID);
-        UpdateMaterial();
-
-        UpdateMesh();
-        UpdateUVs();
-
         _transform.name = string.Format("{0}-{1}", entityData.EntityName, entityData.EntityUID);
-    }
-
-    public void UpdateSprite(uint spriteUID)
-    {
-        GameManager.Singleton.Gamedata.GetSprite(spriteUID, out _sprite);
-    }
-
-    public void UpdateMaterial()
-    {
-        _material = _meshQuad.Material;
     }
 
     public void UpdateComponents()
@@ -149,44 +120,48 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     public void Reset()
     {
-        _sprite = null;
+        if (_spriteGraphics != null)
+        {
+            _spriteGraphics.Reset();
+        }
+
         _transform = this.gameObject.transform;
         _transform.parent = PoolManager.Singleton._transform;
         _lightComponent = null;
-
-        if (_meshQuad != null)
-        {
-            PoolManager.Singleton.ReturnMeshQuad(_meshQuad);
-            _meshQuad = null;
-        }
 
         this.gameObject.SetActive(false);
     }
 
     public void UpdateMesh()
     {
-        _transform.localScale = new Vector3(_entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.x, _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.y, _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.z);
+        if (_spriteGraphics == null)
+            return;
 
-        _meshQuad.UpdateMaterial(_sprite.SpriteSheet.Material, _sprite.SpriteSheet.MaterialUID);
+        _spriteGraphics.UpdateMesh(_entityData.CurrentEntityState.StateTemplate);
+    }
 
-        if (_sprite.SpriteSheet.Material.HasProperty("_Scale"))
-        {
-            Vector4 scale = _meshQuad.Material.GetVector("_Scale");
-            scale.x = _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.x;
-            scale.y = _entityData.CurrentEntityState.StateTemplate.StateGraphicsSize.y;
+    public void UpdateSprite(uint spriteUID)
+    {
+        if (_spriteGraphics == null)
+            return;
 
-            //_meshQuad.renderer.sharedMaterial.SetVector("_Scale", scale);
-            _meshQuad.Material.SetVector("_Scale", scale);
-        }
+        _spriteGraphics.UpdateSprite(spriteUID);
+    }
+
+    public void UpdateMaterial()
+    {
+        if (_spriteGraphics == null)
+            return;
+
+        _spriteGraphics.UpdateMaterial();
     }
 
     public void UpdateUVs()
     {
-        Vector4 uvs = _sprite.GetUVCoords();
-        Vector2 offset =_sprite.uvOffset;
-        _meshQuad.ModifyUV(0, uvs, offset);
+        if (_spriteGraphics == null)
+            return;
 
-        _meshQuad.UpdateUV();
+        _spriteGraphics.UpdateUVs();
     }
 
     void Update()
@@ -201,7 +176,7 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     public void UpdateShaderColors()
     {
-        if (_material == null)
+        if (_spriteGraphics == null)
             return;
 
         Color32 newColor;
@@ -215,19 +190,17 @@ public class EntitySpriteGameObject : MonoBehaviour
             newColor = _entityData.MapTile.LightColor;
         }
 
-        _material.SetColor("_Color", newColor);
+        _spriteGraphics.UpdateShaderColors(newColor);
     }
 
     public void Highlight()
     {
-        _meshQuad.ModifyColor(0, GameManager.HighlightColor);
-        _meshQuad.UpdateColor();
+        _spriteGraphics.Highlight();
     }
 
     public void DeHighlight()
     {
-        _meshQuad.ModifyColor(0, _meshQuad.LastColor);
-        _meshQuad.UpdateColor();
+        _spriteGraphics.DeHighlight();
     }
 
     public void Detach()

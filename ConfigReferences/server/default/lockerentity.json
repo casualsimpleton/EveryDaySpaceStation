@@ -68,6 +68,13 @@
 		"containerstates" :
 		{
 			"maxvolume" : 40,
+			"haslid" : true,
+			"frontlidspriteuid" : 61,
+			"backlidspriteuid" : 62,
+			"graphicsize": { "x": 0.8, "y": 0.8, "z": 0.8 },
+			"positionoffset" : { "x": 0, "y": 0, "z": 0 },
+			"rotationclosed" : { "x": 0, "y": 0, "z": 0 },
+			"rotationopened" : { "x": 0, "y": 180, "z": 0 }
 		}
 	}]
 }

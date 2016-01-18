@@ -10,6 +10,7 @@
 			"statename": "On",
 			"spriteuid": 201,
 			"graphicsize": { "x": 0.8, "y": 0.15, "z": 0.15 },
+			"collidersize": { "x": 0.8, "y": 0.15, "z": 0.15 },
 			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
@@ -17,6 +18,7 @@
 			"statename": "Off",
 			"spriteuid": 200,
 			"graphicsize": { "x": 0.8, "y": 0.15, "z": 0.15 },
+			"collidersize": { "x": 0.8, "y": 0.15, "z": 0.15 },
 			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
@@ -24,6 +26,7 @@
 			"statename": "Broken",
 			"spriteuid": 202,
 			"graphicsize": { "x": 0.8, "y": 0.15, "z": 0.15 },
+			"collidersize": { "x": 0.8, "y": 0.15, "z": 0.15 },
 			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
@@ -31,6 +34,7 @@
 			"statename": "Burnt Out",
 			"spriteuid": 203,
 			"graphicsize": { "x": 0.8, "y": 0.15, "z": 0.15 },
+			"collidersize": { "x": 0.8, "y": 0.15, "z": 0.15 },
 			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		},
 		{
@@ -38,6 +42,7 @@
 			"statename": "Empty",
 			"spriteuid": 204,
 			"graphicsize": { "x": 0.8, "y": 0.15, "z": 0.15 },
+			"collidersize": { "x": 0.8, "y": 0.15, "z": 0.15 },
 			"positionoffset" : { "x": 0.025, "y": 0.85, "z": 0.02 }
 		}
 		],

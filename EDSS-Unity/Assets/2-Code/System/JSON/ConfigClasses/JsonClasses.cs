@@ -734,7 +734,6 @@ namespace EveryDaySpaceStation.Json
         public EntityContainerStateJson()
             : base("containerstates")
         {
-            Debug.Log("HEY");
         }
 
         /// <summary>
@@ -742,6 +741,48 @@ namespace EveryDaySpaceStation.Json
         /// </summary>
         [JsonProperty("maxvolume")]
         public float ContainerMaxVolume { get; set; }
+
+        /// <summary>
+        /// Whether or not container has a lid
+        /// </summary>
+        [JsonProperty("haslid")]
+        public bool ContainerHasLid { get; set; }
+
+        /// <summary>
+        /// Sprite UID when viewing lid from front (closed) position
+        /// </summary>
+        [JsonProperty("frontlidspriteuid")]
+        public uint ContainerLidFrontSprite { get; set; }
+
+        /// <summary>
+        /// Sprite UID when viewing lid from back/inside
+        /// </summary>
+        [JsonProperty("backlidspriteuid")]
+        public uint ContainerLidBackSprite { get; set; }
+
+        /// <summary>
+        /// Size of the graphic mesh
+        /// </summary>
+        [JsonProperty("graphicsize")]
+        public Vector3 ContainerLidGraphicSize { get; set; }
+
+        /// <summary>
+        /// Local position offset for container lid
+        /// </summary>
+        [JsonProperty("positionoffset")]
+        public Vector3 ContainerLidPositionOffset { get; set; }
+
+        /// <summary>
+        /// Local rotation of lid when closed
+        /// </summary>
+        [JsonProperty("rotationaclosed")]
+        public Vector3 ContainerLidRotationClosed { get; set; }
+
+        /// <summary>
+        /// Local rotation of lid when opened
+        /// </summary>
+        [JsonProperty("rotationopened")]
+        public Vector3 ContainerLidRotationOpened { get; set; }
     }
     #endregion
 

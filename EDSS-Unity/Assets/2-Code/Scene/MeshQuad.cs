@@ -28,7 +28,7 @@ public class MeshQuad : MonoBehaviour
 #endif
 
     public Transform _transform { get; protected set; }
-    protected EntitySpriteGameObject _entitySpriteGO;
+    protected EntitySpriteGraphics _entitySpriteGraphics;
     public uint _MaterialUID { get; set; }
 
     [SerializeField]
@@ -66,7 +66,7 @@ public class MeshQuad : MonoBehaviour
     #endregion
 
     #region Gets/Sets
-    public EntitySpriteGameObject EntitySpriteGO { get { return _entitySpriteGO; } }
+    public EntitySpriteGraphics EntitySpriteGO { get { return _entitySpriteGraphics; } }
     public Material Material { get { return _material; } }
     public MeshRenderer Renderer { get { return _meshRenderer; } }
     public Color32 LastColor { get { return _lastColor; } }
@@ -77,7 +77,7 @@ public class MeshQuad : MonoBehaviour
         _transform = this.gameObject.transform;
         _transform.parent = PoolManager.Singleton._transform;
 
-        _entitySpriteGO = null;
+        _entitySpriteGraphics = null;
 
         this.gameObject.SetActive(false);
     }
@@ -144,15 +144,15 @@ public class MeshQuad : MonoBehaviour
         _mesh.RecalculateBounds();
     }
 
-    public virtual void AssignToEntitySpriteGO(EntitySpriteGameObject esgo)
+    public virtual void AssignToEntitySpriteGraphics(EntitySpriteGraphics esg)
     {
-        _transform.parent = esgo._transform;
+        _transform.parent = esg._transform;
         _transform.localPosition = Vector3.zero;
-        _entitySpriteGO = esgo;
+        _entitySpriteGraphics = esg;
 
-        AssignMaterial(_entitySpriteGO.Sprite);
+        AssignMaterial(_entitySpriteGraphics.Sprite);
 
-        this.gameObject.SetActive(esgo.gameObject.activeSelf);
+        this.gameObject.SetActive(esg.gameObject.activeSelf);
     }
 
     public virtual void ModifyUV(int uvIndex, Vector4 uv, Vector2 uvOffset)
@@ -196,9 +196,9 @@ public class MeshQuad : MonoBehaviour
         _meshRenderer.material = _material = mat;
         _MaterialUID = MatUID;
 
-        if (_entitySpriteGO != null)
+        if (_entitySpriteGraphics != null)
         {
-            _entitySpriteGO.UpdateMaterial();
+            _entitySpriteGraphics.UpdateMaterial();
         }
     }
 

@@ -45,7 +45,8 @@ public class PoolManager : MonoBehaviour
 
     protected PoolSceneChunkRenderer _sceneChunkRendererPool;
     protected PoolSceneChunkScaffoldRenderer _sceneChunkScaffoldRendererPool;
-    protected PoolEntitySpriteGameObject _entitySpritesPool;
+    protected PoolEntitySpriteGameObject _entitySpritesGameObjectPool;
+    protected PoolEntitySpriteGraphics _entitySpritesGraphicPool;
     protected PoolMeshQuad _meshQuadPool;
     protected PoolCubeCollider _cubeColliderPool;
     protected PoolBoundsDrawing _boundsDrawerPool;
@@ -75,15 +76,27 @@ public class PoolManager : MonoBehaviour
     }
     #endregion
 
-    #region Entity Sprites GOs
+    #region Entity GOs
     public EntitySpriteGameObject RequestEntitySpriteGameObject()
     {
-        return _entitySpritesPool.RequestObject();
+        return _entitySpritesGameObjectPool.RequestObject();
     }
 
     public void ReturnEntitySpriteGameObject(EntitySpriteGameObject es)
     {
-        _entitySpritesPool.ReturnObject(es);
+        _entitySpritesGameObjectPool.ReturnObject(es);
+    }
+    #endregion
+
+    #region Entity Sprites GOs
+    public EntitySpriteGraphics RequestEntitySpriteGraphics()
+    {
+        return _entitySpritesGraphicPool.RequestObject();
+    }
+
+    public void ReturnEntitySpriteGraphic(EntitySpriteGraphics es)
+    {
+        _entitySpritesGraphicPool.ReturnObject(es);
     }
     #endregion
 
@@ -132,8 +145,11 @@ public class PoolManager : MonoBehaviour
         _cubeColliderPool = new PoolCubeCollider();
         _cubeColliderPool.Init(10, Vector3.one, 0.1f, 2, 0.1f);
         
-        _entitySpritesPool = new PoolEntitySpriteGameObject();
-        _entitySpritesPool.Init(10, 0.1f, 2, 0.1f);
+        _entitySpritesGameObjectPool = new PoolEntitySpriteGameObject();
+        _entitySpritesGameObjectPool.Init(10, 0.1f, 2, 0.1f);
+
+        _entitySpritesGraphicPool = new PoolEntitySpriteGraphics();
+        _entitySpritesGraphicPool.Init(10, 0.1f, 2, 0.1f);
 
         _boundsDrawerPool = new PoolBoundsDrawing();
         _boundsDrawerPool.Init(10, 0.1f, 2, 0.1f);
@@ -159,7 +175,8 @@ public class PoolManager : MonoBehaviour
     {
         _sceneChunkRendererPool.Maintenance();
         _sceneChunkScaffoldRendererPool.Maintenance();
-        _entitySpritesPool.Maintenance();
+        _entitySpritesGameObjectPool.Maintenance();
+        _entitySpritesGraphicPool.Maintenance();
         _meshQuadPool.Maintenance();
         _cubeColliderPool.Maintenance();
         _boundsDrawerPool.Maintenance();
@@ -171,7 +188,8 @@ public class PoolManager : MonoBehaviour
         {
             _sceneChunkRendererPool.Dispose();
             _sceneChunkScaffoldRendererPool.Dispose();
-            _entitySpritesPool.Dispose();
+            _entitySpritesGameObjectPool.Dispose();
+            _entitySpritesGraphicPool.Dispose();
             _meshQuadPool.Dispose();
             _cubeColliderPool.Dispose();
             _boundsDrawerPool.Dispose();

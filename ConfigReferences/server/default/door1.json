@@ -10,259 +10,259 @@
 			"statename": "DoorUnpoweredClosed",
 			"spriteuid": 20,
 			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 1,
 			"statename": "DoorUnpoweredMoving1",
 			"spriteuid": 21,
 			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 2,
 			"statename": "DoorUnpoweredMoving2",
 			"spriteuid": 22,
 			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 3,
 			"statename": "DoorUnpoweredMoving3",
 			"spriteuid": 23,
 			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 4,
 			"statename": "DoorUnpoweredMoving4",
 			"spriteuid": 24,
 			"graphicsize": { "x": 1, "y": 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 5,
 			"statename": "DoorUnpoweredOpen",
 			"spriteuid": 25,
 			"graphicsize": { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid": 6,
 			"statename": "DoorUnpoweredWelded",
 			"spriteuid": 26,
 			"graphicsize": { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x": 1, "y": 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 7,
 			"statename" : "DoorPoweredClosed",
 			"spriteuid" : 27,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 8,
 			"statename" : "DoorPoweredMoving1",
 			"spriteuid" : 28,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 9,
 			"statename" : "DoorPoweredMoving2",
 			"spriteuid" : 29,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 10,
 			"statename" : "DoorPoweredMoving3",
 			"spriteuid" : 30,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 11,
 			"statename" : "DoorPoweredMoving4",
 			"spriteuid" : 31,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 12,
 			"statename" : "DoorPoweredOpen",
 			"spriteuid" : 32,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 13,
 			"statename" : "DoorPoweredWelded",
 			"spriteuid" : 33,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 14,
 			"statename" : "DoorPoweredLocked",
 			"spriteuid" : 34,
 			"graphicsize" : { "x" : 1, "y" : 1, "z": 0.15 },
-			"collidersize": { "x" : 1, "y" : 1, "z": 1 }
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 15,
 			"statename" : "DoorPoweredLockedWelded",
 			"spriteuid" : 35,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 16,
 			"statename" : "DoorUnpoweredAccessedClosed",
 			"spriteuid" : 36,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 17,
 			"statename" : "DoorUnpoweredAccessedOpen1",
 			"spriteuid" : 37,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 18,
 			"statename" : "DoorUnpoweredAccessedOpen2",
 			"spriteuid" : 38,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 19,
 			"statename" : "DoorUnpoweredAccessedOpen3",
 			"spriteuid" : 39,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 20,
 			"statename" : "DoorUnpoweredAccessedOpen4",
 			"spriteuid" : 40,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 21,
 			"statename" : "DoorUnpoweredAccessedOpen5",
 			"spriteuid" : 41,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 22,
 			"statename" : "DoorUnpoweredAccessedWelded",
 			"spriteuid" : 42,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 23,
 			"statename" : "DoorMalfunction1",
 			"spriteuid" : 43,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 24,
 			"statename" : "DoorMalfunction2",
 			"spriteuid" : 44,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 25,
 			"statename" : "DoorMalfunction3",
 			"spriteuid" : 45,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 26,
 			"statename" : "DoorMalfunction4",
 			"spriteuid" : 46,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 27,
 			"statename" : "DoorMalfunction5",
 			"spriteuid" : 47,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 28,
 			"statename" : "DoorMalfunction6",
 			"spriteuid" : 48,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 29,
 			"statename" : "DoorMalfunctionWelded",
 			"spriteuid" : 49,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 30,
 			"statename" : "DoorPoweredAccessClosed",
 			"spriteuid" : 50,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 31,
 			"statename" : "DoorPoweredAccessOpen1",
 			"spriteuid" : 51,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 32,
 			"statename" : "DoorPoweredAccessOpen2",
 			"spriteuid" : 52,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 33,
 			"statename" : "DoorPoweredAccessOpen3",
 			"spriteuid" : 53,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 34,
 			"statename" : "DoorPoweredAccessOpen4",
 			"spriteuid" : 54,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 35,
 			"statename" : "DoorPoweredAccessOpen5",
 			"spriteuid" : 55,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		},
 		{
 			"stateuid" : 36,
 			"statename" : "DoorPoweredAccessWelded",
 			"spriteuid" : 56,
 			"graphicsize" : { "x" : 1, "y" : 1, "z" : 0.15},
-			"collidersize" : { "x" : 1, "y" : 1, "z" : 1}
+			"collidersize": { "x": 1, "y": 1, "z": 0.15 }
 		}
 		],
 		"doorstates" : 

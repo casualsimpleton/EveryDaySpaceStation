@@ -104,7 +104,7 @@ public class EntityBuildManager : MonoBehaviour
         if (entity.Sprite == null)
         {
             EntitySpriteGameObject esgo = PoolManager.Singleton.RequestEntitySpriteGameObject();
-            entity.AssignEntitySprite(esgo);
+            entity.AssignEntityGameObject(esgo);
         }
 
         entity.Sprite.Create(entity);

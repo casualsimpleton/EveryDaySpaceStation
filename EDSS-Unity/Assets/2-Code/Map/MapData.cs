@@ -329,7 +329,7 @@ public sealed class MapData
             _associatedMapTile = mapTile;
         }
 
-        public void AssignEntitySprite(EntitySpriteGameObject sprite)
+        public void AssignEntityGameObject(EntitySpriteGameObject sprite)
         {
             _entitySprite = sprite;
         }

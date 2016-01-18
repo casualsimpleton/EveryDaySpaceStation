@@ -35,6 +35,8 @@ public class ContainerComponent : MonoBehaviour
     protected float _timeWhenLastConditionChange;
     [SerializeField]
     protected bool _isActivated;
+    [SerializeField]
+    protected bool _hasLid;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public ContainerOpenState OpenState { get { return _containerOpenState; } }
@@ -46,6 +48,13 @@ public class ContainerComponent : MonoBehaviour
     {
         _entitySpriteObject = entitySpriteGo;
         UpdateContainerTemplate(template);
+
+        _hasLid = template.HasLid;
+
+        if (_hasLid)
+        {
+
+        }
     }
 
     public void UpdateContainerTemplate(GameData.EntityDataTemplate.ContainerStateTemplate newTemplate)

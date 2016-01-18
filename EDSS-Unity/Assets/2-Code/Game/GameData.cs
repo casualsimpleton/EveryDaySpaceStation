@@ -200,11 +200,28 @@ namespace EveryDaySpaceStation
             {
                 public EntityDataTemplate ReferencedEntityDataTemplate { get; private set; }
                 public float MaxVolume { get; private set; }
+                public bool HasLid { get; private set; }
+                public uint LidFrontSpriteUID { get; private set; }
+                public uint LidBackSpriteUID { get; private set; }
+                public Vector3 LidGraphicSize { get; private set; }
+                public Vector3 LidPositionOffset { get; private set; }
+                public Vector3 LidRotationClosed { get; private set; }
+                public Vector3 LidRotationOpened { get; private set; }
 
-                public ContainerStateTemplate(EntityDataTemplate parentTemplate, float maxVolume)
+                public ContainerStateTemplate(EntityDataTemplate parentTemplate, float maxVolume, 
+                    Vector3 lidGraphicSize, Vector3 lidPositionOffset, Vector3 lidRotationClosed, Vector3 lidRotationOpened,
+                    bool hasLid = false, uint lidFrontSpriteUID = 0, uint lidBackSpriteUID = 0)
                 {
                     ReferencedEntityDataTemplate = parentTemplate;
                     MaxVolume = maxVolume;
+
+                    HasLid = hasLid;
+                    LidFrontSpriteUID = lidFrontSpriteUID;
+                    LidBackSpriteUID = lidBackSpriteUID;
+                    LidGraphicSize = lidGraphicSize;
+                    LidPositionOffset = lidPositionOffset;
+                    LidRotationClosed = lidRotationClosed;
+                    LidRotationOpened = lidRotationOpened;
                 }
 
                 public void Cleanup()
@@ -905,7 +922,9 @@ namespace EveryDaySpaceStation
                     Debug.LogError(string.Format("Attempting to set another container state for template with one already. Template UID: {0} Name: {1}", UID, Name));
                 }
 
-                ContainerState = new ContainerStateTemplate(this, containerState.ContainerMaxVolume);
+                ContainerState = new ContainerStateTemplate(this, containerState.ContainerMaxVolume, containerState.ContainerLidGraphicSize, 
+                    containerState.ContainerLidPositionOffset, containerState.ContainerLidRotationClosed, containerState.ContainerLidRotationOpened,
+                    containerState.ContainerHasLid, containerState.ContainerLidFrontSprite, containerState.ContainerLidBackSprite);
             }
 
             public void Cleanup()
