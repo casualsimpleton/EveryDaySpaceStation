@@ -105,17 +105,28 @@ public class EntitySpriteGraphics : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    public void UpdateMesh(GameData.EntityDataTemplate.StateTemplate stateTemplate)
+    public void UpdateMesh(GameData.EntityDataTemplate.StateTemplate stateTemplate, bool updateMaterial = true, bool updateScale = true)
     {
         _transform.localScale = new Vector3(stateTemplate.StateGraphicsSize.x, stateTemplate.StateGraphicsSize.y, stateTemplate.StateGraphicsSize.z);
 
-        _meshQuad.UpdateMaterial(_sprite.SpriteSheet.Material, _sprite.SpriteSheet.MaterialUID);
+        if (updateMaterial)
+        {
+            _meshQuad.UpdateMaterial(_sprite.SpriteSheet.Material, _sprite.SpriteSheet.MaterialUID);
+        }
 
+        if (updateScale)
+        {
+            UpdateScale(stateTemplate.StateGraphicsSize);
+        }
+    }
+
+    public void UpdateScale(Vector3 newScale)
+    {
         if (_sprite.SpriteSheet.Material.HasProperty("_Scale"))
         {
             Vector4 scale = _meshQuad.Material.GetVector("_Scale");
-            scale.x = stateTemplate.StateGraphicsSize.x;
-            scale.y = stateTemplate.StateGraphicsSize.y;
+            scale.x = newScale.x;
+            scale.y = newScale.y;
 
             _meshQuad.Material.SetVector("_Scale", scale);
         }

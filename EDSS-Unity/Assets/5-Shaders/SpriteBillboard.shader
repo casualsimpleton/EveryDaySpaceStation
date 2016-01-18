@@ -6,6 +6,7 @@ Shader "EDSS/SpriteBillboard" {
 	  _Color ("Color", Color) = (0.5,0.5,0.5,1)
 	  _Scale ("Scale", Vector) = (0.5, 0.5, 0.5)
 	  _ExtraColor("Extra Color", Color) = (0.5,0.5,0.5,1)
+	  //_ZDepth ("Z Depth", float) = 0
    }
    SubShader {
       Pass {   
@@ -37,12 +38,13 @@ Shader "EDSS/SpriteBillboard" {
 	fixed4 _Color;
 	fixed4 _ExtraColor;
 	float3 _Scale = float3(1.0, 1.0, 1.0);
+	//float _ZDepth;
 
 	v2f vert (appdata v)
 	{
 		v2f o;
 		//o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-		o.pos = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_MV, float4(0.0, 0.0, 0.0, 1.0))
+		o.pos = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_MV, float4(0.0, 0.0, 0, 1.0))
 			- float4(v.vertex.x * -_Scale.x, v.vertex.y * -_Scale.y, 0.0, 0.0));
 		o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 		o.color = v.color;

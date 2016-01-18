@@ -26,6 +26,7 @@ public class ContainerComponent : MonoBehaviour
         Opened, //Container is open
     }
 
+    [SerializeField]
     protected EntitySpriteGameObject _entitySpriteObject;
     [SerializeField]
     protected GameData.EntityDataTemplate.ContainerStateTemplate _currentContainerTemplate;
@@ -37,6 +38,8 @@ public class ContainerComponent : MonoBehaviour
     protected bool _isActivated;
     [SerializeField]
     protected bool _hasLid;
+    [SerializeField]
+    protected EntitySpriteGraphics _lidGraphics;
 
     public EntitySpriteGameObject EntitySpriteObject { get { return _entitySpriteObject; } }
     public ContainerOpenState OpenState { get { return _containerOpenState; } }
@@ -53,7 +56,19 @@ public class ContainerComponent : MonoBehaviour
 
         if (_hasLid)
         {
+            _lidGraphics = PoolManager.Singleton.RequestEntitySpriteGraphics();
+            _lidGraphics.Detach();
 
+            _lidGraphics.AttachToEntitySpriteGO(_entitySpriteObject);
+            _lidGraphics.Create(_entitySpriteObject);
+
+            _entitySpriteObject.AddAdditionalSprite(_lidGraphics);           
+
+            _lidGraphics.UpdateSprite(_currentContainerTemplate.LidFrontSpriteUID);
+            _lidGraphics.UpdateMesh(_entitySpriteObject.EntityData.CurrentEntityState.StateTemplate, false);
+            _lidGraphics.UpdateUVs();
+
+            _lidGraphics.UpdateScale(_currentContainerTemplate.LidGraphicSize);
         }
     }
 

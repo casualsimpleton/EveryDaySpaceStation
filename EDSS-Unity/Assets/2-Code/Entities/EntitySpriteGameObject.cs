@@ -23,6 +23,7 @@ public class EntitySpriteGameObject : MonoBehaviour
     #region Vars
     public Transform _transform { get; private set; }
     protected EntitySpriteGraphics _spriteGraphics;
+    protected List<EntitySpriteGraphics> _additionalSpriteGraphics;
     protected float _updateTimer;
     protected float _updateTimerDelta;
     protected MapData.EntityData _entityData { get; private set; }
@@ -47,6 +48,16 @@ public class EntitySpriteGameObject : MonoBehaviour
     void Start()
     {
         _transform = this.transform;
+    }
+
+    public void AddAdditionalSprite(EntitySpriteGraphics newESG)
+    {
+        _additionalSpriteGraphics.Add(newESG);
+    }
+
+    public void RemoveAdditionalSprite(EntitySpriteGraphics esg)
+    {
+        _additionalSpriteGraphics.Remove(esg);
     }
 
     void OnEnable()
@@ -77,6 +88,11 @@ public class EntitySpriteGameObject : MonoBehaviour
 
     public void Create(MapData.EntityData entityData)
     {
+        if (_additionalSpriteGraphics == null)
+        {
+            _additionalSpriteGraphics = new List<EntitySpriteGraphics>();
+        }
+
         if (_transform == null)
         {
             _transform = this.transform;
@@ -123,6 +139,11 @@ public class EntitySpriteGameObject : MonoBehaviour
         if (_spriteGraphics != null)
         {
             _spriteGraphics.Reset();
+        }
+
+        for (int i = 0; i < _additionalSpriteGraphics.Count; i++)
+        {
+            _additionalSpriteGraphics[i].Reset();
         }
 
         _transform = this.gameObject.transform;
@@ -196,11 +217,21 @@ public class EntitySpriteGameObject : MonoBehaviour
     public void Highlight()
     {
         _spriteGraphics.Highlight();
+
+        for (int i = 0; i < _additionalSpriteGraphics.Count; i++)
+        {
+            _additionalSpriteGraphics[i].Highlight();
+        }
     }
 
     public void DeHighlight()
     {
         _spriteGraphics.DeHighlight();
+
+        for (int i = 0; i < _additionalSpriteGraphics.Count; i++)
+        {
+            _additionalSpriteGraphics[i].DeHighlight();
+        }
     }
 
     public void Detach()
