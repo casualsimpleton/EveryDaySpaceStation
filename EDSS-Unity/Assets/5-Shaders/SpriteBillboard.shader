@@ -4,7 +4,7 @@ Shader "EDSS/SpriteBillboard" {
    Properties {
       _MainTex ("Texture Image", 2D) = "white" {}
 	  _Color ("Color", Color) = (0.5,0.5,0.5,1)
-	  _Scale ("Scale", Vector) = (0.5, 0.5, 0.5)
+	  _Scale ("Scale", Vector) = (1, 1, 1)
 	  _ExtraColor("Extra Color", Color) = (0.5,0.5,0.5,1)
 	  //_ZDepth ("Z Depth", float) = 0
    }

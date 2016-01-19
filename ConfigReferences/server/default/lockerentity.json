@@ -71,10 +71,12 @@
 			"haslid" : true,
 			"frontlidspriteuid" : 61,
 			"backlidspriteuid" : 62,
-			"graphicsize": { "x": 0.55, "y": 0.9, "z": 1 },
-			"positionoffset" : { "x": 0, "y": 0.05, "z": 0 },
+			"graphicsize": { "x": 0.4, "y": 0.84, "z": 1 },
+			"positionoffset" : { "x": 0.025, "y": 0.05, "z": 0.05 },
 			"rotationclosed" : { "x": 0, "y": 0, "z": 0 },
-			"rotationopened" : { "x": 0, "y": 180, "z": 0 }
+			"rotationopened" : { "x": 0, "y": 180, "z": 0 },
+			"containerfrontlidstates" : [ 0 ],
+			"containerbacklidstates" : [ 2 ]
 		}
 	}]
 }

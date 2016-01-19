@@ -23,6 +23,8 @@ public class MultiAngleComponent : MonoBehaviour
 {
     protected EntitySpriteGameObject _entitySpriteObject;
     protected GameData.EntityDataTemplate.MultiAngleStateTemplate _currentMultiAngleTemplate;
+    protected float _prevAng;
+    protected float _prevAngDir;
     protected float _updateTimer;
     protected float _updateTimerDelta = 1f / 15f;
 
@@ -31,16 +33,14 @@ public class MultiAngleComponent : MonoBehaviour
     public void Create(EntitySpriteGameObject entitySpriteGO, GameData.EntityDataTemplate.MultiAngleStateTemplate initialMultiAngleTemplate)
     {
         _entitySpriteObject = entitySpriteGO;
-        UpdateMultiAngleTemplate(initialMultiAngleTemplate);
+        UpdateMultiAngleTemplate(initialMultiAngleTemplate, 0, 0f, 0f);
     }
 
-    public void UpdateMultiAngleTemplate(GameData.EntityDataTemplate.MultiAngleStateTemplate newState)
+    public void UpdateMultiAngleTemplate(GameData.EntityDataTemplate.MultiAngleStateTemplate newState, ushort entityStateUID, float angle, float angleDir)
     {
         _currentMultiAngleTemplate = newState;
 
-        _entitySpriteObject.UpdateSprite(_currentMultiAngleTemplate.SpriteUID);
-        _entitySpriteObject.UpdateMesh();
-        _entitySpriteObject.UpdateUVs();
+        _entitySpriteObject.UpdateMultiAngle(_currentMultiAngleTemplate.SpriteUID, entityStateUID, angle, angleDir);
     }
 
     void Update()
@@ -65,9 +65,19 @@ public class MultiAngleComponent : MonoBehaviour
             angMod = ang + 360f;
         }
 
+        //Same angle, so skip
+        if (_prevAng == ang && _prevAngDir == angDir)
+        {
+            return;
+        }
+
+        _prevAng = ang;
+        _prevAngDir = angDir;
+
         //Debug.Log("Ang " + ang + " andDir " + angDir + " angMod " + angMod);
 
         GameData.EntityDataTemplate.MultiAngleStateTemplate template = null;
+        ushort stateUID = 0;
         foreach (KeyValuePair<ushort, GameData.EntityDataTemplate.MultiAngleStateTemplate> t in _entitySpriteObject.EntityData.Template.MultiAngleStates)
         {
             float minC1 = t.Value.AngleMinC1;
@@ -84,6 +94,7 @@ public class MultiAngleComponent : MonoBehaviour
                     //Debug.Log("T1 " + t.Key + " Ang " + ang + " andDir " + angDir + " angMod " + angMod);
                     //key = t.Key;
                     template = t.Value;
+                    stateUID = t.Key;
                     break;
                 }
                 else if (angMod > minC1 && angMod < maxC1)
@@ -91,6 +102,7 @@ public class MultiAngleComponent : MonoBehaviour
                     //Debug.Log("T4 " + t.Key + " Ang " + ang + " andDir " + angDir + " angMod " + angMod);
                     //key = t.Key;
                     template = t.Value;
+                    stateUID = t.Key;
                     break;
                 }
             }
@@ -101,6 +113,7 @@ public class MultiAngleComponent : MonoBehaviour
                     //Debug.Log("T2 " + t.Key + " Ang " + ang + " andDir " + angDir + " angMod " + angMod);
                     //key = t.Key;
                     template = t.Value;
+                    stateUID = t.Key;
                     break;
                 }
                 else if (angMod > minC1 && angMod < maxC1)
@@ -108,11 +121,12 @@ public class MultiAngleComponent : MonoBehaviour
                     //Debug.Log("T3 " + t.Key + " Ang " + ang + " andDir " + angDir + " angMod " + angMod);
                     //key = t.Key;
                     template = t.Value;
+                    stateUID = t.Key;
                     break;
                 }
             }
         }
-
-        UpdateMultiAngleTemplate(template);
+                
+        UpdateMultiAngleTemplate(template, stateUID, ang, angDir);
     }
 }

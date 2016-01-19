@@ -185,6 +185,18 @@ public class EntitySpriteGameObject : MonoBehaviour
         _spriteGraphics.UpdateUVs();
     }
 
+    public void UpdateMultiAngle(uint newSpriteUID, ushort containerStateUID, float angle, float angleDir)
+    {
+        UpdateSprite(newSpriteUID);
+        UpdateMesh();
+        UpdateUVs();
+
+        if (_containerComponent != null)
+        {
+            _containerComponent.UpdateMultiAngle(containerStateUID, angle, angleDir);
+        }
+    }
+
     void Update()
     {
         if (_updateTimer > Time.time)

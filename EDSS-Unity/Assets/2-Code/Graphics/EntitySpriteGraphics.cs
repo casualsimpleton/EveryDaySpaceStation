@@ -107,8 +107,6 @@ public class EntitySpriteGraphics : MonoBehaviour
 
     public void UpdateMesh(GameData.EntityDataTemplate.StateTemplate stateTemplate, bool updateMaterial = true, bool updateScale = true)
     {
-        _transform.localScale = new Vector3(stateTemplate.StateGraphicsSize.x, stateTemplate.StateGraphicsSize.y, stateTemplate.StateGraphicsSize.z);
-
         if (updateMaterial)
         {
             _meshQuad.UpdateMaterial(_sprite.SpriteSheet.Material, _sprite.SpriteSheet.MaterialUID);
@@ -122,14 +120,21 @@ public class EntitySpriteGraphics : MonoBehaviour
 
     public void UpdateScale(Vector3 newScale)
     {
+        _transform.localScale = new Vector3(newScale.x, newScale.y, newScale.z);
+        
         if (_sprite.SpriteSheet.Material.HasProperty("_Scale"))
         {
             Vector4 scale = _meshQuad.Material.GetVector("_Scale");
             scale.x = newScale.x;
             scale.y = newScale.y;
 
-            _meshQuad.Material.SetVector("_Scale", scale);
+            //_meshQuad.Material.SetVector("_Scale", scale);
         }
+    }
+
+    public void UpdateOffset(Vector3 offset)
+    {
+        _transform.localPosition = offset;
     }
 
     public void UpdateUVs()
@@ -174,5 +179,21 @@ public class EntitySpriteGraphics : MonoBehaviour
     {
         _transform.parent = null;
         this.gameObject.SetActive(true);
+    }
+
+    public void Disable()
+    {
+        if (this.gameObject.activeSelf)
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+
+    public void Enable()
+    {
+        if (!this.gameObject.activeSelf)
+        {
+            this.gameObject.SetActive(true);
+        }
     }
 }

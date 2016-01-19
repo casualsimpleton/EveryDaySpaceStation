@@ -783,6 +783,19 @@ namespace EveryDaySpaceStation.Json
         /// </summary>
         [JsonProperty("rotationopened")]
         public Vector3 ContainerLidRotationOpened { get; set; }
+
+        /// <summary>
+        /// The container states where the front of the lid is visible
+        /// </summary>
+        [JsonProperty("containerfrontlidstates")]
+        public ushort[] ContainerLidFrontStates { get; set; }
+
+        /// <summary>
+        /// The container states where the back of the lid is visible
+        /// </summary>
+        [JsonProperty("containerbacklidstates")]
+        public ushort[] ContainerLidBackStates { get; set; }
+
     }
     #endregion
 

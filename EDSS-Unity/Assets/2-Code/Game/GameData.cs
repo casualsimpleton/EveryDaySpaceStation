@@ -203,6 +203,8 @@ namespace EveryDaySpaceStation
                 public bool HasLid { get; private set; }
                 public uint LidFrontSpriteUID { get; private set; }
                 public uint LidBackSpriteUID { get; private set; }
+                public ushort[] LidContainerFrontStates { get; private set; }
+                public ushort[] LidContainerBackStates { get; private set; }
                 public Vector3 LidGraphicSize { get; private set; }
                 public Vector3 LidPositionOffset { get; private set; }
                 public Vector3 LidRotationClosed { get; private set; }
@@ -210,6 +212,7 @@ namespace EveryDaySpaceStation
 
                 public ContainerStateTemplate(EntityDataTemplate parentTemplate, float maxVolume, 
                     Vector3 lidGraphicSize, Vector3 lidPositionOffset, Vector3 lidRotationClosed, Vector3 lidRotationOpened,
+                    ushort[] lidContainerFrontStates, ushort[] lidContainerBackStates,
                     bool hasLid = false, uint lidFrontSpriteUID = 0, uint lidBackSpriteUID = 0)
                 {
                     ReferencedEntityDataTemplate = parentTemplate;
@@ -222,6 +225,8 @@ namespace EveryDaySpaceStation
                     LidPositionOffset = lidPositionOffset;
                     LidRotationClosed = lidRotationClosed;
                     LidRotationOpened = lidRotationOpened;
+                    LidContainerFrontStates = lidContainerFrontStates;
+                    LidContainerBackStates = lidContainerBackStates;
                 }
 
                 public void Cleanup()
@@ -924,6 +929,7 @@ namespace EveryDaySpaceStation
 
                 ContainerState = new ContainerStateTemplate(this, containerState.ContainerMaxVolume, containerState.ContainerLidGraphicSize, 
                     containerState.ContainerLidPositionOffset, containerState.ContainerLidRotationClosed, containerState.ContainerLidRotationOpened,
+                    containerState.ContainerLidFrontStates, containerState.ContainerLidBackStates,
                     containerState.ContainerHasLid, containerState.ContainerLidFrontSprite, containerState.ContainerLidBackSprite);
             }
 

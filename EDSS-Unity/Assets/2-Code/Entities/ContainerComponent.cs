@@ -69,6 +69,7 @@ public class ContainerComponent : MonoBehaviour
             _lidGraphics.UpdateUVs();
 
             _lidGraphics.UpdateScale(_currentContainerTemplate.LidGraphicSize);
+            _lidGraphics.UpdateOffset(_currentContainerTemplate.LidPositionOffset);
         }
     }
 
@@ -82,5 +83,61 @@ public class ContainerComponent : MonoBehaviour
         _isActivated = true;
 
         //_currentCondition.CheckConditionTransitions(this);
+    }
+
+    public void UpdateMultiAngle(ushort containerStateUID, float angle, float angleDir)
+    {
+        //The lid is dependent on the container. We assume the config file is correct
+        //Based on the containerStateUID, we'll determine what version of the lid (if any) to display
+        
+        bool displayFront = false;
+        bool displayBack = false;
+
+        for (int i = 0; i < _currentContainerTemplate.LidContainerFrontStates.Length; i++)
+        {
+            if (_currentContainerTemplate.LidContainerFrontStates[i] == containerStateUID)
+            {
+                displayFront = true;
+                break;
+            }
+        }
+
+        if (displayFront)
+        {
+            //Display the front version of the lid
+            _lidGraphics.Enable();
+            _lidGraphics.UpdateSprite(_currentContainerTemplate.LidFrontSpriteUID);
+            _lidGraphics.UpdateMesh(_entitySpriteObject.EntityData.CurrentEntityState.StateTemplate, false);
+            _lidGraphics.UpdateUVs();
+
+            _lidGraphics.UpdateScale(_currentContainerTemplate.LidGraphicSize);
+            _lidGraphics.UpdateOffset(_currentContainerTemplate.LidPositionOffset);
+            return;
+        }
+
+        for (int i = 0; i < _currentContainerTemplate.LidContainerBackStates.Length; i++)
+        {
+            if (_currentContainerTemplate.LidContainerBackStates[i] == containerStateUID)
+            {
+                displayBack = true;
+                break;
+            }
+        }
+
+        if (displayBack)
+        {
+            //Display the front version of the lid
+            _lidGraphics.Enable();
+            _lidGraphics.UpdateSprite(_currentContainerTemplate.LidBackSpriteUID);
+            _lidGraphics.UpdateMesh(_entitySpriteObject.EntityData.CurrentEntityState.StateTemplate, false);
+            _lidGraphics.UpdateUVs();
+
+            _lidGraphics.UpdateScale(_currentContainerTemplate.LidGraphicSize);
+            _lidGraphics.UpdateOffset(_currentContainerTemplate.LidPositionOffset);
+            return;
+        }
+
+        //No state present, so disable it
+        _lidGraphics.Disable();
     }
 }
