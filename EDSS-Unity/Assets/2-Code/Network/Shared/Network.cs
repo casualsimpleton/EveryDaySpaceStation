@@ -34,7 +34,7 @@ namespace EveryDaySpaceStation.Network
         UnknownError //Unknown problem, like a timeout or network failure
     }
 
-    internal enum NetMessageType : byte
+    public enum NetMessageType : byte
     {
         RESERVED = 0,
 
@@ -47,10 +47,10 @@ namespace EveryDaySpaceStation.Network
     #endregion
 
     #region Delegates
-    public delegate void OnTcpClientConnect();
-    public delegate void OnTcpClientDataReceived();
+    public delegate void OnTcpClientConnect(NetGameClient newConnection);
+    public delegate void OnTcpClientDataReceived(NetMessage message);
     public delegate void OnTcpClientDataTransmit();
-    public delegate void OnTcpClientDisconnect();
+    public delegate void OnTcpClientDisconnect(IPEndPoint remoteEP, NetworkConnectionStatus connectionStatus);
 
     public delegate void OnTcpServerClientConnect();
     public delegate void OnTcpServerDataReceived();
