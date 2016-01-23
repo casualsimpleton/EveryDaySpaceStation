@@ -130,7 +130,15 @@ namespace EveryDaySpaceStation.Network
 
         public void Close()
         {
+            _isActive = false;
+            Debug.Log("Closing netclient");
+            //_netGameClient.Close(false);
 
+            if (_tcpClient != null && _tcpClient.Client != null)
+            {
+                _tcpClient.Client.Shutdown(SocketShutdown.Both);
+                _tcpClient.Client.Close();
+            }
         }
 
         private void ConnectionStarted(System.IAsyncResult iar)

@@ -150,4 +150,36 @@ namespace EveryDaySpaceStation.Network
         }
     }
     #endregion
+
+    public static class NetworkPool
+    {
+        static NetByteBufferPool _msgServerHeaderPool;
+        static NetByteBufferPool _msgClientHeaderPool;
+
+        static public void Init()
+        {
+            _msgServerHeaderPool = new NetByteBufferPool();
+            _msgClientHeaderPool = new NetByteBufferPool();
+        }
+
+        static public NetByteBuffer RequestServerIncBuffer(int desiredLength)
+        {
+            return _msgServerHeaderPool.RequestObject(desiredLength);
+        }
+
+        static public NetByteBuffer RequestClientIncBuffer(int desiredLength)
+        {
+            return _msgClientHeaderPool.RequestObject(desiredLength);
+        }
+
+        static public void ReturnServerBuffer(NetByteBuffer item)
+        {
+            _msgServerHeaderPool.ReturnObject(item);
+        }
+
+        static public void ReturnClientBuffer(NetByteBuffer item)
+        {
+            _msgClientHeaderPool.ReturnObject(item);
+        }
+    }
 }
