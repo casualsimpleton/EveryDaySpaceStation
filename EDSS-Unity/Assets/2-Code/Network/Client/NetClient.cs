@@ -38,7 +38,7 @@ namespace EveryDaySpaceStation.Network
         /// <summary>
         /// Contains game related and higher level logic for tcp client
         /// </summary>
-        protected NetGameClient _netGameClient;
+        protected NetGameClientConnection _netGameClient;
 
         /// <summary>
         /// Is this connection active (either connected, attempting to connect or something similar)
@@ -85,7 +85,7 @@ namespace EveryDaySpaceStation.Network
             get { return ((IPEndPoint)_tcpClient.Client.RemoteEndPoint); }
         }
 
-        public NetGameClient Netgameclient
+        public NetGameClientConnection Netgameclient
         {
             get { return _netGameClient; }
         }
@@ -177,12 +177,12 @@ namespace EveryDaySpaceStation.Network
                 _netGameClient = null;
             }
 
-            _netGameClient = new NetGameClient();
+            _netGameClient = new NetGameClientConnection();
 
             _isActive = true;
         }
 
-        public void OnTcpClientConnect(NetGameClient newConnection)
+        public void OnTcpClientConnect(NetGameClientConnection newConnection)
         {
             if (_onTcpConnect != null)
             {

@@ -47,7 +47,7 @@ namespace EveryDaySpaceStation.Network
     #endregion
 
     #region Delegates
-    public delegate void OnTcpClientConnect(NetGameClient newConnection);
+    public delegate void OnTcpClientConnect(NetGameClientConnection newConnection);
     public delegate void OnTcpClientDataReceived(NetMessage message);
     public delegate void OnTcpClientDataTransmit();
     public delegate void OnTcpClientDisconnect(IPEndPoint remoteEP, NetworkConnectionStatus connectionStatus);
