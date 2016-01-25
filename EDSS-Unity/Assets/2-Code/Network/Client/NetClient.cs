@@ -177,7 +177,7 @@ namespace EveryDaySpaceStation.Network
                 _netGameClient = null;
             }
 
-            _netGameClient = new NetGameClientConnection();
+            _netGameClient = new NetGameClientConnection(_tcpClient, OnTcpClientConnect, OnTcpClientDisconnect, OnTcpDataReceived, OnTcpDataTransmitted);
 
             _isActive = true;
         }
@@ -214,7 +214,7 @@ namespace EveryDaySpaceStation.Network
             }
         }
 
-        public void SendNetMessage(NetMessageType msgType, byte[] data, bool useCompression = false)
+        public void SendNetMessage(NetMessageType msgType, NetByteBuffer nbb, bool useCompression = false)
         {
             if (!IsConnected)
             {
@@ -222,7 +222,7 @@ namespace EveryDaySpaceStation.Network
                 return;
             }
 
-            _netGameClient.SendMessage(msgType, data, useCompression);
+            _netGameClient.SendMessage(msgType, nbb, useCompression);
         }
     }
 }

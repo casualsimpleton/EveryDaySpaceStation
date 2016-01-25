@@ -29,6 +29,18 @@ namespace EveryDaySpaceStation.Network
         public static int NETMSGHEADER_MSGTYPE = 0;
         public static int NETMSGHEADER_BODYSIZEINDEX = 1;
         public static int NETMSG_BODYINDEX = 5;
+
+        public static int MSGTHRESHOLDWARNING = 30;
+
+        public static byte GetByteFromNetMessageType(NetMessageType msgType)
+        {
+            return (byte)msgType;
+        }
+
+        public static NetMessageType GetNetMessageTypeFromByte(byte b)
+        {
+            return (NetMessageType)b;
+        }
         #endregion
 
         #region Vars
@@ -211,13 +223,13 @@ namespace EveryDaySpaceStation.Network
             //Return byte buffers to appropriate pool
             if (_isServerMessage)
             {
-                NetworkPool.ReturnServerBuffer(_headerData);
-                NetworkPool.ReturnServerBuffer(_msgData);
+                NetworkPool.ReturnServerIncBuffer(_headerData);
+                NetworkPool.ReturnServerIncBuffer(_msgData);
             }
             else
             {
-                NetworkPool.ReturnClientBuffer(_headerData);
-                NetworkPool.ReturnClientBuffer(_msgData);
+                NetworkPool.ReturnClientIncBuffer(_headerData);
+                NetworkPool.ReturnClientIncBuffer(_msgData);
             }
             _headerData = null;
             _msgData = null;
@@ -394,13 +406,13 @@ namespace EveryDaySpaceStation.Network
                 {
                     if (IsServerMessage)
                     {
-                        NetworkPool.ReturnServerBuffer(_headerData);
-                        NetworkPool.ReturnServerBuffer(_msgData);
+                        NetworkPool.ReturnServerIncBuffer(_headerData);
+                        NetworkPool.ReturnServerIncBuffer(_msgData);
                     }
                     else
                     {
-                        NetworkPool.ReturnClientBuffer(_headerData);
-                        NetworkPool.ReturnClientBuffer(_msgData);
+                        NetworkPool.ReturnClientIncBuffer(_headerData);
+                        NetworkPool.ReturnClientIncBuffer(_msgData);
                     }
 
                     _headerData = null;

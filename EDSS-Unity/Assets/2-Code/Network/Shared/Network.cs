@@ -31,6 +31,7 @@ namespace EveryDaySpaceStation.Network
         Connected, //Is connected
         ClientDisconnect, //Was connected, but client ended connection
         ServerDisconnect, //Was connected, but server ended connection
+        UnexpectedConnectionClose, //Was connected, but connection closed without message
         UnknownError //Unknown problem, like a timeout or network failure
     }
 
@@ -52,10 +53,11 @@ namespace EveryDaySpaceStation.Network
     public delegate void OnTcpClientDataTransmit();
     public delegate void OnTcpClientDisconnect(IPEndPoint remoteEP, NetworkConnectionStatus connectionStatus);
 
-    public delegate void OnTcpServerClientConnect();
-    public delegate void OnTcpServerDataReceived();
-    public delegate void OnTcpServerDataTransmit();
-    public delegate void OnTcpServerClientDisconnect();
+    public delegate void OnTcpServerClientConnect(NetGameServerConnection newConnection);
+    public delegate void OnTcpServerDataReceived(NetMessage message);
+    public delegate void OnTcpServerDataTransmit(NetGameServerConnection clientDestination);
+    public delegate void OnTcpServerClientDisconnect(IPEndPoint remoteEP, NetworkConnectionStatus connectionStatus);
+    public delegate void OnTcpServerClientAccepted(NetGameServerConnection newConnection, uint uniqueID, string playerName);
     #endregion
 
     #region Utility
@@ -151,6 +153,41 @@ namespace EveryDaySpaceStation.Network
     }
     #endregion
 
+    public static class Network
+    {
+        #region Vars
+        private static System.Diagnostics.Stopwatch _syncTimer;
+        private static bool _allowConnections;
+        #endregion
+
+        #region Gets/Sets
+        static public float NetworkTime
+        {
+            get { return _syncTimer.ElapsedMilliseconds * 0.001f; }
+        }
+
+        static public bool AllowConnections
+        {
+            get { return _allowConnections; }
+            set { _allowConnections = value; }
+        }
+        #endregion
+
+        public static void Init()
+        {
+            _syncTimer = new System.Diagnostics.Stopwatch();
+            _syncTimer.Start();
+        }
+
+        public static void Shutdown()
+        {
+            if (_syncTimer != null)
+            {
+                _syncTimer.Stop();
+            }
+        }
+    }
+    
     public static class NetworkPool
     {
         static NetByteBufferPool _msgServerHeaderPool;
@@ -162,6 +199,7 @@ namespace EveryDaySpaceStation.Network
             _msgClientHeaderPool = new NetByteBufferPool();
         }
 
+        #region Incoming Buffers
         static public NetByteBuffer RequestServerIncBuffer(int desiredLength)
         {
             return _msgServerHeaderPool.RequestObject(desiredLength);
@@ -172,14 +210,46 @@ namespace EveryDaySpaceStation.Network
             return _msgClientHeaderPool.RequestObject(desiredLength);
         }
 
-        static public void ReturnServerBuffer(NetByteBuffer item)
+        static public void ReturnServerIncBuffer(NetByteBuffer item)
         {
             _msgServerHeaderPool.ReturnObject(item);
         }
 
-        static public void ReturnClientBuffer(NetByteBuffer item)
+        static public void ReturnClientIncBuffer(NetByteBuffer item)
         {
             _msgClientHeaderPool.ReturnObject(item);
+        }
+        #endregion
+
+        #region Outgoing Buffers
+        static public NetByteBuffer RequestServerOutBuffer(int desiredLength)
+        {
+            return new NetByteBuffer(desiredLength);
+        }
+
+        static public NetByteBuffer RequestClientOutBuffer(int desiredLength)
+        {
+            return new NetByteBuffer(desiredLength);
+        }
+
+        static public void ReturnServerOutBuffer(NetByteBuffer nbb)
+        {
+        }
+
+        static public void ReturnClientOutBuffer(NetByteBuffer nbb)
+        {
+        }
+        #endregion
+
+        //TODO - FIX THIS
+        static public NetMessage RequestClientNetMessage()
+        {
+            return new NetMessage();
+        }
+
+        static public NetMessage RequestServerNetMessage()
+        {
+            return new NetMessage();
         }
     }
 }
