@@ -12,12 +12,12 @@ TagManager:
   Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
-  User Layer 8: World
-  User Layer 9: Entity
-  User Layer 10: Trigger
-  User Layer 11: 
-  User Layer 12: 
-  User Layer 13: 
+  User Layer 8: ClientWorld
+  User Layer 9: ClientEntity
+  User Layer 10: ClientTrigger
+  User Layer 11: ServerWorld
+  User Layer 12: ServerEntity
+  User Layer 13: ServerTrigger
   User Layer 14: 
   User Layer 15: 
   User Layer 16: 
