@@ -21,16 +21,29 @@ using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 using EveryDaySpaceStation.Network;
 
-namespace EveryDaySpaceStation
+public class ServerGameManager : MonoBehaviour
 {
-    public static class ServerGameManager
+    #region Singleton
+    protected static ServerGameManager m_singleton = null;
+    public static ServerGameManager Singleton
     {
-        #region Enums
-
-        #endregion
-
-        #region Vars
-
-        #endregion
+        get
+        {
+            return m_singleton;
+        }
     }
+
+    void Awake()
+    {
+        m_singleton = this;
+    }
+    #endregion
+
+    #region Enums
+
+    #endregion
+
+    #region Vars
+
+    #endregion
 }
