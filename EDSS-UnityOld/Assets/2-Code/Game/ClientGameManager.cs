@@ -54,13 +54,12 @@ public class ClientGameManager : MonoBehaviour
     public static int ClientEntityLayer;
     public static int ClientTriggerLayer;
     public static Color32 HighlightColor = new Color32(180, 255, 180, 255);
+    System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
     #endregion
 
     #region Gets/Sets
     public GameData Gamedata { get { return _gameData; } }
     public MapData Mapdata { get { return _mapData; } }
-
-    System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
     #endregion
 
     public void Start()

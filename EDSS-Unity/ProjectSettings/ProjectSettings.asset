@@ -170,7 +170,7 @@ PlayerSettings:
   flashStrippingLevel: 2
   spritePackerPolicy: 
   scriptingDefineSymbols:
-    1: DEBUGCLIENT
+    1: DEBUGCLIENT;DEBUGSERVER;VISUALSERVER
   metroPackageName: EDSS-Unity
   metroPackageLogo: 
   metroPackageLogo140: 

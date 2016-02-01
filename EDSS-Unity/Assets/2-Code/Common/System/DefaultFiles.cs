@@ -46,4 +46,6 @@ public class DefaultFiles : MonoBehaviour
     public Shader billboardShader;
     public Shader twoSidedSpriteShader;
     public Shader lineDrawingShader;
+
+    public Material[] testMaterials;
 }

@@ -98,6 +98,8 @@ namespace EveryDaySpaceStation
             MapDataConfig testMap = LoadMap(_serverConfig.MapChoices[0].MapName);  //"testLevel1");
             MapEntityDataConfig testEntities = LoadMapEnities(_serverConfig.MapChoices[0].EntityName);
 
+            ServerGameManager.Singleton.ProcessMap(testMap);
+            ServerGameManager.Singleton.ProcessMapEntities(testEntities);
             //ClientGameManager.Singleton.ProcessMap(testMap);
             //ClientGameManager.Singleton.ProcessMapEntities(testEntities);
 
@@ -146,67 +148,6 @@ namespace EveryDaySpaceStation
             string rawJson = File.ReadAllText(manifestPath);
 
             _gameManifestConfig = JsonConvert.DeserializeObject<GameManfiest>(rawJson);
-        }
-        #endregion
-
-        #region Image Stuff
-        static public Texture2D LoadImageFromFileName(string fileName, TextureFormat imgFormat = TextureFormat.ARGB32)
-        {
-            string fileAndPath = string.Format("{0}{1}{2}{1}{3}{1}{4}", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _clientDataDirectory, _clientGameDataDirectory, fileName);
-
-            return LoadImageFromFileAndPath(fileAndPath, imgFormat);
-        }
-
-        static public Texture2D LoadImageFromFileAndPath(string fileAndPath, TextureFormat imgFormat = TextureFormat.ARGB32)
-        {
-            if (!File.Exists(fileAndPath))
-            {
-                Debug.LogWarning(string.Format("Could not find art piece '{0}'.", fileAndPath));
-                return null;
-            }
-
-            Texture2D newTexture = new Texture2D(4, 4, imgFormat, false, false);
-
-            byte[] byteData = null;
-            using (FileStream fs = File.OpenRead(fileAndPath))
-            {
-                byteData = new byte[fs.Length];
-                ReadWholeDataStreamArray(fs, ref byteData);
-            }
-
-            newTexture.LoadImage(byteData);
-
-            Debug.Log(string.Format("Loaded image {0} as ({1}w {2}h) and format '{3}'", fileAndPath, newTexture.width, newTexture.height, imgFormat));
-
-            newTexture.filterMode = FilterMode.Point;
-
-            return newTexture;
-        }
-
-        /// <summary>
-        /// Reads data into a complete array, throwing an EndOfStreamException
-        /// if the stream runs out of data first, or if an IOException
-        /// naturally occurs.
-        /// </summary>
-        /// <param name="stream">The stream to read data from</param>
-        /// <param name="data">The array to read bytes into. The array
-        /// will be completely filled from the stream, so an appropriate
-        /// size must be given.</param>
-        static public void ReadWholeDataStreamArray(Stream stream, ref byte[] data)
-        {
-            int offset = 0;
-            int remaining = data.Length;
-            while (remaining > 0)
-            {
-                int read = stream.Read(data, offset, remaining);
-                if (read <= 0)
-                {
-                    throw new EndOfStreamException(string.Format("End of stream reached with {0} bytes left to read", remaining));
-                }
-
-                remaining -= read;
-                offset += read;
-            }
         }
         #endregion
 
