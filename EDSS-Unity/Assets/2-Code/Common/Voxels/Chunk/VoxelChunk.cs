@@ -278,25 +278,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(0f, 0f));
+                    Vector3.up, new Vector2(0f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 1f));
+                    Vector3.up, new Vector2(0f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 1f));
+                    Vector3.up, new Vector2(1f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(1f, 0f));
+                    Vector3.up, new Vector2(1f, 0f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -307,25 +307,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(0f, 1f));
+                    -Vector3.up, new Vector2(0f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 0f));
+                    -Vector3.up, new Vector2(0f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 0f));
+                    -Vector3.up, new Vector2(1f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(1f, 1f));
+                    -Vector3.up, new Vector2(1f, 1f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }
@@ -336,25 +336,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(0f, 0f));
+                    Vector3.forward, new Vector2(1f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(0f, 1f));
+                    Vector3.forward, new Vector2(1f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(1f, 1f));
+                    Vector3.forward, new Vector2(0f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(1f, 0f));
+                    Vector3.forward, new Vector2(0f, 1f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -365,25 +365,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(0f, 1f));
+                    -Vector3.forward, new Vector2(0f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(0f, 0f));
+                    -Vector3.forward, new Vector2(0f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(1f, 0f));
+                    -Vector3.forward, new Vector2(1f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(1f, 1f));
+                    -Vector3.forward, new Vector2(1f, 1f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }
@@ -394,25 +394,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(0f, 0f));
+                    Vector3.right, new Vector2(0f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 1f));
+                    Vector3.right, new Vector2(1f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 1f));
+                    Vector3.right, new Vector2(1f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(1f, 0f));
+                    Vector3.right, new Vector2(0f, 0f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -423,25 +423,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(0f, 0f));
+                    -Vector3.right, new Vector2(1f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 1f));
+                    -Vector3.right, new Vector2(0f, 1f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 1f));
+                    -Vector3.right, new Vector2(0f, 0f));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.forward, new Vector2(1f, 0f));
+                    -Vector3.right, new Vector2(1f, 0f));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }

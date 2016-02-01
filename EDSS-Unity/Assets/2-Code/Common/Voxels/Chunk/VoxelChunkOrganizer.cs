@@ -43,19 +43,19 @@ namespace EveryDaySpaceStation
             TempMap[0, 0, 4] = 1;
             TempMap[0, 0, 5] = 1;
 
-            TempMap[1, 0, 0] = 1;
-            TempMap[1, 0, 1] = 1;
-            TempMap[1, 0, 2] = 1;
-            TempMap[1, 0, 3] = 1;
-            TempMap[1, 0, 4] = 1;
-            TempMap[1, 0, 5] = 1;
+            TempMap[1, 0, 0] = 2;
+            TempMap[1, 0, 1] = 2;
+            TempMap[1, 0, 2] = 2;
+            TempMap[1, 0, 3] = 2;
+            TempMap[1, 0, 4] = 2;
+            TempMap[1, 0, 5] = 2;
 
-            TempMap[2, 0, 0] = 1;
-            TempMap[2, 0, 1] = 1;
-            TempMap[2, 0, 2] = 1;
-            TempMap[2, 0, 3] = 1;
-            TempMap[2, 0, 4] = 1;
-            TempMap[2, 0, 5] = 1;
+            TempMap[2, 0, 0] = 2;
+            TempMap[2, 0, 1] = 2;
+            TempMap[2, 0, 2] = 2;
+            TempMap[2, 0, 3] = 2;
+            TempMap[2, 0, 4] = 2;
+            TempMap[2, 0, 5] = 2;
 
             TempMap[3, 0, 0] = 1;
             TempMap[3, 0, 1] = 1;
@@ -66,12 +66,12 @@ namespace EveryDaySpaceStation
             #endregion
 
             #region Second Layer
-            TempMap[0, 1, 0] = 3;
-            TempMap[0, 1, 1] = 3;
-            TempMap[0, 1, 2] = 3;
-            TempMap[0, 1, 3] = 3;
-            TempMap[0, 1, 4] = 3;
-            TempMap[0, 1, 5] = 3;
+            TempMap[0, 1, 0] = 4;
+            TempMap[0, 1, 1] = 4;
+            TempMap[0, 1, 2] = 4;
+            TempMap[0, 1, 3] = 4;
+            TempMap[0, 1, 4] = 4;
+            TempMap[0, 1, 5] = 4;
 
             TempMap[1, 1, 0] = 0;
             TempMap[1, 1, 1] = 0;
@@ -87,21 +87,21 @@ namespace EveryDaySpaceStation
             TempMap[2, 1, 4] = 0;
             TempMap[2, 1, 5] = 0;
 
-            TempMap[3, 1, 0] = 3;
-            TempMap[3, 1, 1] = 3;
-            TempMap[3, 1, 2] = 3;
-            TempMap[3, 1, 3] = 3;
-            TempMap[3, 1, 4] = 3;
-            TempMap[3, 1, 5] = 3;
+            TempMap[3, 1, 0] = 4;
+            TempMap[3, 1, 1] = 4;
+            TempMap[3, 1, 2] = 5;
+            TempMap[3, 1, 3] = 4;
+            TempMap[3, 1, 4] = 4;
+            TempMap[3, 1, 5] = 4;
             #endregion
 
             #region Third Layer
-            TempMap[0, 2, 0] = 3;
-            TempMap[0, 2, 1] = 3;
-            TempMap[0, 2, 2] = 3;
-            TempMap[0, 2, 3] = 3;
-            TempMap[0, 2, 4] = 3;
-            TempMap[0, 2, 5] = 3;
+            TempMap[0, 2, 0] = 4;
+            TempMap[0, 2, 1] = 4;
+            TempMap[0, 2, 2] = 4;
+            TempMap[0, 2, 3] = 4;
+            TempMap[0, 2, 4] = 4;
+            TempMap[0, 2, 5] = 4;
 
             TempMap[1, 2, 0] = 0;
             TempMap[1, 2, 1] = 0;
@@ -117,12 +117,12 @@ namespace EveryDaySpaceStation
             TempMap[2, 2, 4] = 0;
             TempMap[2, 2, 5] = 0;
 
-            TempMap[3, 2, 0] = 3;
-            TempMap[3, 2, 1] = 3;
-            TempMap[3, 2, 2] = 3;
-            TempMap[3, 2, 3] = 3;
-            TempMap[3, 2, 4] = 3;
-            TempMap[3, 2, 5] = 3;
+            TempMap[3, 2, 0] = 4;
+            TempMap[3, 2, 1] = 4;
+            TempMap[3, 2, 2] = 4;
+            TempMap[3, 2, 3] = 4;
+            TempMap[3, 2, 4] = 4;
+            TempMap[3, 2, 5] = 4;
             #endregion
 
             #region Top Layer
@@ -133,19 +133,19 @@ namespace EveryDaySpaceStation
             TempMap[0, 3, 4] = 1;
             TempMap[0, 3, 5] = 1;
 
-            TempMap[1, 3, 0] = 1;
-            TempMap[1, 3, 1] = 1;
-            TempMap[1, 3, 2] = 1;
-            TempMap[1, 3, 3] = 1;
-            TempMap[1, 3, 4] = 1;
-            TempMap[1, 3, 5] = 1;
+            TempMap[1, 3, 0] = 3;
+            TempMap[1, 3, 1] = 3;
+            TempMap[1, 3, 2] = 3;
+            TempMap[1, 3, 3] = 3;
+            TempMap[1, 3, 4] = 3;
+            TempMap[1, 3, 5] = 3;
 
-            TempMap[2, 3, 0] = 1;
-            TempMap[2, 3, 1] = 1;
-            TempMap[2, 3, 2] = 1;
-            TempMap[2, 3, 3] = 1;
-            TempMap[2, 3, 4] = 1;
-            TempMap[2, 3, 5] = 1;
+            TempMap[2, 3, 0] = 3;
+            TempMap[2, 3, 1] = 3;
+            TempMap[2, 3, 2] = 3;
+            TempMap[2, 3, 3] = 3;
+            TempMap[2, 3, 4] = 3;
+            TempMap[2, 3, 5] = 3;
 
             TempMap[3, 3, 0] = 1;
             TempMap[3, 3, 1] = 1;
