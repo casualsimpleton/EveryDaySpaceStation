@@ -51,10 +51,15 @@ MonoBehaviour:
   lineDrawingShader: {fileID: 4800000, guid: 6d092ca6fe042574bbda45fd439efdd7, type: 3}
   testMaterials:
   - {fileID: 2100000, guid: b40627583270d8741a39ff2a1aeade3d, type: 2}
-  - {fileID: 2100000, guid: ea1f682c1e9efec44bd5e9bebac8f848, type: 2}
   - {fileID: 2100000, guid: 0834cc0e527b19342bb90a6fbb287897, type: 2}
   - {fileID: 2100000, guid: 4ecbd076747418c4e9ccbb8ce5779dc5, type: 2}
+  - {fileID: 2100000, guid: ea1f682c1e9efec44bd5e9bebac8f848, type: 2}
   - {fileID: 2100000, guid: bcf7682215785e9449cf2b2b258389db, type: 2}
+  TestMap:
+  - {fileID: 2800000, guid: 3056896a4e8c0ec4db8929ce431ced67, type: 3}
+  - {fileID: 2800000, guid: 8799185f70d6fcd479b789a91c75928f, type: 3}
+  - {fileID: 2800000, guid: 1cbf871305210bc4ab6c083be091d100, type: 3}
+  - {fileID: 2800000, guid: 80aa7f0938c7b724abd71837cb185295, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

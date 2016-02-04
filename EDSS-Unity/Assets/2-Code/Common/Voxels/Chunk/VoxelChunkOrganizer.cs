@@ -27,140 +27,42 @@ namespace EveryDaySpaceStation
 {
     public class VoxelChunkOrganizer : MonoBehaviour
     {
-        public static ushort[, ,] TempMap;
-
         protected UniqueList<ChunkRenderer> _chunkRenderers;
         protected VoxelChunk _chunk;
 
         void Start()
         {
-            TempMap = new ushort[4, 4, 6];
-            #region Bottom Layer
-            TempMap[0, 0, 0] = 1;
-            TempMap[0, 0, 1] = 1;
-            TempMap[0, 0, 2] = 1;
-            TempMap[0, 0, 3] = 1;
-            TempMap[0, 0, 4] = 1;
-            TempMap[0, 0, 5] = 1;
+            //_chunk = new VoxelChunk(TempMap.GetLength(0), TempMap.GetLength(1), TempMap.GetLength(2));
 
-            TempMap[1, 0, 0] = 2;
-            TempMap[1, 0, 1] = 2;
-            TempMap[1, 0, 2] = 2;
-            TempMap[1, 0, 3] = 2;
-            TempMap[1, 0, 4] = 2;
-            TempMap[1, 0, 5] = 2;
+            //_chunk.SetChunkGameObject(this);
+            ////_chunk.TestRandomChunkData();
+            //_chunk.LoadChunkData(TempMap);
+        }
 
-            TempMap[2, 0, 0] = 2;
-            TempMap[2, 0, 1] = 2;
-            TempMap[2, 0, 2] = 2;
-            TempMap[2, 0, 3] = 2;
-            TempMap[2, 0, 4] = 2;
-            TempMap[2, 0, 5] = 2;
-
-            TempMap[3, 0, 0] = 1;
-            TempMap[3, 0, 1] = 1;
-            TempMap[3, 0, 2] = 1;
-            TempMap[3, 0, 3] = 1;
-            TempMap[3, 0, 4] = 1;
-            TempMap[3, 0, 5] = 1;
-            #endregion
-
-            #region Second Layer
-            TempMap[0, 1, 0] = 4;
-            TempMap[0, 1, 1] = 4;
-            TempMap[0, 1, 2] = 4;
-            TempMap[0, 1, 3] = 4;
-            TempMap[0, 1, 4] = 4;
-            TempMap[0, 1, 5] = 4;
-
-            TempMap[1, 1, 0] = 0;
-            TempMap[1, 1, 1] = 0;
-            TempMap[1, 1, 2] = 0;
-            TempMap[1, 1, 3] = 0;
-            TempMap[1, 1, 4] = 0;
-            TempMap[1, 1, 5] = 0;
-
-            TempMap[2, 1, 0] = 0;
-            TempMap[2, 1, 1] = 0;
-            TempMap[2, 1, 2] = 0;
-            TempMap[2, 1, 3] = 0;
-            TempMap[2, 1, 4] = 0;
-            TempMap[2, 1, 5] = 0;
-
-            TempMap[3, 1, 0] = 4;
-            TempMap[3, 1, 1] = 4;
-            TempMap[3, 1, 2] = 5;
-            TempMap[3, 1, 3] = 4;
-            TempMap[3, 1, 4] = 4;
-            TempMap[3, 1, 5] = 4;
-            #endregion
-
-            #region Third Layer
-            TempMap[0, 2, 0] = 4;
-            TempMap[0, 2, 1] = 4;
-            TempMap[0, 2, 2] = 4;
-            TempMap[0, 2, 3] = 4;
-            TempMap[0, 2, 4] = 4;
-            TempMap[0, 2, 5] = 4;
-
-            TempMap[1, 2, 0] = 0;
-            TempMap[1, 2, 1] = 0;
-            TempMap[1, 2, 2] = 0;
-            TempMap[1, 2, 3] = 0;
-            TempMap[1, 2, 4] = 0;
-            TempMap[1, 2, 5] = 0;
-
-            TempMap[2, 2, 0] = 0;
-            TempMap[2, 2, 1] = 0;
-            TempMap[2, 2, 2] = 0;
-            TempMap[2, 2, 3] = 0;
-            TempMap[2, 2, 4] = 0;
-            TempMap[2, 2, 5] = 0;
-
-            TempMap[3, 2, 0] = 4;
-            TempMap[3, 2, 1] = 4;
-            TempMap[3, 2, 2] = 4;
-            TempMap[3, 2, 3] = 4;
-            TempMap[3, 2, 4] = 4;
-            TempMap[3, 2, 5] = 4;
-            #endregion
-
-            #region Top Layer
-            TempMap[0, 3, 0] = 1;
-            TempMap[0, 3, 1] = 1;
-            TempMap[0, 3, 2] = 1;
-            TempMap[0, 3, 3] = 1;
-            TempMap[0, 3, 4] = 1;
-            TempMap[0, 3, 5] = 1;
-
-            TempMap[1, 3, 0] = 3;
-            TempMap[1, 3, 1] = 3;
-            TempMap[1, 3, 2] = 3;
-            TempMap[1, 3, 3] = 3;
-            TempMap[1, 3, 4] = 3;
-            TempMap[1, 3, 5] = 3;
-
-            TempMap[2, 3, 0] = 3;
-            TempMap[2, 3, 1] = 3;
-            TempMap[2, 3, 2] = 3;
-            TempMap[2, 3, 3] = 3;
-            TempMap[2, 3, 4] = 3;
-            TempMap[2, 3, 5] = 3;
-
-            TempMap[3, 3, 0] = 1;
-            TempMap[3, 3, 1] = 1;
-            TempMap[3, 3, 2] = 1;
-            TempMap[3, 3, 3] = 1;
-            TempMap[3, 3, 4] = 1;
-            TempMap[3, 3, 5] = 1;
-            #endregion
-
-
-            _chunk = new VoxelChunk(TempMap.GetLength(0), TempMap.GetLength(1), TempMap.GetLength(2));
-
+        public void Init(int xwidth, int yheight, int zlength)
+        {
+            _chunk = new VoxelChunk(xwidth, yheight, zlength);
             _chunk.SetChunkGameObject(this);
-            //_chunk.TestRandomChunkData();
-            _chunk.LoadChunkData(TempMap);
+        }
+
+        public void LoadChunkData()
+        {
+
+        }
+
+        public void LoadChunkDataPreSet(Vec3Int chunkSize)
+        {
+            _chunk.LoadChunkDataPreSet(chunkSize);
+        }
+
+        public void LoadChunkDataPiecemeal(ushort blockType, Vec3Int xyz)
+        {
+            _chunk.LoadChunkDataPiecemeal(blockType, xyz);
+        }
+
+        public void LoadChunkDataPostSet()
+        {
+            _chunk.LoadChunkDataPostSet();
         }
 
         void Update()
@@ -171,6 +73,15 @@ namespace EveryDaySpaceStation
         void LateUpdate()
         {
             _chunk.ChunkLateUpdate();
+        }
+
+        public void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.magenta;
+
+            Gizmos.DrawWireCube(
+                new Vector3(_chunk.ChunkSize.x * 0.5f * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.y * 0.5f * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.z * 0.5f * VoxelBlock.DefaultBlockSize.x)
+                 + transform.position, new Vector3(_chunk.ChunkSize.x * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.y * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.z * VoxelBlock.DefaultBlockSize.x));
         }
     }
 }

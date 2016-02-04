@@ -31,6 +31,9 @@ namespace EveryDaySpaceStation
         protected VoxelBlock[, ,] _blocks;
         protected UniqueList<ChunkRenderer> _chunkRenderers;
         public VoxelChunkOrganizer ChunkGameObject { get; private set; }
+        public Vec3Int ChunkSize { get; private set; }
+
+        //System.Diagnostics.Stopwatch _timer;
 
         public bool IsDirty { get; set; }
 
@@ -95,6 +98,46 @@ namespace EveryDaySpaceStation
             }
             timer.Stop();
             Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
+
+            IsDirty = true;
+        }
+
+        public void LoadChunkDataPreSet(Vec3Int chunkSize)
+        {
+            //_timer = new System.Diagnostics.Stopwatch();
+            //_timer.Start();
+
+            _blocks = new VoxelBlock[chunkSize.x, chunkSize.y, chunkSize.z];
+            ChunkSize = chunkSize;
+        }
+
+        public void LoadChunkDataPiecemeal(ushort blockType, Vec3Int xyz)
+        {
+            if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                return;
+            }
+
+            if (xyz.y < 0 || xyz.y > ChunkSize.y - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                return;
+            }
+
+            if (xyz.z < 0 || xyz.z > ChunkSize.z - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                return;
+            }
+
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(blockType, this);
+        }
+
+        public void LoadChunkDataPostSet()
+        {
+            //_timer.Stop();
+            //Debug.Log("Created " + (_blocks.GetLength(0) * _blocks.GetLength(1) * _blocks.GetLength(2)) + " blocks in " + _timer.ElapsedMilliseconds);
 
             IsDirty = true;
         }

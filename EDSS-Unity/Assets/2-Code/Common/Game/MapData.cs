@@ -21,6 +21,91 @@ using EveryDaySpaceStation.Json;
 namespace EveryDaySpaceStation
 {
     [System.Serializable]
+    public class MapDataV2
+    {
+        #region Structs/Classes
+        public struct MapBlock
+        {
+            public enum BlockFace
+            {
+                TopFace,
+                BottomFace,
+                ForwardFace,
+                BackFace,
+                RightFace,
+                LeftFace,
+                MAX
+            }
+
+            public enum BlockPipeFlags : byte
+            {
+                O2 = 0,
+                N2 = 1,
+                Air = 2,
+                CO2 = 3,
+                N2O = 4,
+                Plasma = 5,
+            }
+            //2 Byte Ushort - Block Type UID
+            //2 Byte Ushort - Top Face UID
+            //2 Byte Ushort - Bottom Face UID
+            //2 Byte Ushort - Forward Face UID
+            //2 Byte Ushort - Back Face UID
+            //2 Byte Ushort - Right Face UID
+            //2 Byte Ushort - Left Face UID
+            //1 Byte - Light Info
+            //1 Byte - Pipe Data
+                //Bit 0 - O2
+                //Bit 1 - N2
+                //Bit 2 - Air
+                //Bit 3 - CO2
+                //Bit 4 - N2O
+                //Bit 5 - Plasma
+                //Bit 6 - TBD
+                //Bit 7 - TBD
+
+            public ushort BlockType { get; set; }
+            public ushort[] BlockFaces { get; set; }
+            public byte BlockLight { get; set; }
+            public byte BlockPipe { get; set; }
+
+            public bool HasPipe(BlockPipeFlags testFlag)
+            {
+                return ((BlockPipe & (1 << (int)testFlag)) != 0);
+            }
+
+            public void SetPipe(BlockPipeFlags newFlag)
+            {
+                BlockPipe |= (byte)(1 << (int)newFlag);
+            }
+
+            public void RemovePipe(BlockPipeFlags flag)
+            {
+                BlockPipe = (byte)(BlockPipe & ~(byte)flag);
+            }
+        }
+
+        public class MapRegion
+        {
+            public ushort RegionUID { get; set; }
+            /// <summary>
+            /// Region size in blocks
+            /// </summary>
+            public Vec3Int RegionSize { get; set; }
+
+            public MapBlock[, ,] RegionBlocks { get; set; }
+        }
+
+        #endregion
+
+        #region Vars
+        public string MapName { get; set; }
+        public ushort MapVersion { get; set; }
+        public List<MapRegion> MapRegions { get; set; }
+        #endregion
+    }
+
+    [System.Serializable]
     public abstract class MapData
     {
         #region Classes        

@@ -119,4 +119,5 @@ namespace EveryDaySpaceStation.DataTypes
             return x + y;
         }
     }
+
 }

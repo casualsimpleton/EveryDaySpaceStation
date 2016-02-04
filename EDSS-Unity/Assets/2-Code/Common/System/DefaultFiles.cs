@@ -48,4 +48,6 @@ public class DefaultFiles : MonoBehaviour
     public Shader lineDrawingShader;
 
     public Material[] testMaterials;
+
+    public Texture2D[] TestMap;
 }

@@ -152,6 +152,192 @@ namespace EveryDaySpaceStation
         #endregion
 
         #region Map Data
+        //Map Format:
+        //4 Byte Char - EDSS 
+        //2 Byte Ushort - Map Format Version
+        //\0 Terminated String - Map Name
+        //2 Byte Ushort - Region ID
+        //2 Byte Ushort - Region Block Count X
+        //2 Byte Ushort - Region Block Count Y
+        //2 Byte Ushort - Region Block Count Z
+
+        //Each Block
+        //2 Byte Ushort - Block Type UID
+        //2 Byte Ushort - Top Face UID
+        //2 Byte Ushort - Bottom Face UID
+        //2 Byte Ushort - Forward Face UID
+        //2 Byte Ushort - Back Face UID
+        //2 Byte Ushort - Right Face UID
+        //2 Byte Ushort - Left Face UID
+        //1 Byte - Light Info
+        //1 Byte - Pipe Data
+            //Bit 0 - O2
+            //Bit 1 - N2
+            //Bit 2 - Air
+            //Bit 3 - CO2
+            //Bit 4 - N2O
+            //Bit 5 - Plasma
+            //Bit 6 - TBD
+            //Bit 7 - TBD
+
+        public static void WriteMap(MapDataV2 mapData, string filePath)
+        {
+            using (Stream s = File.Open(filePath, FileMode.OpenOrCreate))
+            {
+                using (BinaryWriter bWriter = new BinaryWriter(s))
+                {
+                    //Preface file with EDSS
+                    bWriter.Write('E');
+                    bWriter.Write('D');
+                    bWriter.Write('S');
+                    bWriter.Write('S');
+
+                    //Map Format Version
+                    bWriter.Write(mapData.MapVersion);
+
+                    //Map Name
+                    bWriter.Write(mapData.MapName);
+
+                    for (int i = 0; i < mapData.MapRegions.Count; i++)
+                    {
+                        MapDataV2.MapRegion region = mapData.MapRegions[i];
+
+                        //Region UID
+                        bWriter.Write(region.RegionUID);
+
+                        //Region Block Size X
+                        bWriter.Write(region.RegionSize.x);
+                        //Region Block Size Y
+                        bWriter.Write(region.RegionSize.y);
+                        //Region Block Size Z
+                        bWriter.Write(region.RegionSize.z);
+
+                        int xlen = region.RegionBlocks.GetLength(0);
+                        int ylen = region.RegionBlocks.GetLength(1);
+                        int zlen = region.RegionBlocks.GetLength(2);
+
+                        if (xlen != region.RegionSize.x || ylen != region.RegionSize.y || zlen != region.RegionSize.z)
+                        {
+                            Debug.LogWarning(string.Format("Region size {2} mismatches with actual block size {3},{4},{5} for map {0}, region {1}", mapData.MapName, region.RegionUID, region.RegionSize, xlen, ylen, zlen));
+                        }
+
+                        for(int z = 0; z < zlen; z++)
+                        {
+                            for(int x = 0; x < xlen; x++)
+                            {
+                                for(int y = 0; y < ylen; y++)
+                                {
+                                    MapDataV2.MapBlock block = region.RegionBlocks[x, y, z];
+                                    
+                                    //Block Type
+                                    bWriter.Write(block.BlockType);
+                                    
+                                    //Faces UID - Top, Bottom, Forward, Back, Right, Left
+                                    for (ushort f = 0; f < block.BlockFaces.Length; f++)
+                                    {
+                                        bWriter.Write(block.BlockFaces[f]);
+                                    }
+
+                                    //Block Light Info
+                                    bWriter.Write(block.BlockLight);
+
+                                    //Block Pipe Info
+                                    bWriter.Write(block.BlockPipe);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static MapDataV2 LoadMapData(string fileAndPath)
+        {
+            if (!File.Exists(fileAndPath))
+            {
+                Debug.LogWarning(string.Format("Can't find a file at: {0}", fileAndPath));
+                return null;
+            }
+
+            using (Stream s = File.Open(fileAndPath, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader b = new BinaryReader(s))
+                {
+                    byte[] fourBytes = b.ReadBytes(4);
+
+                    //Check that it starts with EDSS...
+                    //Lazy and fast way to do it
+                    if (fourBytes[0] != 'E' && fourBytes[1] != 'D' && fourBytes[2] != 'S' && fourBytes[3] != 'S')
+                    {
+                        Debug.LogWarning(string.Format("Data loaded from '{0}' doesn't appear to be a map file", fileAndPath));
+                        return null;
+                    }
+
+                    MapDataV2 loadedMap = new MapDataV2();
+
+                    //Map Format Version
+                    loadedMap.MapVersion = b.ReadUInt16();
+
+                    //Map Name
+                    loadedMap.MapName = b.ReadString();
+
+                    while (b.BaseStream.Position != b.BaseStream.Length)
+                    {
+                        //Now for regions - Expect at least 1
+                        MapDataV2.MapRegion newRegion = new MapDataV2.MapRegion();
+
+                        //Region UID
+                        newRegion.RegionUID = b.ReadUInt16();
+
+                        //Region Block Sizes
+                        Vec3Int size = new Vec3Int(0, 0, 0);
+
+                        size.x = b.ReadInt32();
+                        size.y = b.ReadInt32();
+                        size.z = b.ReadInt32();
+
+                        newRegion.RegionSize = size;
+
+                        newRegion.RegionBlocks = new MapDataV2.MapBlock[size.x, size.y, size.z];
+
+                        for (int z = 0; z < size.z; z++)
+                        {
+                            for (int x = 0; x < size.x; x++)
+                            {
+                                for (int y = 0; y < size.y; y++)
+                                {
+                                    MapDataV2.MapBlock block = new MapDataV2.MapBlock();
+
+                                    //Block Type
+                                    block.BlockType = b.ReadUInt16();
+
+                                    //Block Faces
+                                    block.BlockFaces = new ushort[(int)MapDataV2.MapBlock.BlockFace.MAX];
+
+                                    for (int f = 0; f < block.BlockFaces.Length; f++)
+                                    {
+                                        block.BlockFaces[f] = b.ReadUInt16();
+                                    }
+
+                                    //Block Light Info
+                                    block.BlockLight = b.ReadByte();
+
+                                    //Block Pipe Info
+                                    block.BlockPipe = b.ReadByte();
+
+                                    newRegion.RegionBlocks[x, y, z] = block;
+                                }
+                            }
+                        }
+
+                        loadedMap.MapRegions.Add(newRegion);
+                    }
+
+                    return loadedMap;
+                }
+            }
+        }
+
         public static MapDataConfig LoadMap(string mapName)
         {
             string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
