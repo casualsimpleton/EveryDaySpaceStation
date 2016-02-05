@@ -353,6 +353,11 @@ namespace EveryDaySpaceStation
             return JsonConvert.DeserializeObject<MapDataConfig>(rawJson);
         }
 
+        public static string GetFileNameWithoutExtension(string fullPathAndFile)
+        {
+            return Path.GetFileNameWithoutExtension(fullPathAndFile);
+        }
+
         public static MapEntityDataConfig LoadMapEnities(string entityFileName)
         {
             string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, entityFileName);

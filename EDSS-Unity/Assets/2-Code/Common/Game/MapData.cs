@@ -69,6 +69,11 @@ namespace EveryDaySpaceStation
             public byte BlockLight { get; set; }
             public byte BlockPipe { get; set; }
 
+            public void Init()
+            {
+                BlockFaces = new ushort[(int)BlockFace.MAX];
+            }
+
             public bool HasPipe(BlockPipeFlags testFlag)
             {
                 return ((BlockPipe & (1 << (int)testFlag)) != 0);
@@ -103,6 +108,11 @@ namespace EveryDaySpaceStation
         public ushort MapVersion { get; set; }
         public List<MapRegion> MapRegions { get; set; }
         #endregion
+
+        public MapDataV2()
+        {
+            MapRegions = new List<MapRegion>();
+        }
     }
 
     [System.Serializable]

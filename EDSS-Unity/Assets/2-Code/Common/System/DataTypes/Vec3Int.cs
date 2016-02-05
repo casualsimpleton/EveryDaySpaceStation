@@ -43,6 +43,13 @@ namespace EveryDaySpaceStation.DataTypes
             y = Mathf.RoundToInt(vec3.y);
             z = Mathf.RoundToInt(vec3.z);
         }
+
+        public Vec3Int(Vec3Int vec3)
+        {
+            x = vec3.x;
+            y = vec3.y;
+            z = vec3.z;
+        }
         
         public static bool operator ==(Vec3Int m, Vec3Int n)
         {
