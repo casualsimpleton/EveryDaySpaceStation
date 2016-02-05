@@ -61,14 +61,33 @@ public class MapEditor : EditorWindow {
     MapDataV2.MapRegion _curMapRegion = null;
     Vec3Int _curMapRegionSize = Vec3Int.Zero;
 
+    bool showImportRegionTextures = false;
+    List<Texture2D> _importRegionTextures;
+    Object _assetSelectorObject;
+
+    Vector2 _scrollPos = new Vector2();
+
+    void Reset()
+    {
+        _curMapData = null;
+        _curMapRegion = null;
+        _selDelAddButtons = SelectDeleteAdd.None;
+        _regionCreateRenumDelete = RegionAction.None;
+        _regionRenumberArray = null;
+        _importRegionTextures = null;
+        _scrollPos = new Vector2();
+    }
+
     void OnGUI()
     {
         if (EditorApplication.isCompiling)
         {
             EditorApplication.isPlaying = false;
-            _curMapData = null;
+
+            Reset();
         }
 
+        _scrollPos = GUILayout.BeginScrollView(_scrollPos);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
         {
@@ -78,6 +97,7 @@ public class MapEditor : EditorWindow {
 
             if (!EditorApplication.isPlaying)
             {
+                Reset();
                 EditorApplication.isPlaying = true;
             }
 
@@ -131,6 +151,9 @@ public class MapEditor : EditorWindow {
             _regionCreateRenumDelete = RegionAction.CreateNew;
             //_curMapRegion = new MapDataV2.MapRegion();
 
+            _importRegionTextures.Clear();
+            showImportRegionTextures = false;
+            _assetSelectorObject = null;
         }
 
         if (GUILayout.Button("Renum. Region", GUILayout.MaxWidth(100), GUILayout.MinHeight(30)))
@@ -152,13 +175,117 @@ public class MapEditor : EditorWindow {
 
         if (_regionCreateRenumDelete == RegionAction.CreateNew)
         {
+            string commandName = Event.current.commandName;
             ushort newUID = FindFirstUnusedRegionUID(_curMapData);
+            
             GUILayout.Label(string.Format("New UID: {0}", newUID));
             
             GUILayout.Label("New Region Size:");
             _curMapRegionSize.x = Mathf.Clamp(EditorGUILayout.IntField("Width (X):", _curMapRegionSize.x), 0, 256);
             _curMapRegionSize.y = Mathf.Clamp(EditorGUILayout.IntField("Height (Y):", _curMapRegionSize.y), 0, 256);
             _curMapRegionSize.z = Mathf.Clamp(EditorGUILayout.IntField("Length (Z):", _curMapRegionSize.z), 0, 256);
+            
+            //showImportRegionTextures = EditorGUILayout.BeginToggleGroup("Import From Texture", showImportRegionTextures);
+
+            if(_importRegionTextures == null)
+            {
+                _importRegionTextures = new List<Texture2D>();
+            }
+
+            //This has to happen before drawing the loop. Otherwise it poops itself
+            if (Event.current.type == EventType.Layout)
+            {
+                if (commandName == "ObjectSelectorUpdated")
+                {
+                    _assetSelectorObject = EditorGUIUtility.GetObjectPickerObject();
+
+                    if (_assetSelectorObject is Texture2D)
+                    {
+                        _importRegionTextures.Add(_assetSelectorObject as Texture2D);
+                    }
+                    else
+                    {
+                        EditorUtility.DisplayDialog("Invalid file", "Only supported textures can be used.", "OK");
+                    }
+                }
+            }
+
+            for (int i = 0; i < _importRegionTextures.Count; i++)
+            {
+                GUILayout.BeginHorizontal();
+                
+                GUILayout.Label(_importRegionTextures[i], GUILayout.MaxWidth(180), GUILayout.MaxHeight(180));
+
+                if (i == 0)
+                {
+                    GUI.enabled = false;
+                }
+
+                //Move item up
+                if (GUILayout.Button("/\\"))
+                {
+                    Texture2D tex = _importRegionTextures[i];
+                    _importRegionTextures.RemoveAt(i);
+                    _importRegionTextures.Insert(i - 1, tex);
+                }
+
+                if (i == 0)
+                {
+                    GUI.enabled = true;
+                }
+
+                if (i == _importRegionTextures.Count - 1)
+                {
+                    GUI.enabled = false;
+                }
+
+                //Move item down
+                if (GUILayout.Button("\\/"))
+                {
+                    Texture2D tex = _importRegionTextures[i];
+                    _importRegionTextures.RemoveAt(i);
+                    _importRegionTextures.Insert(i + 1, tex);
+                }
+
+                if (i == _importRegionTextures.Count - 1)
+                {
+                    GUI.enabled = true;
+                }
+
+                if (GUILayout.Button("R"))
+                {
+                    _importRegionTextures.RemoveAt(i);
+                    break;
+                }
+                GUILayout.EndHorizontal();
+            }
+            
+            if (GUILayout.Button("Add New Texture"))
+            {
+                EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", -1);
+            }
+
+            //else if (commandName == "ObjectSelectorClosed")
+            //if (commandName == "ObjectSelectorClosed")
+            //{
+            //    //_assetSelectorObject = EditorGUIUtility.GetObjectPickerObject();
+            //    //if (_assetSelectorObject is Texture2D)
+            //    //{
+            //    //    if (Event.current.type == EventType.Layout)
+            //    //    {
+            //    //        _importRegionTextures.Add(_assetSelectorObject as Texture2D);
+            //    //        return;
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    EditorUtility.DisplayDialog("Invalid file", "Only supported textures can be used.", "OK");
+            //    //}
+            //}
+
+            GUILayout.Box("", GUILayout.MaxWidth(350), GUILayout.Height(0));
+
+            //EditorGUILayout.EndToggleGroup();            
 
             if (GUILayout.Button("Create Region", GUILayout.MaxWidth(350), GUILayout.MinHeight(60)))
             {
@@ -305,6 +432,7 @@ public class MapEditor : EditorWindow {
             }
             GUILayout.EndHorizontal();
         }
+        GUILayout.EndScrollView();
     }
 
     public void AdjustRegionSize(ref MapDataV2.MapRegion region, Vec3Int newSize)
