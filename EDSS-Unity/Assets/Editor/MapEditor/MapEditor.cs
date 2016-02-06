@@ -65,7 +65,11 @@ public class MapEditor : EditorWindow {
     List<Texture2D> _importRegionTextures;
     Object _assetSelectorObject;
 
+    List<Tuple<Color32, ushort>> _mapColorDefinitions = new List<Tuple<Color32,ushort>>();
+
     Vector2 _scrollPos = new Vector2();
+
+    MapEditorCamera _editorCamera;
 
     void Reset()
     {
@@ -75,7 +79,15 @@ public class MapEditor : EditorWindow {
         _regionCreateRenumDelete = RegionAction.None;
         _regionRenumberArray = null;
         _importRegionTextures = null;
+        _mapColorDefinitions = null;
         _scrollPos = new Vector2();
+
+        if (_editorCamera == null)
+        {
+            _editorCamera = FindObjectOfType<MapEditorCamera>();
+        }
+
+        _editorCamera._targetCube.SetActive(false);
     }
 
     void OnGUI()
@@ -151,6 +163,7 @@ public class MapEditor : EditorWindow {
             _regionCreateRenumDelete = RegionAction.CreateNew;
             //_curMapRegion = new MapDataV2.MapRegion();
 
+            _mapColorDefinitions.Clear();
             _importRegionTextures.Clear();
             showImportRegionTextures = false;
             _assetSelectorObject = null;
@@ -184,12 +197,40 @@ public class MapEditor : EditorWindow {
             _curMapRegionSize.x = Mathf.Clamp(EditorGUILayout.IntField("Width (X):", _curMapRegionSize.x), 0, 256);
             _curMapRegionSize.y = Mathf.Clamp(EditorGUILayout.IntField("Height (Y):", _curMapRegionSize.y), 0, 256);
             _curMapRegionSize.z = Mathf.Clamp(EditorGUILayout.IntField("Length (Z):", _curMapRegionSize.z), 0, 256);
+            if (GUILayout.Button("Reset To Cur Size"))
+            {
+                if (_importRegionTextures != null && _importRegionTextures.Count > 0)
+                {
+                    //Go through all textures and find largest size
+                    for (int i = 0; i < _importRegionTextures.Count; i++)
+                    {
+                        if (_importRegionTextures[i].width > _curMapRegionSize.x)
+                        {
+                            _curMapRegionSize.x = _importRegionTextures[i].width;
+                        }
+
+                        if (_importRegionTextures[i].height > _curMapRegionSize.z)
+                        {
+                            _curMapRegionSize.z = _importRegionTextures[i].height;
+                        }
+
+                        _curMapRegionSize.y = _importRegionTextures.Count;
+                    }
+                }
+            }
             
-            //showImportRegionTextures = EditorGUILayout.BeginToggleGroup("Import From Texture", showImportRegionTextures);
+            showImportRegionTextures = EditorGUILayout.BeginToggleGroup("Import From Texture", showImportRegionTextures);
+
+            GUILayout.Space(10);
 
             if(_importRegionTextures == null)
             {
                 _importRegionTextures = new List<Texture2D>();
+            }
+
+            if (_mapColorDefinitions == null)
+            {
+                _mapColorDefinitions = new List<Tuple<Color32, ushort>>();
             }
 
             //This has to happen before drawing the loop. Otherwise it poops itself
@@ -201,7 +242,23 @@ public class MapEditor : EditorWindow {
 
                     if (_assetSelectorObject is Texture2D)
                     {
-                        _importRegionTextures.Add(_assetSelectorObject as Texture2D);
+                        Texture2D texture = _assetSelectorObject as Texture2D;
+                        _importRegionTextures.Add(texture);
+
+                        if (texture.width > _curMapRegionSize.x)
+                        {
+                            _curMapRegionSize.x = texture.width;
+                        }
+
+                        if (texture.height > _curMapRegionSize.z)
+                        {
+                            _curMapRegionSize.z = texture.height;
+                        }
+
+                        _curMapRegionSize.y = _importRegionTextures.Count;
+
+                        //Check colors
+                        UpdateColorBlockPairing(texture, ref _mapColorDefinitions);
                     }
                     else
                     {
@@ -213,10 +270,11 @@ public class MapEditor : EditorWindow {
             for (int i = 0; i < _importRegionTextures.Count; i++)
             {
                 GUILayout.BeginHorizontal();
-                
-                GUILayout.Label(_importRegionTextures[i], GUILayout.MaxWidth(180), GUILayout.MaxHeight(180));
+                GUILayout.Label(string.Format("Level {0}", i));
 
-                if (i == 0)
+                GUILayout.Label(_importRegionTextures[i], GUILayout.MinWidth(180), GUILayout.MinHeight(180), GUILayout.MaxWidth(_importRegionTextures[i].width), GUILayout.MaxHeight(_importRegionTextures[i].height));
+
+                if (i == 0 && showImportRegionTextures)
                 {
                     GUI.enabled = false;
                 }
@@ -229,12 +287,12 @@ public class MapEditor : EditorWindow {
                     _importRegionTextures.Insert(i - 1, tex);
                 }
 
-                if (i == 0)
+                if (i == 0 && showImportRegionTextures)
                 {
                     GUI.enabled = true;
                 }
 
-                if (i == _importRegionTextures.Count - 1)
+                if (i == _importRegionTextures.Count - 1 && showImportRegionTextures)
                 {
                     GUI.enabled = false;
                 }
@@ -247,7 +305,7 @@ public class MapEditor : EditorWindow {
                     _importRegionTextures.Insert(i + 1, tex);
                 }
 
-                if (i == _importRegionTextures.Count - 1)
+                if (i == _importRegionTextures.Count - 1 && showImportRegionTextures)
                 {
                     GUI.enabled = true;
                 }
@@ -264,6 +322,25 @@ public class MapEditor : EditorWindow {
             {
                 EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", -1);
             }
+
+            GUILayout.Space(10);
+
+            GUILayout.Label("Color / Block Tile Type Definitions", GUILayout.MaxHeight(18));
+            Color prevColor = GUI.color;
+            for (int i = 0; i < _mapColorDefinitions.Count; i++)
+            {
+                GUILayout.BeginHorizontal();
+
+                GUI.color = _mapColorDefinitions[i].First;
+                GUILayout.Label(string.Format("R {0} G {1} B {2}", _mapColorDefinitions[i].First.r, _mapColorDefinitions[i].First.g, _mapColorDefinitions[i].First.b), GUILayout.MinWidth(120), GUILayout.MaxWidth(120));
+                GUILayout.Label(string.Format("Block Type: {0}", _mapColorDefinitions[i].Second), GUILayout.MaxWidth(100), GUILayout.MinWidth(100));
+                _mapColorDefinitions[i].Second = (ushort)Mathf.Clamp(EditorGUILayout.IntField(_mapColorDefinitions[i].Second, GUILayout.MaxWidth(30)), 0, ushort.MaxValue);
+
+                GUILayout.EndHorizontal();
+            }
+            GUI.color = prevColor;
+
+            GUILayout.Space(10);
 
             //else if (commandName == "ObjectSelectorClosed")
             //if (commandName == "ObjectSelectorClosed")
@@ -283,9 +360,9 @@ public class MapEditor : EditorWindow {
             //    //}
             //}
 
-            GUILayout.Box("", GUILayout.MaxWidth(350), GUILayout.Height(0));
+            GUILayout.Space(10);
 
-            //EditorGUILayout.EndToggleGroup();            
+            EditorGUILayout.EndToggleGroup();            
 
             if (GUILayout.Button("Create Region", GUILayout.MaxWidth(350), GUILayout.MinHeight(60)))
             {
@@ -294,7 +371,17 @@ public class MapEditor : EditorWindow {
                 _curMapRegion.RegionSize = new Vec3Int(_curMapRegionSize);
                 _curMapRegion.RegionUID = newUID;
 
-                AdjustRegionSize(ref _curMapRegion, _curMapRegion.RegionSize);
+                if (_importRegionTextures == null || _importRegionTextures.Count < 1)
+                {
+                    AdjustRegionSize(ref _curMapRegion, _curMapRegion.RegionSize);
+                }
+                else
+                {
+                    PopulateRegionFromTextures(ref _curMapRegion, _curMapRegion.RegionSize, _importRegionTextures, _mapColorDefinitions);
+                }
+
+                VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
+                vw.CreateWorld(_curMapRegion.RegionBlocks);
 
                 _curMapData.MapRegions.Add(_curMapRegion);
                 _curMapRegion = null;
@@ -379,6 +466,13 @@ public class MapEditor : EditorWindow {
         if (GUILayout.Button("Select", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
         {
             _selDelAddButtons = SelectDeleteAdd.Select;
+
+            if (_editorCamera == null)
+            {
+                _editorCamera = FindObjectOfType<MapEditorCamera>();
+            }
+
+            _editorCamera._targetCube.SetActive(true);
         }
 
         if (GUILayout.Button("Delete", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
@@ -396,13 +490,18 @@ public class MapEditor : EditorWindow {
             if (GUILayout.Button("Clear", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
             {
                 _selDelAddButtons = SelectDeleteAdd.None;
+
+                if (_editorCamera == null)
+                {
+                    _editorCamera = FindObjectOfType<MapEditorCamera>();
+                }
+
+                _editorCamera._targetCube.SetActive(false);
             }
         }
         GUILayout.EndHorizontal();
 
         GUILayout.Space(5);
-
-        
 
         if (_selDelAddButtons == SelectDeleteAdd.Select)
         {
@@ -440,6 +539,20 @@ public class MapEditor : EditorWindow {
         if (region.RegionBlocks == null)
         {
             region.RegionBlocks = new MapDataV2.MapBlock[newSize.x, newSize.y, newSize.z];
+
+            //Have to init this to something otherwise we'll get nothing out of it later
+            for (int x = 0; x < newSize.x; x++)
+            {
+                for (int y = 0; y < newSize.y; y++)
+                {
+                    for (int z = 0; z < newSize.z; z++)
+                    {
+                        MapDataV2.MapBlock block = new MapDataV2.MapBlock();
+                        block.Init();
+                        region.RegionBlocks[x, y, z] = block;
+                    }
+                }
+            }
         }
         else
         {
@@ -481,6 +594,67 @@ public class MapEditor : EditorWindow {
         }
     }
 
+    public void PopulateRegionFromTextures(ref MapDataV2.MapRegion region, Vec3Int newSize, List<Texture2D> importTextures, List<Tuple<Color32, ushort>> colorBlockDefs)
+    {
+        if (region.RegionBlocks == null)
+        {
+            region.RegionBlocks = new MapDataV2.MapBlock[newSize.x, newSize.y, newSize.z];
+        }
+
+        //First pass, fill with empty stuff
+        for (int x = 0; x < newSize.x; x++)
+        {
+            for (int y = 0; y < newSize.y; y++)
+            {
+                for (int z = 0; z < newSize.z; z++)
+                {
+                    MapDataV2.MapBlock block = new MapDataV2.MapBlock();
+                    block.Init();
+                    region.RegionBlocks[x, y, z] = block;
+                }
+            }
+        }
+
+        for (int y = 0; y < importTextures.Count && y < newSize.y; y++)
+        {
+            int width = importTextures[y].width;
+            int index = 0;
+            Color32[] colors = importTextures[y].GetPixels32();
+
+            //Because of how Unity reads in the pixels, we need to swap the X and the Z in order to get the same orientation as the source image
+            //So we swap X and Z, but also need to swap bounds check 
+            int height = importTextures[y].height;
+            for (int x = 0; x < height && x < newSize.x; x++)
+            {                
+                for (int z = 0; z < width && z < newSize.z; z++)
+                {
+                    //We're going to flip the z and x import here so it matches the same from any image it's imported from
+                    region.RegionBlocks[z, y, x] = MapBlockFromColor(colors[index], colorBlockDefs);
+                    index++;
+                }
+            }
+        }
+    }
+
+    public MapDataV2.MapBlock MapBlockFromColor(Color32 color, List<Tuple<Color32, ushort>> colorBlockDefs)
+    {
+        for (int i = 0; i < colorBlockDefs.Count; i++)
+        {
+            if (color.Compare(colorBlockDefs[i].First))
+            {
+                MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+                newBlock.BlockType = colorBlockDefs[i].Second;
+
+                return newBlock;
+            }
+        }
+
+        MapDataV2.MapBlock blankBlock = new MapDataV2.MapBlock();
+        blankBlock.BlockType = 0;
+
+        return blankBlock;
+    }
+
     public ushort FindFirstUnusedRegionUID(MapDataV2 mapData)
     {
         ushort uid = 0;
@@ -505,5 +679,31 @@ public class MapEditor : EditorWindow {
         }
 
         return uid;
+    }
+
+    public void UpdateColorBlockPairing(Texture2D newTexture, ref List<Tuple<Color32, ushort>> blockColorPairings)
+    {
+        Color32[] colors = newTexture.GetPixels32();
+
+        for (int i = 0; i < colors.Length; i++)
+        {
+            bool doesContain = false;
+            for (int j = 0; j < blockColorPairings.Count; j++)
+            {
+                if (blockColorPairings[j].First.Compare(colors[i]))
+                {
+                    doesContain = true;
+                    break;
+                }
+            }
+
+            //Color already present
+            if (doesContain)
+            {
+                continue;
+            }
+
+            blockColorPairings.Add(Tuple.New<Color32, ushort>(colors[i], 0));
+        }
     }
 }

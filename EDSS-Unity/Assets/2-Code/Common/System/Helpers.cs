@@ -235,6 +235,16 @@ namespace EveryDaySpaceStation.Utils
         }
         #endregion
 
+        #region Color Comparison
+        public static bool Compare (this Color32 m, Color32 n)
+        {
+            if (m.r == n.r && m.g == n.g && m.b == n.b && m.a == n.a)
+                return true;
+
+            return false;
+        }
+        #endregion
+
         public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
         {
             Vector3 perp = Vector3.Cross(fwd, targetDir);

@@ -44,7 +44,7 @@ namespace EveryDaySpaceStation
         #endregion
 
         protected VoxelChunkOrganizer[,,] _voxelChunks;
-        public static ushort[, ,] TempMap;
+        public static MapDataV2.MapBlock[, ,] TempMap;
         public Transform myTransform { get; private set; }
         System.Diagnostics.Stopwatch _timer;
 
@@ -62,11 +62,20 @@ namespace EveryDaySpaceStation
         public void Start()
         {
             myTransform = this.transform;
+        }
+
+        public void CreateWorld(MapDataV2.MapBlock[, ,] blockData)
+        {
+            if (myTransform == null)
+            {
+                Start();
+            }
 
             _timer = new System.Diagnostics.Stopwatch();
             _timer.Start();
 
-            TempMap = VoxelTempWorldData.GetMapFromFile();
+            //TempMap = VoxelTempWorldData.GetMapFromFile();
+            TempMap = blockData;
 
             int xChunkNum = Mathf.CeilToInt((float)TempMap.GetLength(0) / (float)ChunkSize.x);
             int zChunkNum = Mathf.CeilToInt((float)TempMap.GetLength(2) / (float)ChunkSize.z);

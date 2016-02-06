@@ -111,27 +111,27 @@ namespace EveryDaySpaceStation
             ChunkSize = chunkSize;
         }
 
-        public void LoadChunkDataPiecemeal(ushort blockType, Vec3Int xyz)
+        public void LoadChunkDataPiecemeal(MapDataV2.MapBlock block, Vec3Int xyz)
         {
             if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
             {
-                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
                 return;
             }
 
             if (xyz.y < 0 || xyz.y > ChunkSize.y - 1)
             {
-                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
                 return;
             }
 
             if (xyz.z < 0 || xyz.z > ChunkSize.z - 1)
             {
-                Debug.Log(string.Format("Block {0} is out of bounds {1}", blockType, xyz));
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
                 return;
             }
 
-            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(blockType, this);
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block.BlockType, this);
         }
 
         public void LoadChunkDataPostSet()

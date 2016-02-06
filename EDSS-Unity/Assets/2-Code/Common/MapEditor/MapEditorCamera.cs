@@ -35,6 +35,10 @@ public class MapEditorCamera : MonoBehaviour
 
     public Vector3 cameraMoveModifier = Vector3.one;
 
+    public Vec3Int _curTargetBlock = Vec3Int.Zero;
+
+    public GameObject _targetCube;
+
     //protected EntitySpriteGameObject _curHighLightESGO;
     //protected EntitySpriteGameObject _prevHighLightESGO;
 
@@ -47,6 +51,16 @@ public class MapEditorCamera : MonoBehaviour
         _transform = this.gameObject.transform;
         _theCamera = this.gameObject.GetComponentInChildren<Camera>();
 
+        if (_targetCube == null)
+        {
+            _targetCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            _targetCube.collider.enabled = false;
+        }
+
+        _targetCube.transform.localScale = (VoxelBlock.DefaultBlockSize * 1.02f);
+
+        _targetCube.SetActive(false);
+
         if (_theCamera == null)
         {
             Debug.LogError("Can't find camera for FPS camera");
@@ -56,6 +70,8 @@ public class MapEditorCamera : MonoBehaviour
 
         //_lineBoundsDrawer = PoolManager.Singleton.RequestBoundsDrawer();
         //_lineBoundsDrawer.Detach();
+
+        _curTargetBlock = Vec3Int.Zero;
     }
 
     void Update()
@@ -142,7 +158,24 @@ public class MapEditorCamera : MonoBehaviour
             _cameraTrans.Translate(moveDelta, Space.Self);
         }
 
+        CheckForBlock();
         //MouseCrossHair();
+    }
+
+    void CheckForBlock()
+    {
+        Vector3 centerPoint = _theCamera.transform.position;
+        Vector3 dir = _cameraTrans.transform.forward;
+
+        Vector3 targetPos = centerPoint + (dir * 2.5f);
+
+        targetPos.x = Mathf.Floor(targetPos.x / VoxelBlock.DefaultBlockSize.x);
+        targetPos.y = Mathf.Floor(targetPos.y / VoxelBlock.DefaultBlockSize.y);
+        targetPos.z = Mathf.Floor(targetPos.z / VoxelBlock.DefaultBlockSize.z);
+
+        targetPos += Vector3.one * 0.5f;
+
+        _targetCube.transform.position = targetPos;
     }
 
     //void MouseCrossHair()
