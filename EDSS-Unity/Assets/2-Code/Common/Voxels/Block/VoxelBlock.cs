@@ -33,6 +33,7 @@ namespace EveryDaySpaceStation
         public ushort BlockType { get; private set; }
         public byte LightValue { get; private set; }
         public byte IsModified { get; private set; }
+        //public bool IsDirty { get; private set; }
 
         public VoxelChunk ParentChunk { get; private set; }
 
@@ -51,5 +52,10 @@ namespace EveryDaySpaceStation
         {
             IsModified = (byte)(isChanged == true ? 1 : 0);
         }
+
+        //public void SetDirty(bool isDirty)
+        //{
+        //    IsDirty = IsDirty;
+        //}
     }
 }

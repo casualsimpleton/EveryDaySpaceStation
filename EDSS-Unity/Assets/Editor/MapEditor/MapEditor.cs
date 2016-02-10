@@ -40,9 +40,8 @@ public class MapEditor : EditorWindow {
     public enum SelectDeleteAdd
     {
         None,
-        Select,
-        Delete,
-        Add
+        BlockEdit,
+        EntityEdit
     }
 
     public enum RegionAction
@@ -70,6 +69,7 @@ public class MapEditor : EditorWindow {
     Vector2 _scrollPos = new Vector2();
 
     MapEditorCamera _editorCamera;
+    VoxelWorld _vw;
 
     void Reset()
     {
@@ -380,11 +380,12 @@ public class MapEditor : EditorWindow {
                     PopulateRegionFromTextures(ref _curMapRegion, _curMapRegion.RegionSize, _importRegionTextures, _mapColorDefinitions);
                 }
 
-                VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
-                vw.CreateWorld(_curMapRegion.RegionBlocks);
+                //VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
+                _vw = GameObject.FindObjectOfType<VoxelWorld>();
+                _vw.CreateWorld(_curMapRegion.RegionBlocks);
 
                 _curMapData.MapRegions.Add(_curMapRegion);
-                _curMapRegion = null;
+                //_curMapRegion = null;
             }
         }
         else if (_regionCreateRenumDelete == RegionAction.Renumber)
@@ -458,31 +459,32 @@ public class MapEditor : EditorWindow {
         //if (_selDelAddButtons != SelectDeleteAdd.None)
         {
             GUILayout.Label(string.Format("Action: {0}", _selDelAddButtons));
+
+            if (_selDelAddButtons == SelectDeleteAdd.BlockEdit)
+            {
+                GUILayout.Label(string.Format("Select Anchor: {0},{1},{2}", _editorCamera._curTargetBlockPos.x, _editorCamera._curTargetBlockPos.y, _editorCamera._curTargetBlockPos.z));
+            }
         }
 
         GUILayout.Space(5);
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Select", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
+        if (GUILayout.Button("Block Edit", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
         {
-            _selDelAddButtons = SelectDeleteAdd.Select;
+            _selDelAddButtons = SelectDeleteAdd.BlockEdit;
 
             if (_editorCamera == null)
             {
                 _editorCamera = FindObjectOfType<MapEditorCamera>();
             }
 
+            _editorCamera.MouseSelectionMode = MapEditorCamera.MouseEditMode.BlockEdit;
             _editorCamera._targetCube.SetActive(true);
         }
 
-        if (GUILayout.Button("Delete", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
+        if (GUILayout.Button("Entity Edit", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
         {
-            _selDelAddButtons = SelectDeleteAdd.Delete;
-        }
-
-        if (GUILayout.Button("Add", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
-        {
-            _selDelAddButtons = SelectDeleteAdd.Add;
+            _selDelAddButtons = SelectDeleteAdd.EntityEdit;
         }
 
         if (_selDelAddButtons != SelectDeleteAdd.None)
@@ -503,35 +505,96 @@ public class MapEditor : EditorWindow {
 
         GUILayout.Space(5);
 
-        if (_selDelAddButtons == SelectDeleteAdd.Select)
-        {
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("<X", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
+        //if (_selDelAddButtons == SelectDeleteAdd.Select)
+        //{
+        //    GUILayout.BeginHorizontal();
+        //    if (GUILayout.Button("<X", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(-1, 0, 0);
+        //    }
 
-            if (GUILayout.Button("X>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
+        //    if (GUILayout.Button("X>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(1, 0, 0);
+        //    }
 
-            if (GUILayout.Button("<Y", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
+        //    if (GUILayout.Button("<Y", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(0, -1, 0);
+        //    }
 
-            if (GUILayout.Button("Y>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
+        //    if (GUILayout.Button("Y>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(0, 1, 0);
+        //    }
 
-            if (GUILayout.Button("<Z", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
+        //    if (GUILayout.Button("<Z", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(0, 0, -1);
+        //    }
 
-            if (GUILayout.Button("Z>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
-            {
-            }
-            GUILayout.EndHorizontal();
-        }
+        //    if (GUILayout.Button("Z>", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ChangeSelectionBlock(0, 0, 1);
+        //    }
+
+        //    if (GUILayout.Button("Reset", GUILayout.MaxWidth(40), GUILayout.MinHeight(40)))
+        //    {
+        //        _editorCamera.ResetSelectionBlock();
+        //    }
+        //    GUILayout.EndHorizontal();
+        //}
         GUILayout.EndScrollView();
+    }
+
+    void Update()
+    {
+        ProcessMouseCameraEvent();
+    }
+    
+    /// <summary>
+    /// Since the mouse has no reliable way to send messages to the editor window, we need to check the editor mouse to see if it has any new mouse events to process
+    /// </summary>
+    public void ProcessMouseCameraEvent()
+    {
+        if(_curMapRegion == null)
+            return;
+
+        MapEditorCamera.MouseActionEvent mouseEditEvent = _editorCamera.GetMouseAction();
+
+        if (mouseEditEvent == null)
+        {
+            return;
+        }
+
+        //Check for bounds
+        if (mouseEditEvent._position.x < 0 || mouseEditEvent._position.y < 0 || mouseEditEvent._position.z < 0
+            || mouseEditEvent._position.x >= _curMapRegion.RegionSize.x || mouseEditEvent._position.y >= _curMapRegion.RegionSize.y || mouseEditEvent._position.z >= _curMapRegion.RegionSize.z)
+        {
+            return;
+        }
+
+        if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.AddBlock)
+        {
+            MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+            newBlock.BlockType = 1;
+            _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
+        }
+        else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.RemoveBlock)
+        {
+            //It's already "empty"
+            if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
+            {
+                return;
+            }
+
+            MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+            newBlock.BlockType = 0;
+            _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
+        }
+
+        //VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
+        _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z]);
     }
 
     public void AdjustRegionSize(ref MapDataV2.MapRegion region, Vec3Int newSize)

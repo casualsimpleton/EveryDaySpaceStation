@@ -130,5 +130,16 @@ namespace EveryDaySpaceStation
             _timer.Stop();
             Debug.Log(string.Format("World Created in {0}ms for {1},{2},{3}", _timer.ElapsedMilliseconds, TempMap.GetLength(0), TempMap.GetLength(1), TempMap.GetLength(2)));
         }
+
+        public void UpdateBlock(Vec3Int position, MapDataV2.MapBlock newBlock)
+        {
+            int chunkX = position.x / ChunkSize.x;
+            int chunkY = position.y / ChunkSize.y;
+            int chunkZ = position.z / ChunkSize.z;
+
+            Vec3Int localPos = new Vec3Int(position.x % ChunkSize.x, position.y % ChunkSize.y, position.z % ChunkSize.z);
+
+            _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataBlock(newBlock, localPos);
+        }
     }
 }

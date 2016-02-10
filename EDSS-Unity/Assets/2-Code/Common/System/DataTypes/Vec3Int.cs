@@ -29,6 +29,7 @@ namespace EveryDaySpaceStation.DataTypes
         public static Vec3Int Up = new Vec3Int(0, 1, 0);
         public static Vec3Int Forward = new Vec3Int(0, 0, 1);
         public static Vec3Int Right = new Vec3Int(1, 0, 0);
+        public static Vec3Int One = new Vec3Int(1, 1, 1);
 
         public Vec3Int(int newX, int newY, int newZ)
         {
@@ -127,4 +128,25 @@ namespace EveryDaySpaceStation.DataTypes
         }
     }
 
+    public struct Vec3IntCube
+    {
+        public Vec3Int LowerLeft;
+        public Vec3Int WidthHeightLength;
+
+        public Vec3IntCube(Vec3Int Lowerleft, Vec3Int Widthheightlength)
+        {
+            LowerLeft = Lowerleft;
+            WidthHeightLength = Widthheightlength;
+        }
+
+        public bool IsPointWithinCube(Vec3Int testPoint)
+        {
+            Vec3Int adjustedPoint = testPoint - LowerLeft;
+
+            if (testPoint.x < WidthHeightLength.x && testPoint.y < WidthHeightLength.y && testPoint.z < WidthHeightLength.z)
+                return true;
+
+            return false;
+        }
+    }
 }

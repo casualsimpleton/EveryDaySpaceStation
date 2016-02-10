@@ -21,6 +21,31 @@ using EveryDaySpaceStation.Utils;
 [ExecuteInEditMode]
 public class MapEditorCamera : MonoBehaviour
 {
+    public enum MouseEditMode
+    {
+        None,
+        BlockEdit,
+        EntitySelect
+    }
+
+    public enum MouseActionType
+    {
+        AddBlock,
+        RemoveBlock
+    }
+
+    public class MouseActionEvent
+    {
+        public MouseActionEvent(MouseActionType actionType, Vec3Int pos)
+        {
+            _mouseActionType = actionType;
+            _position = pos;
+        }
+
+        public MouseActionType _mouseActionType;
+        public Vec3Int _position;
+    }
+
     Transform _transform;
     Transform _cameraTrans;
 
@@ -35,7 +60,7 @@ public class MapEditorCamera : MonoBehaviour
 
     public Vector3 cameraMoveModifier = Vector3.one;
 
-    public Vec3Int _curTargetBlock = Vec3Int.Zero;
+    public Vec3Int _curTargetBlockPos = Vec3Int.Zero;
 
     public GameObject _targetCube;
 
@@ -45,6 +70,33 @@ public class MapEditorCamera : MonoBehaviour
     //protected BoundsDrawing _lineBoundsDrawer;
 
     //public EntitySpriteGameObject CurrentHighlitedESGO { get { return _curHighLightESGO; } }
+
+    protected MouseEditMode _mouseSelectMode;
+
+    public MouseEditMode MouseSelectionMode
+    {
+        get { return _mouseSelectMode; }
+        set { _mouseSelectMode = value; }
+    }
+
+    Queue<MouseActionEvent> _pendingMouseActions;
+
+    public MouseActionEvent GetMouseAction()
+    {
+        if (_pendingMouseActions == null)
+            return null;
+
+        if (_pendingMouseActions.Count < 1)
+            return null;
+
+        return _pendingMouseActions.Dequeue();
+    }
+
+    public void AddMouseAction(MouseActionType actionType, Vec3Int pos)
+    {
+        Debug.Log(string.Format("Mouse action: {0} Pos: {1}", actionType, pos));
+        _pendingMouseActions.Enqueue(new MouseActionEvent(actionType, pos));
+    }
 
     void Start()
     {
@@ -56,6 +108,8 @@ public class MapEditorCamera : MonoBehaviour
             _targetCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             _targetCube.collider.enabled = false;
         }
+
+        _pendingMouseActions = new Queue<MouseActionEvent>();
 
         _targetCube.transform.localScale = (VoxelBlock.DefaultBlockSize * 1.02f);
 
@@ -71,7 +125,7 @@ public class MapEditorCamera : MonoBehaviour
         //_lineBoundsDrawer = PoolManager.Singleton.RequestBoundsDrawer();
         //_lineBoundsDrawer.Detach();
 
-        _curTargetBlock = Vec3Int.Zero;
+        _curTargetBlockPos = Vec3Int.Zero;
     }
 
     void Update()
@@ -116,6 +170,26 @@ public class MapEditorCamera : MonoBehaviour
             }
         }
 
+        //When holding down right click and pressing left click, add a block remove event
+        if (_mouseSelectMode == MouseEditMode.BlockEdit)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    AddMouseAction(MouseActionType.RemoveBlock, _curTargetBlockPos);
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    AddMouseAction(MouseActionType.AddBlock, _curTargetBlockPos);
+                }
+            }
+        }
+
+
         bool shiftDown = Input.GetKey(KeyCode.LeftShift);
         Vector3 moveDelta = Vector3.zero;
 
@@ -158,8 +232,10 @@ public class MapEditorCamera : MonoBehaviour
             _cameraTrans.Translate(moveDelta, Space.Self);
         }
 
-        CheckForBlock();
-        //MouseCrossHair();
+        if (_mouseSelectMode == MouseEditMode.BlockEdit)
+        {
+            CheckForBlock();
+        }
     }
 
     void CheckForBlock()
@@ -175,52 +251,17 @@ public class MapEditorCamera : MonoBehaviour
 
         targetPos += Vector3.one * 0.5f;
 
+        _curTargetBlockPos.x = Mathf.FloorToInt(targetPos.x);
+        _curTargetBlockPos.y = Mathf.FloorToInt(targetPos.y);
+        _curTargetBlockPos.z = Mathf.FloorToInt(targetPos.z);
+
         _targetCube.transform.position = targetPos;
     }
 
-    //void MouseCrossHair()
-    //{
-    //    Vector3 centerPoint = _cameraTrans.transform.position;
-    //    Vector3 dir = _cameraTrans.transform.forward;
-
-    //    int layer = 1 << ClientGameManager.ClientTriggerLayer;
-
-    //    RaycastHit hitInfo;
-
-    //    bool hit = Physics.Raycast(centerPoint, dir, out hitInfo, 10f, layer);
-
-    //    if (hit)
-    //    {
-    //        //Debug.Log("Hit " + hitInfo.collider.gameObject.transform.root.name);
-
-    //        _curHighLightESGO = hitInfo.collider.gameObject.transform.root.gameObject.GetComponent<EntitySpriteGameObject>();
-
-    //        if (_curHighLightESGO == null)
-    //        {
-    //            return;
-    //        }
-
-    //        if (_curHighLightESGO != _prevHighLightESGO)
-    //        {
-    //            _curHighLightESGO.Highlight();
-    //            _lineBoundsDrawer.DrawCube(_curHighLightESGO._transform.position, _curHighLightESGO.Cubecollider.BoxSize);
-    //            _lineBoundsDrawer.Enable();
-
-    //            if (_prevHighLightESGO != null)
-    //            {
-    //                _prevHighLightESGO.DeHighlight();
-    //            }
-    //        }
-
-    //        _prevHighLightESGO = _curHighLightESGO;
-    //    }
-    //    else if (_prevHighLightESGO != null)
-    //    {
-    //        _lineBoundsDrawer.Disable();
-    //        _prevHighLightESGO.DeHighlight();
-    //        _prevHighLightESGO = null;
-    //    }
-    //}
+    public void ResetSelectionBlock()
+    {
+        _targetCube.transform.localScale = Vector3.one;
+    }
 
     void OnPostRender()
     {

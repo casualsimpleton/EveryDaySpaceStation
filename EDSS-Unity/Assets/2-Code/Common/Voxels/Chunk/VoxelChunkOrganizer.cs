@@ -65,6 +65,11 @@ namespace EveryDaySpaceStation
             _chunk.LoadChunkDataPostSet();
         }
 
+        public void ChangeDataBlock(MapDataV2.MapBlock block, Vec3Int xyz)
+        {
+            _chunk.ChangeDataBlock(block, xyz);
+        }
+
         void Update()
         {
             _chunk.ChunkUpdate();

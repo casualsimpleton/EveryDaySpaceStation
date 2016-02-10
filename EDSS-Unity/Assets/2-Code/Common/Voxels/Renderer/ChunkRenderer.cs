@@ -153,6 +153,7 @@ namespace EveryDaySpaceStation
             CollisionMesh.vertices = CollisionVertices.ToArray();
             CollisionMesh.triangles = CollisionTriangles.ToArray();
 
+            MeshCollider.sharedMesh = null;
             MeshCollider.sharedMesh = CollisionMesh;
         }
     }

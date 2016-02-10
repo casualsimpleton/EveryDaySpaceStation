@@ -32,15 +32,18 @@ namespace EveryDaySpaceStation
         protected UniqueList<ChunkRenderer> _chunkRenderers;
         public VoxelChunkOrganizer ChunkGameObject { get; private set; }
         public Vec3Int ChunkSize { get; private set; }
+        protected List<Vec3Int> _removedBlocks = new List<Vec3Int>();
 
         //System.Diagnostics.Stopwatch _timer;
 
         public bool IsDirty { get; set; }
+        public bool NeedsRebuilt { get; set; }
 
         public VoxelChunk(int xWidth, int yHeight, int zLength)
         {
             _blocks = new VoxelBlock[xWidth, yHeight, zLength];
             IsDirty = false;
+            NeedsRebuilt = false;
             _chunkRenderers = new UniqueList<ChunkRenderer>();
         }
 
@@ -74,6 +77,7 @@ namespace EveryDaySpaceStation
             timer.Stop();
             Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
 
+            NeedsRebuilt = true;
             IsDirty = true;
         }
 
@@ -100,6 +104,7 @@ namespace EveryDaySpaceStation
             Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
 
             IsDirty = true;
+            NeedsRebuilt = true;
         }
 
         public void LoadChunkDataPreSet(Vec3Int chunkSize)
@@ -134,16 +139,61 @@ namespace EveryDaySpaceStation
             _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block.BlockType, this);
         }
 
+        /// <summary>
+        /// Change a single block and mark this chunk dirt. Don't use when making big changes
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="xyz"></param>
+        public void ChangeDataBlock(MapDataV2.MapBlock block, Vec3Int xyz)
+        {
+            if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
+                return;
+            }
+
+            if (xyz.y < 0 || xyz.y > ChunkSize.y - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
+                return;
+            }
+
+            if (xyz.z < 0 || xyz.z > ChunkSize.z - 1)
+            {
+                Debug.Log(string.Format("Block {0} is out of bounds {1}", block.BlockType, xyz));
+                return;
+            }
+
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block.BlockType, this);
+
+            //If the new block type is 0 (empty) we need to handle it separately
+            if (block.BlockType == 0)
+            {
+                _removedBlocks.Add(xyz);
+                NeedsRebuilt = true;
+            }
+
+            IsDirty = true;
+        }
+
+
         public void LoadChunkDataPostSet()
         {
             //_timer.Stop();
             //Debug.Log("Created " + (_blocks.GetLength(0) * _blocks.GetLength(1) * _blocks.GetLength(2)) + " blocks in " + _timer.ElapsedMilliseconds);
 
+            NeedsRebuilt = true;
             IsDirty = true;
         }
 
         public ChunkRenderer GetChunkRenderer(ushort uid)
         {
+            //Special case
+            if(uid == 0)
+            {
+                return null;
+            }
+
             List<ChunkRenderer> cr = _chunkRenderers.List;
             for (int i = 0; i < cr.Count; i++)
             {
@@ -172,11 +222,27 @@ namespace EveryDaySpaceStation
             }
         }
 
+        protected void ResetChunkRenderers()
+        {
+            List<ChunkRenderer> crs = _chunkRenderers.List;
+            for (int i = 0; i < crs.Count; i++)
+            {
+                GameObject.Destroy(crs[i]);
+            }
+
+            _chunkRenderers.Clear();
+        }
+
         public void ChunkUpdate()
         {
-            if (!IsDirty)
+            if (!IsDirty && !NeedsRebuilt)
             {
                 return;
+            }
+
+            if (NeedsRebuilt)
+            {
+                ResetChunkRenderers();
             }
 
             int xw = _blocks.GetLength(0);
@@ -196,7 +262,13 @@ namespace EveryDaySpaceStation
                         //Don't draw blocks "0"
                         if (block.BlockType == 0)
                         {
-                            continue;
+                            Vec3Int xyz = new Vec3Int(x, y, z);
+                            if (!_removedBlocks.Contains(xyz))
+                            {
+                                continue;
+                            }
+
+                            _removedBlocks.Remove(xyz);
                         }
 
                         ChunkRenderer cr = lastCR;
@@ -221,6 +293,7 @@ namespace EveryDaySpaceStation
             }
 
             IsDirty = false;
+            NeedsRebuilt = false;
         }
 
         protected void UpdateChunkRendererBlock(ChunkRenderer chunkRenderer, VoxelBlock block, 
