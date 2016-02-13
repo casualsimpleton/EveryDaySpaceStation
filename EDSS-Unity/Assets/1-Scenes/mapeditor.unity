@@ -447,7 +447,7 @@ MonoBehaviour:
   maxX: 90
   minX: -90
   cameraMoveModifier: {x: .25, y: .25, z: .25}
-  _curTargetBlock:
+  _curTargetBlockPos:
     x: 0
     y: 0
     z: 0

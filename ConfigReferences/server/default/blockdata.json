@@ -2,132 +2,163 @@
 	"blockdata" :
 	[
 		{
-			"uid" : 0,
-			"name" : "empty",
+			"blockuid" : 0,
+			"name" : "Air",
 			"strength" : -1,
 			"facez+" : 0,
 			"facex+" : 0,
 			"facez-" : 0,
 			"facex-" : 0,
-			"facetop" : 0,
-			"facebottom" : 0,			
+			"facey+" : 0,
+			"facey-" : 0,
 			"flags" :
 			[
-				"Empty" 
+				"Empty"
 			],
 			"requirement" : 0
-		},
+		}
+		,
 		{
-			"uid" : 1,
-			"name" : "space",
-			"strength" : -1,
-			"facez+" : 0,
-			"facex+" : 0,
-			"facez-" : 0,
-			"facex-" : 0,
-			"facetop" : 0,
-			"facebottom" : 0,
-			"flags" :
-			[
-				"Vacuum" 
-			],
-			"requirement" : 0
-		},
-		{
-			"uid" : 2,
-			"name" : "lattice",
-			"strength" : 1000,
-			"facez+" : 0,
-			"facex+" : 0,
-			"facez-" : 0,
-			"facex-" : 0,
-			"facetop" : 0,
-			"facebottom" : 0,
-			"flags" :
-			[
-				"None" 
-			],
-			"requirement" : 1
-		},
-		{
-			"uid" : 3,
-			"name" : "floor",
-			"strength" : 1000,
-			"facez+" : 0,
-			"facex+" : 0,
-			"facez-" : 0,
-			"facex-" : 0,
-			"facetop" : 0,
-			"facebottom" : 1,
-			"flags" :
-			[
-				"None" 
-			],
-			"requirement" : 2
-		},
-		{
-			"uid" : 4,
-			"name" : "wall",
-			"strength" : 1000,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facetop" : 1,
-			"facebottom" : 1,
-			"flags" :
-			[
-				"BlocksLight" 
-			],
-			"requirement" : 3
-		},
-		{
-			"uid" : 5,
-			"name" : "door",
+			"blockuid" : 1,
+			"name" : "Scaffold",
 			"strength" : 100,
 			"facez+" : 1,
 			"facex+" : 1,
 			"facez-" : 1,
 			"facex-" : 1,
-			"facetop" : 1,
-			"facebottom" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
 			"flags" :
 			[
-				"Door" 
+				"Scaffold",
+				"Transparent"
 			],
-			"requirement" : 3
-		},
-		{
-			"uid" : 6,
-			"name" : "grate",
+			"requirement" : 0
+		}
+		,
+		{		
+			"blockuid" : 2,
+			"name" : "Hull",
 			"strength" : 1000,
 			"facez+" : 1,
 			"facex+" : 1,
 			"facez-" : 1,
 			"facex-" : 1,
-			"facetop" : 1,
-			"facebottom" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
 			"flags" :
 			[
-				"Porous" 
+				"Hull",
+				"BlocksLight"
 			],
-			"requirement" : 3
-		},
-		{
-			"uid" : 7,
-			"name" : "window",
-			"strength" : 1000,
+			"requirement" : 1
+		}
+		,
+		{		
+			"blockuid" : 3,
+			"name" : "Reinforced Hull",
+			"strength" : 5000,
 			"facez+" : 1,
 			"facex+" : 1,
 			"facez-" : 1,
 			"facex-" : 1,
-			"facetop" : 1,
-			"facebottom" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
 			"flags" :
 			[
-				"Transparent" 
+				"Reinforced Hull",
+				"BlocksLight"
 			],
-			"requirement" : 3
+			"requirement" : 2
+		}
+		,
+		{		
+			"blockuid" : 4,
+			"name" : "Basic Door",
+			"strength" : 500,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
+			"flags" :
+			[
+				"Door",
+				"BlocksLight"
+			],
+			"requirement" : 0
+		}
+		,
+		{		
+			"blockuid" : 5,
+			"name" : "Heavy Door",
+			"strength" : 1500,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
+			"flags" :
+			[
+				"Heavy Door",
+				"BlocksLight"
+			],
+			"requirement" : 4
+		}
+		,
+		{		
+			"blockuid" : 6,
+			"name" : "Glass",
+			"strength" : 500,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
+			"flags" :
+			[
+				"Glass",
+				"Transparent"
+			],
+			"requirement" : 0
+		}
+		,
+		{		
+			"blockuid" : 7,
+			"name" : "Reinforced Glass",
+			"strength" : 2500,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
+			"flags" :
+			[
+				"Reinforced Glass",
+				"Transparent"
+			],
+			"requirement" : 6
+		}
+		,
+		{		
+			"blockuid" : 8,
+			"name" : "Grating",
+			"strength" : 2000,
+			"facez+" : 1,
+			"facex+" : 1,
+			"facez-" : 1,
+			"facex-" : 1,
+			"facey+" : 1,
+			"facey-" : 1,
+			"flags" :
+			[
+				"Porous"
+			],
+			"requirement" : 0
 		}
 	]
 }

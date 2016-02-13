@@ -71,6 +71,15 @@ public class MapEditor : EditorWindow {
     MapEditorCamera _editorCamera;
     VoxelWorld _vw;
 
+    bool _hasStarted = false;
+
+    void StartLoad()
+    {
+        Debug.Log(string.Format("Loading Map Editor: {0}", System.Environment.SpecialFolder.ApplicationData));
+
+        _hasStarted = true;
+    }
+
     void Reset()
     {
         _curMapData = null;
@@ -549,6 +558,11 @@ public class MapEditor : EditorWindow {
 
     void Update()
     {
+        if (!_hasStarted)
+        {
+            StartLoad();
+        }
+
         ProcessMouseCameraEvent();
     }
     
