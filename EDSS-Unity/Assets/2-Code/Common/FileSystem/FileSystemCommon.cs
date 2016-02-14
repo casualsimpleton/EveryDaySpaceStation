@@ -43,7 +43,7 @@ namespace EveryDaySpaceStation
         static ServerConfig _serverConfig = null;
         static ServerNetConfig _serverNetConfig = null;
         static ClientNetConfig _clientNetConfig = null;
-        static GameManfiest _gameManifestConfig = null;
+        //static GameManfiest _gameManifestConfig = null;
         #endregion
 
         #region Gets/Sets
@@ -86,28 +86,28 @@ namespace EveryDaySpaceStation
 
             LoadConfigFiles();
 
-            //TODO Load this properly
-            _mapDirectory = "maps";
+            ////TODO Load this properly
+            //_mapDirectory = "maps";
 
-            if (_serverConfig.MapChoices.Length < 1)
-            {
-                Debug.LogError(string.Format("No maps present in rotation. Unable to proceed!"));
-                return;
-            }
+            //if (_serverConfig.MapChoices.Length < 1)
+            //{
+            //    Debug.LogError(string.Format("No maps present in rotation. Unable to proceed!"));
+            //    return;
+            //}
 
-            MapDataConfig testMap = LoadMap(_serverConfig.MapChoices[0].MapName);  //"testLevel1");
-            MapEntityDataConfig testEntities = LoadMapEnities(_serverConfig.MapChoices[0].EntityName);
+            //MapDataConfig testMap = LoadMap(_serverConfig.MapChoices[0].MapName);  //"testLevel1");
+            //MapEntityDataConfig testEntities = LoadMapEnities(_serverConfig.MapChoices[0].EntityName);
 
-            ServerGameManager.Singleton.ProcessMap(testMap);
-            ServerGameManager.Singleton.ProcessMapEntities(testEntities);
-            //ClientGameManager.Singleton.ProcessMap(testMap);
-            //ClientGameManager.Singleton.ProcessMapEntities(testEntities);
+            //ServerGameManager.Singleton.ProcessMap(testMap);
+            //ServerGameManager.Singleton.ProcessMapEntities(testEntities);
+            ////ClientGameManager.Singleton.ProcessMap(testMap);
+            ////ClientGameManager.Singleton.ProcessMapEntities(testEntities);
 
-            //Trigger a collection now so it doesn't kick in later as we just produced a good amount of trash
-            System.GC.Collect();
+            ////Trigger a collection now so it doesn't kick in later as we just produced a good amount of trash
+            //System.GC.Collect();
 
             _initDone = true;
-            _hasGameStarted = true;
+            //_hasGameStarted = true;
         }
 
         #region Config stuff
@@ -117,11 +117,11 @@ namespace EveryDaySpaceStation
             _serverNetConfig = Config.GetConfig<ServerNetConfig>();
             _clientNetConfig = Config.GetConfig<ClientNetConfig>();
 
-            LoadServerConfig();
-            ProcessGameManifest();
+            //LoadServerConfig();
+            //ProcessGameManifest();
         }
 
-        private static void LoadServerConfig()
+        public static void LoadServerConfig(string manifestPath = "")
         {
             _serverConfig = Config.GetConfig<ServerConfig>();
 
@@ -138,7 +138,10 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            string manifestPath = Path.Combine(path, "manifest.json");
+            if (string.IsNullOrEmpty(manifestPath))
+            {
+                manifestPath = Path.Combine(path, "manifest.json");
+            }
 
             if (!File.Exists(manifestPath))
             {
@@ -146,8 +149,89 @@ namespace EveryDaySpaceStation
             }
 
             string rawJson = File.ReadAllText(manifestPath);
+            string fileName = FileSystem.GetFileNameWithExtension(manifestPath);
 
-            _gameManifestConfig = JsonConvert.DeserializeObject<GameManfiest>(rawJson);
+            //_gameManifestConfig = JsonConvert.DeserializeObject<GameManfiest>(rawJson);
+            ProcessGameManifest(path, fileName, rawJson);
+        }
+
+        public static void ProcessGameManifest(string manifestPath, string manifestFileName, string rawManifestJson)
+        {
+            if (string.IsNullOrEmpty(rawManifestJson))
+            {
+                Debug.LogError(string.Format("Game Manifest string is null. Can't proceed."));
+                return;
+            }
+
+            GameManifestJson jsonData = JsonConvert.DeserializeObject<GameManifestJson>(rawManifestJson);
+
+            GameManifestV2.Singleton.PrepareManifest(manifestFileName, manifestPath, jsonData.ManifestName, jsonData.ManifestVersion);
+
+            #region Block Data
+            int blockDataFilesProcessed = 0;
+            int blockDataTemplatesProcessed = 0;
+            for (int i = 0; i < jsonData.BlockDataFileNames.Length; i++)
+            {
+                blockDataFilesProcessed++;
+                List<GameManifestV2.BlockDataTemplate> newBlocks = ProcessBlockTemplates(jsonData.BlockDataFileNames[i], ref blockDataTemplatesProcessed);
+
+                if (newBlocks == null)
+                {
+                    Debug.LogWarning(string.Format("No block templates processed from '{0}'. You might want to check that.", jsonData.BlockDataFileNames[i]));
+                    continue;
+                }
+
+                for (int j = 0; j < newBlocks.Count; j++)
+                {
+                    GameManifestV2.Singleton.AddBlockTemplate(newBlocks[j]);
+                }
+            }
+            #endregion
+        }
+
+        private static List<GameManifestV2.BlockDataTemplate> ProcessBlockTemplates(string blockDataFileName, ref int numberOfBlockTemplatesProcessed)
+        {
+            List<GameManifestV2.BlockDataTemplate> newBlockTemplates = new List<GameManifestV2.BlockDataTemplate>();
+
+            string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, blockDataFileName);
+
+            if (!File.Exists(fileAndPath))
+            {
+                Debug.LogError(string.Format("Unable to load block template data file '{0}'. Check the manifest json for accuracy", fileAndPath));
+                return null;
+            }
+
+            string rawJson = File.ReadAllText(fileAndPath);
+
+            BlockTemplateCollectionJson groupBlockDataJson = JsonConvert.DeserializeObject<BlockTemplateCollectionJson>(rawJson);
+
+            if (groupBlockDataJson == null)
+            {
+                Debug.LogError(string.Format("Problem loading block template data json for '{0}'. Please double check it.", fileAndPath));
+                return null;
+            }
+
+            for (int i = 0; i < groupBlockDataJson.BlockData.Length; i++)
+            {
+                BlockTemplateJson blockJson = groupBlockDataJson.BlockData[i];
+
+                byte[] blockDrawingFaces = new byte[System.Enum.GetValues(typeof(GameManifestV2.BlockDataTemplate.ShowFaceDirection)).Length];
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus] = blockJson.FaceZForward;
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus] = blockJson.FaceXForward;
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus] = blockJson.FaceTop;
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus] = blockJson.FaceZBack;
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus] = blockJson.FaceXBack;
+                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYMinus] = blockJson.FaceBottom;
+
+                GameManifestV2.BlockDataTemplate newBlock = new GameManifestV2.BlockDataTemplate(blockJson.BlockUID, blockJson.BlockName,
+                    blockJson.BlockDefaultStrength, blockDrawingFaces, blockJson.Flags, blockJson.Requirement);
+
+                numberOfBlockTemplatesProcessed++;
+
+                newBlockTemplates.Add(newBlock);
+            }
+
+            return newBlockTemplates;
         }
         #endregion
 
@@ -171,14 +255,14 @@ namespace EveryDaySpaceStation
         //2 Byte Ushort - Left Face UID
         //1 Byte - Light Info
         //1 Byte - Pipe Data
-            //Bit 0 - O2
-            //Bit 1 - N2
-            //Bit 2 - Air
-            //Bit 3 - CO2
-            //Bit 4 - N2O
-            //Bit 5 - Plasma
-            //Bit 6 - TBD
-            //Bit 7 - TBD
+        //Bit 0 - O2
+        //Bit 1 - N2
+        //Bit 2 - Air
+        //Bit 3 - CO2
+        //Bit 4 - N2O
+        //Bit 5 - Plasma
+        //Bit 6 - TBD
+        //Bit 7 - TBD
 
         public static void WriteMap(MapDataV2 mapData, string filePath)
         {
@@ -338,393 +422,400 @@ namespace EveryDaySpaceStation
             }
         }
 
-        public static MapDataConfig LoadMap(string mapName)
-        {
-            string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
 
-            if (!File.Exists(fileAndPath))
-            {
-                Debug.LogWarning(string.Format("Could not find map '{0}'.", fileAndPath));
-                return null;
-            }
 
-            string rawJson = File.ReadAllText(fileAndPath);
+        //public static MapDataConfig LoadMap(string mapName)
+        //{
+        //    string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
 
-            return JsonConvert.DeserializeObject<MapDataConfig>(rawJson);
-        }
+        //    if (!File.Exists(fileAndPath))
+        //    {
+        //        Debug.LogWarning(string.Format("Could not find map '{0}'.", fileAndPath));
+        //        return null;
+        //    }
+
+        //    string rawJson = File.ReadAllText(fileAndPath);
+
+        //    return JsonConvert.DeserializeObject<MapDataConfig>(rawJson);
+        //}
 
         public static string GetFileNameWithoutExtension(string fullPathAndFile)
         {
             return Path.GetFileNameWithoutExtension(fullPathAndFile);
         }
 
-        public static MapEntityDataConfig LoadMapEnities(string entityFileName)
+        public static string GetFileNameWithExtension(string fullPathAndFile)
         {
-            string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, entityFileName);
-
-            if (!File.Exists(fileAndPath))
-            {
-                Debug.LogWarning(string.Format("Could not find entity file: '{0}'.", fileAndPath));
-                return null;
-            }
-
-            string rawJson = File.ReadAllText(fileAndPath);
-
-            return JsonConvert.DeserializeObject<MapEntityDataConfig>(rawJson);
+            return Path.GetFileName(fullPathAndFile);
         }
 
-        public static void SaveMap(MapDataConfig mapData, string mapName)
-        {
-            string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
-
-            string jsonText = JsonConvert.SerializeObject(mapData, Formatting.Indented);
-
-            using (FileStream fs = File.Open(fileAndPath, FileMode.Create))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.WriteLine(jsonText);
-                }
-            }
-        }
-        #endregion
-
-        #region Server Loading
-        /// <summary>
-        /// Not the most elegant process, but it copies the default texture to something in memory, so it can be inserted into the runtime texture diction
-        /// and cleaned up just like the rest at the end of the game
-        /// </summary>
-        private static void PrepareDefaultTextures()
-        {
-            Texture2D defaultCopy = new Texture2D(DefaultFiles.Singleton.defaultTexture.width, DefaultFiles.Singleton.defaultTexture.height, DefaultFiles.Singleton.defaultTexture.format, true);
-            Color[] defColors = DefaultFiles.Singleton.defaultTexture.GetPixels();
-            defaultCopy.SetPixels(defColors);
-            defaultCopy.Apply();
-            defaultCopy.name = DefaultFiles.Singleton.defaultTexture.name;
-            defaultCopy.filterMode = DefaultFiles.Singleton.defaultTexture.filterMode;
-            defaultCopy.wrapMode = DefaultFiles.Singleton.defaultTexture.wrapMode;
-            //ClientGameManager.Singleton.Gamedata.AddTexture(defaultCopy.name, defaultCopy);
-        }
-
-        private static void ProcessGameManifest()
-        {
-            if (_gameManifestConfig == null)
-            {
-                Debug.LogError(string.Format("Game Manifest is null. Can't proceed."));
-            }
-
-            //Adding the default texture to the texture dictionary
-            PrepareDefaultTextures();
-
-            //Load all the texture data based on the 
-            int artProcessed = 0;
-            for (int i = 0; i < _gameManifestConfig.ArtFileNames.Length; i++)
-            {
-                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, _gameManifestConfig.ArtFileNames[i]);
-
-                if (!File.Exists(fileAndPath))
-                {
-                    Debug.LogError(string.Format("Unable to load art file '{0}'. Check manifest.json for accuracy", fileAndPath));
-                    continue;
-                }
-
-                Texture2D tex = LoadImageFromFileAndPath(fileAndPath);
-                tex.name = _gameManifestConfig.ArtFileNames[i];
-
-                //ClientGameManager.Singleton.Gamedata.AddTexture(_gameManifestConfig.ArtFileNames[i], tex);
-                artProcessed++;
-            }
-
-            //First create the default Sprite Sheet and Sprite
-            CreateDefaultSpriteSheetAndSprite();
-
-            //Load Sprite Data and store it into Gamedata
-            int spriteFileProcessed = 0;
-            int spritesProcessed = ProcessSprites(_gameManifestConfig.SpriteDataFileNames, out spriteFileProcessed);
-
-            //Block Data
-            int blockDataProcessed = 0;
-            int blockFilesProcessed = ProcessBlockData(_gameManifestConfig.BlockDataFileNames, out blockDataProcessed);
-
-            //Entity Data
-            int entityDataProcessed = 0;
-            int entityFilesProcessed = ProcessEntityData(_gameManifestConfig.EntityDataFileNames, out entityDataProcessed);
-
-            string results = string.Format("Game Manifest Done! Processed: {0} Art Files, {1} Sprite Files and {2} Sprites, {3} Game Block Files and {4} Game Blocks, {5} Entity Data Files and {6} Entities", artProcessed, spriteFileProcessed, spritesProcessed, blockFilesProcessed, blockDataProcessed, entityFilesProcessed, entityDataProcessed);
-            Debug.Log(results);
-        }
-
-        public static bool AttemptCreateSpriteSheet(SpriteDataJson spriteData, string sheetName, EDSSSpriteSheet.ShaderType desiredType, out EDSSSpriteSheet sheet)
-        {
-            sheet = null;
-
-            ////If we arrived here, then we probably couldn't find the sheet by texture name. We're going to assume the textures have all successfully been loaded by now
-            ////So we'll first look at the textures to see if we can make a sheet from it
-            //Texture2D texture = null;
-            //bool found = ClientGameManager.Singleton.Gamedata.GetTexture(spriteData.SpriteSheetFileName, out texture);
-
-            //if (!found)
-            //{
-            //    Debug.LogError(string.Format("Attempted to locate texture '{0}' for sprite '{1}' but failed.", spriteData.SpriteSheetFileName, spriteData));
-            //    return false;
-            //}
-
-            //sheet = new EDSSSpriteSheet();
-            //uint uid = ClientGameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
-            //uint matUID = ClientGameManager.Singleton.Gamedata.GetNewMaterialUID();
-
-            ////Create a new material and assign the texture
-            //Material newMat;
-
-            //if (desiredType == EDSSSpriteSheet.ShaderType.Billboard)
-            //{
-            //    newMat = new Material(DefaultFiles.Singleton.billboardShader);
-            //}
-            //else if (desiredType == EDSSSpriteSheet.ShaderType.TwoSidedSprite)
-            //{
-            //    newMat = new Material(DefaultFiles.Singleton.twoSidedSpriteShader);
-            //}
-            //else
-            //{
-            //    newMat = new Material(DefaultFiles.Singleton.defaultShader);
-            //}
-
-            //newMat.name = string.Format("{0}", sheetName);
-            //newMat.SetTexture("_MainTex", texture);
-            //ClientGameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
-
-            //sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
-
-            //ClientGameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
-
-            return true;
-        }
-
-        public static void CreateDefaultSpriteSheetAndSprite()
-        {
-            //EDSSSpriteSheet sheet = new EDSSSpriteSheet();
-            //uint uid = ClientGameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
-            //uint matUID = ClientGameManager.Singleton.Gamedata.GetNewMaterialUID();
-
-            //Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
-
-            //Texture2D texture = null;
-            ////We'll use the same name since we copied that
-            //ClientGameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
-
-            //newMat.name = string.Format("{0}", texture);
-            //newMat.SetTexture("_MainTex", texture);
-            //ClientGameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
-
-            //sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
-
-            //ClientGameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
-
-            ////Create the default sprite
-            //SpriteDataJson defaultSpriteJson = new SpriteDataJson();
-            //defaultSpriteJson.UID = 0;
-            //defaultSpriteJson.SpriteName = "Default";
-            //defaultSpriteJson.SpriteSheetFileName = texture.name;
-            //defaultSpriteJson.SpritePosition = new Vec2Int(0, 0);
-            //defaultSpriteJson.SpritePosition = new Vec2Int(texture.width, texture.height);
-
-            //EDSSSprite newSprite = CreateSprite(defaultSpriteJson);
-            //EveryDaySpaceStation.GameData.DefaultSprite = newSprite;
-            //ClientGameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
-        }
-        #endregion
-
-        #region Game Block Processing
-        private static int ProcessBlockData(string[] blockDataFileNames, out int blockFilesProcessed)
-        {
-            int blockDataProcessed = 0;
-            blockFilesProcessed = 0;
-            for (int i = 0; i < blockDataFileNames.Length; i++)
-            {
-                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, blockDataFileNames[i]);
-
-                if (!File.Exists(fileAndPath))
-                {
-                    Debug.LogError(string.Format("Unable to load block data file '{0}'. Check manifest.json for accuracy", fileAndPath));
-                    continue;
-                }
-
-                string rawJson = File.ReadAllText(fileAndPath);
-
-                GameBlockDataConfig blockConfig = JsonConvert.DeserializeObject<GameBlockDataConfig>(rawJson);
-
-                if (blockConfig == null)
-                {
-                    Debug.LogError(string.Format("Problem loading block data config for '{0}'. Please double check it.", fileAndPath));
-                    continue;
-                }
-
-                //for (int j = 0; j < blockConfig.BlockData.Length; j++)
-                //{
-                //    BlockDataJson blockData = blockConfig.BlockData[j];
-
-                //    GameData.GameBlockData newBlock = new GameData.GameBlockData(blockData.UID, blockData.Name, blockData.DefaultStrength, blockData.Flags, blockData.Requirement);
-                //    newBlock.SetFaceParameters(blockData.FaceZForward, blockData.FaceXForward, blockData.FaceZBack, blockData.FaceXBack, blockData.FaceTop, blockData.FaceBottom);
-
-                //    //ClientGameManager.Singleton.Gamedata.AddGameBlock(newBlock.UID, newBlock);
-
-                //    blockDataProcessed++;
-                //}
-
-                blockFilesProcessed++;
-            }
-
-            return blockDataProcessed;
-        }
-        #endregion
-
-        #region Entity Data Processing
-        private static int ProcessEntityData(string[] entityDataFilesNames, out int entityFilesProcessed)
-        {
-            int entityDataProcessed = 0;
-            entityFilesProcessed = 0;
-            for (int i = 0; i < entityDataFilesNames.Length; i++)
-            {
-                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, entityDataFilesNames[i]);
-
-                if (!File.Exists(fileAndPath))
-                {
-                    Debug.LogError(string.Format("Unable to load entity data file '{0}'. Check manifest.json for accuracy", fileAndPath));
-                    continue;
-                }
-
-                string rawJson = File.ReadAllText(fileAndPath);
-
-                EntityDataConfig entityConfig = JsonConvert.DeserializeObject<EntityDataConfig>(rawJson);
-
-                if (entityConfig == null)
-                {
-                    Debug.LogError(string.Format("Problem loading entity data config for '{0}'. Please double check it.", fileAndPath));
-                    continue;
-                }
-
-                for (int j = 0; j < entityConfig.EntityData.Length; j++)
-                {
-                    EntityDataJson entityData = entityConfig.EntityData[j];
-
-                    //GameData.EntityDataTemplate newEntity = new GameData.EntityDataTemplate(entityData.UID, entityData.EntityName, entityData.EntityTypeFlags, entityData.EntityStates);
-                    //newEntity.ParseLightStates(entityData.EntityLightStates);
-                    //newEntity.ParseFixedStates(entityData.EntityFixedStates);
-                    //newEntity.ParsePoweredStates(entityData.EntityPoweredStates);
-                    //newEntity.ParseDeviceStates(entityData.EntityDeviceStates);
-                    //newEntity.ParseCraftStates(entityData.EntityCraftStates);
-                    //newEntity.ParseMultiAngleStates(entityData.EntityMultiAngleStates);
-                    //newEntity.ParseDoorStates(entityData.EntityDoorState);
-                    //newEntity.ParseContainerStates(entityData.EntityContainerState);
-
-                    //ClientGameManager.Singleton.Gamedata.AddEntityTemplate(newEntity.UID, newEntity);
-
-                    entityDataProcessed++;
-                }
-
-                entityFilesProcessed++;
-            }
-
-            return entityDataProcessed;
-        }
-        #endregion
-
-        #region Sprite Data Processing
-        private static int ProcessSprites(string[] spriteDatafileNames, out int spriteFileProcess)
-        {
-            int spriteProcessed = 0;
-            spriteFileProcess = 0;
-            for (int i = 0; i < spriteDatafileNames.Length; i++)
-            {
-                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, spriteDatafileNames[i]);
-
-                if (!File.Exists(fileAndPath))
-                {
-                    Debug.LogError(string.Format("Unable to load spritedata file '{0}'. Check manifest.json for accuracy", fileAndPath));
-                    continue;
-                }
-
-                string rawJson = File.ReadAllText(fileAndPath);
-
-                SpriteDataConfig spriteConfig = JsonConvert.DeserializeObject<SpriteDataConfig>(rawJson);
-
-                if (spriteConfig == null)
-                {
-                    Debug.LogError(string.Format("Problem loading sprite data config for '{0}'. Please double check it.", fileAndPath));
-                    continue;
-                }
-
-                //Now that we have the sprite data file loaded and it appears legit, we need to go through each sprite and try to turn it into a EDSSSprite
-                for (int j = 0; j < spriteConfig.SpriteData.Length; j++)
-                {
-                    SpriteDataJson spriteData = spriteConfig.SpriteData[j];
-
-                    EDSSSprite newSprite = CreateSprite(spriteData);
-
-                    if (newSprite == null)
-                        continue;
-
-                    //ClientGameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
-                    spriteProcessed++;
-                }
-
-                spriteFileProcess++;
-            }
-
-            return spriteProcessed;
-        }
-
-        public static EDSSSprite CreateSprite(SpriteDataJson spriteData)
-        {
-            //string sheetTypeName = "world";
-            //EDSSSpriteSheet.ShaderType shaderType = EDSSSpriteSheet.ShaderType.World;
-            ////We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
-            //if (spriteData.Flags != null)
-            //{
-            //    for (int k = 0; k < spriteData.Flags.Length; k++)
-            //    {
-            //        string flag = spriteData.Flags[k].ToLower();
-
-            //        switch (flag)
-            //        {
-            //            case "billboard":
-            //                sheetTypeName = "billboard";
-            //                shaderType = EDSSSpriteSheet.ShaderType.Billboard;
-            //                break;
-
-            //            case "twosided":
-            //                sheetTypeName = "twosided";
-            //                shaderType = EDSSSpriteSheet.ShaderType.TwoSidedSprite;
-            //                break;
-            //        }
-            //    }
-            //}
-
-            ////First look if there is a EDSSSpriteSheet
-            //EDSSSpriteSheet sheet = null;
-            //string sheetname = string.Format("{0}-{1}", spriteData.SpriteSheetFileName, sheetTypeName);
-            //bool found = ClientGameManager.Singleton.Gamedata.GetSpriteSheet(sheetname, out sheet);
-
-            ////Couldn't find the sheet already created
-            //if (!found)
-            //{
-            //    //So attempt to create
-            //    found = AttemptCreateSpriteSheet(spriteData, sheetname, shaderType, out sheet);
-            //}
-
-            ////It's still not found, so we need to throw an error and move on
-            //if (!found)
-            //{
-            //    Debug.LogError(string.Format("Could not locate a spritesheet for sprite '{0}'. Giving up.", spriteData));
-            //    return null;
-            //}
-
-            ////We've got a sheet somehow, so we're ready to make the sprite
-            //EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName, spriteData.Flags);
-
-            //return newSprite;
-            return null;
-        }
+        //public static MapEntityDataConfig LoadMapEnities(string entityFileName)
+        //{
+        //    string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, entityFileName);
+
+        //    if (!File.Exists(fileAndPath))
+        //    {
+        //        Debug.LogWarning(string.Format("Could not find entity file: '{0}'.", fileAndPath));
+        //        return null;
+        //    }
+
+        //    string rawJson = File.ReadAllText(fileAndPath);
+
+        //    return JsonConvert.DeserializeObject<MapEntityDataConfig>(rawJson);
+        //}
+
+        //public static void SaveMap(MapDataConfig mapData, string mapName)
+        //{
+        //    string fileAndPath = string.Format("{0}{1}{2}{1}{3}.json", _appDataDirectory, System.IO.Path.DirectorySeparatorChar, _mapDirectory, mapName);
+
+        //    string jsonText = JsonConvert.SerializeObject(mapData, Formatting.Indented);
+
+        //    using (FileStream fs = File.Open(fileAndPath, FileMode.Create))
+        //    {
+        //        using (StreamWriter sw = new StreamWriter(fs))
+        //        {
+        //            sw.WriteLine(jsonText);
+        //        }
+        //    }
+        //}
+        //#endregion
+
+        //#region Server Loading
+        ///// <summary>
+        ///// Not the most elegant process, but it copies the default texture to something in memory, so it can be inserted into the runtime texture diction
+        ///// and cleaned up just like the rest at the end of the game
+        ///// </summary>
+        //private static void PrepareDefaultTextures()
+        //{
+        //    Texture2D defaultCopy = new Texture2D(DefaultFiles.Singleton.defaultTexture.width, DefaultFiles.Singleton.defaultTexture.height, DefaultFiles.Singleton.defaultTexture.format, true);
+        //    Color[] defColors = DefaultFiles.Singleton.defaultTexture.GetPixels();
+        //    defaultCopy.SetPixels(defColors);
+        //    defaultCopy.Apply();
+        //    defaultCopy.name = DefaultFiles.Singleton.defaultTexture.name;
+        //    defaultCopy.filterMode = DefaultFiles.Singleton.defaultTexture.filterMode;
+        //    defaultCopy.wrapMode = DefaultFiles.Singleton.defaultTexture.wrapMode;
+        //    //ClientGameManager.Singleton.Gamedata.AddTexture(defaultCopy.name, defaultCopy);
+        //}
+
+        //private static void ProcessGameManifest()
+        //{
+        //    if (_gameManifestConfig == null)
+        //    {
+        //        Debug.LogError(string.Format("Game Manifest is null. Can't proceed."));
+        //    }
+
+        //    //Adding the default texture to the texture dictionary
+        //    PrepareDefaultTextures();
+
+        //    //Load all the texture data based on the 
+        //    int artProcessed = 0;
+        //    for (int i = 0; i < _gameManifestConfig.ArtFileNames.Length; i++)
+        //    {
+        //        string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, _gameManifestConfig.ArtFileNames[i]);
+
+        //        if (!File.Exists(fileAndPath))
+        //        {
+        //            Debug.LogError(string.Format("Unable to load art file '{0}'. Check manifest.json for accuracy", fileAndPath));
+        //            continue;
+        //        }
+
+        //        Texture2D tex = LoadImageFromFileAndPath(fileAndPath);
+        //        tex.name = _gameManifestConfig.ArtFileNames[i];
+
+        //        //ClientGameManager.Singleton.Gamedata.AddTexture(_gameManifestConfig.ArtFileNames[i], tex);
+        //        artProcessed++;
+        //    }
+
+        //    //First create the default Sprite Sheet and Sprite
+        //    CreateDefaultSpriteSheetAndSprite();
+
+        //    //Load Sprite Data and store it into Gamedata
+        //    int spriteFileProcessed = 0;
+        //    int spritesProcessed = ProcessSprites(_gameManifestConfig.SpriteDataFileNames, out spriteFileProcessed);
+
+        //    //Block Data
+        //    int blockDataProcessed = 0;
+        //    int blockFilesProcessed = ProcessBlockData(_gameManifestConfig.BlockDataFileNames, out blockDataProcessed);
+
+        //    //Entity Data
+        //    int entityDataProcessed = 0;
+        //    int entityFilesProcessed = ProcessEntityData(_gameManifestConfig.EntityDataFileNames, out entityDataProcessed);
+
+        //    string results = string.Format("Game Manifest Done! Processed: {0} Art Files, {1} Sprite Files and {2} Sprites, {3} Game Block Files and {4} Game Blocks, {5} Entity Data Files and {6} Entities", artProcessed, spriteFileProcessed, spritesProcessed, blockFilesProcessed, blockDataProcessed, entityFilesProcessed, entityDataProcessed);
+        //    Debug.Log(results);
+        //}
+
+        //public static bool AttemptCreateSpriteSheet(SpriteDataJson spriteData, string sheetName, EDSSSpriteSheet.ShaderType desiredType, out EDSSSpriteSheet sheet)
+        //{
+        //    sheet = null;
+
+        //    ////If we arrived here, then we probably couldn't find the sheet by texture name. We're going to assume the textures have all successfully been loaded by now
+        //    ////So we'll first look at the textures to see if we can make a sheet from it
+        //    //Texture2D texture = null;
+        //    //bool found = ClientGameManager.Singleton.Gamedata.GetTexture(spriteData.SpriteSheetFileName, out texture);
+
+        //    //if (!found)
+        //    //{
+        //    //    Debug.LogError(string.Format("Attempted to locate texture '{0}' for sprite '{1}' but failed.", spriteData.SpriteSheetFileName, spriteData));
+        //    //    return false;
+        //    //}
+
+        //    //sheet = new EDSSSpriteSheet();
+        //    //uint uid = ClientGameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
+        //    //uint matUID = ClientGameManager.Singleton.Gamedata.GetNewMaterialUID();
+
+        //    ////Create a new material and assign the texture
+        //    //Material newMat;
+
+        //    //if (desiredType == EDSSSpriteSheet.ShaderType.Billboard)
+        //    //{
+        //    //    newMat = new Material(DefaultFiles.Singleton.billboardShader);
+        //    //}
+        //    //else if (desiredType == EDSSSpriteSheet.ShaderType.TwoSidedSprite)
+        //    //{
+        //    //    newMat = new Material(DefaultFiles.Singleton.twoSidedSpriteShader);
+        //    //}
+        //    //else
+        //    //{
+        //    //    newMat = new Material(DefaultFiles.Singleton.defaultShader);
+        //    //}
+
+        //    //newMat.name = string.Format("{0}", sheetName);
+        //    //newMat.SetTexture("_MainTex", texture);
+        //    //ClientGameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
+
+        //    //sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
+
+        //    //ClientGameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
+
+        //    return true;
+        //}
+
+        //public static void CreateDefaultSpriteSheetAndSprite()
+        //{
+        //    //EDSSSpriteSheet sheet = new EDSSSpriteSheet();
+        //    //uint uid = ClientGameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
+        //    //uint matUID = ClientGameManager.Singleton.Gamedata.GetNewMaterialUID();
+
+        //    //Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
+
+        //    //Texture2D texture = null;
+        //    ////We'll use the same name since we copied that
+        //    //ClientGameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
+
+        //    //newMat.name = string.Format("{0}", texture);
+        //    //newMat.SetTexture("_MainTex", texture);
+        //    //ClientGameManager.Singleton.Gamedata.AddMaterial(matUID, newMat);
+
+        //    //sheet.CreateSpriteSheet(uid, matUID, texture, newMat, null);
+
+        //    //ClientGameManager.Singleton.Gamedata.AddSpriteSheet(uid, sheet);
+
+        //    ////Create the default sprite
+        //    //SpriteDataJson defaultSpriteJson = new SpriteDataJson();
+        //    //defaultSpriteJson.UID = 0;
+        //    //defaultSpriteJson.SpriteName = "Default";
+        //    //defaultSpriteJson.SpriteSheetFileName = texture.name;
+        //    //defaultSpriteJson.SpritePosition = new Vec2Int(0, 0);
+        //    //defaultSpriteJson.SpritePosition = new Vec2Int(texture.width, texture.height);
+
+        //    //EDSSSprite newSprite = CreateSprite(defaultSpriteJson);
+        //    //EveryDaySpaceStation.GameData.DefaultSprite = newSprite;
+        //    //ClientGameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
+        //}
+        //#endregion
+
+        //#region Game Block Processing
+        //private static int ProcessBlockData(string[] blockDataFileNames, out int blockFilesProcessed)
+        //{
+        //    int blockDataProcessed = 0;
+        //    blockFilesProcessed = 0;
+        //    for (int i = 0; i < blockDataFileNames.Length; i++)
+        //    {
+        //        string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, blockDataFileNames[i]);
+
+        //        if (!File.Exists(fileAndPath))
+        //        {
+        //            Debug.LogError(string.Format("Unable to load block data file '{0}'. Check manifest.json for accuracy", fileAndPath));
+        //            continue;
+        //        }
+
+        //        string rawJson = File.ReadAllText(fileAndPath);
+
+        //        GameBlockDataConfig blockConfig = JsonConvert.DeserializeObject<GameBlockDataConfig>(rawJson);
+
+        //        if (blockConfig == null)
+        //        {
+        //            Debug.LogError(string.Format("Problem loading block data config for '{0}'. Please double check it.", fileAndPath));
+        //            continue;
+        //        }
+
+        //        //for (int j = 0; j < blockConfig.BlockData.Length; j++)
+        //        //{
+        //        //    BlockDataJson blockData = blockConfig.BlockData[j];
+
+        //        //    GameData.GameBlockData newBlock = new GameData.GameBlockData(blockData.UID, blockData.Name, blockData.DefaultStrength, blockData.Flags, blockData.Requirement);
+        //        //    newBlock.SetFaceParameters(blockData.FaceZForward, blockData.FaceXForward, blockData.FaceZBack, blockData.FaceXBack, blockData.FaceTop, blockData.FaceBottom);
+
+        //        //    //ClientGameManager.Singleton.Gamedata.AddGameBlock(newBlock.UID, newBlock);
+
+        //        //    blockDataProcessed++;
+        //        //}
+
+        //        blockFilesProcessed++;
+        //    }
+
+        //    return blockDataProcessed;
+        //}
+        //#endregion
+
+        //#region Entity Data Processing
+        //private static int ProcessEntityData(string[] entityDataFilesNames, out int entityFilesProcessed)
+        //{
+        //    int entityDataProcessed = 0;
+        //    entityFilesProcessed = 0;
+        //    for (int i = 0; i < entityDataFilesNames.Length; i++)
+        //    {
+        //        string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, entityDataFilesNames[i]);
+
+        //        if (!File.Exists(fileAndPath))
+        //        {
+        //            Debug.LogError(string.Format("Unable to load entity data file '{0}'. Check manifest.json for accuracy", fileAndPath));
+        //            continue;
+        //        }
+
+        //        string rawJson = File.ReadAllText(fileAndPath);
+
+        //        EntityDataConfig entityConfig = JsonConvert.DeserializeObject<EntityDataConfig>(rawJson);
+
+        //        if (entityConfig == null)
+        //        {
+        //            Debug.LogError(string.Format("Problem loading entity data config for '{0}'. Please double check it.", fileAndPath));
+        //            continue;
+        //        }
+
+        //        for (int j = 0; j < entityConfig.EntityData.Length; j++)
+        //        {
+        //            EntityDataJson entityData = entityConfig.EntityData[j];
+
+        //            //GameData.EntityDataTemplate newEntity = new GameData.EntityDataTemplate(entityData.UID, entityData.EntityName, entityData.EntityTypeFlags, entityData.EntityStates);
+        //            //newEntity.ParseLightStates(entityData.EntityLightStates);
+        //            //newEntity.ParseFixedStates(entityData.EntityFixedStates);
+        //            //newEntity.ParsePoweredStates(entityData.EntityPoweredStates);
+        //            //newEntity.ParseDeviceStates(entityData.EntityDeviceStates);
+        //            //newEntity.ParseCraftStates(entityData.EntityCraftStates);
+        //            //newEntity.ParseMultiAngleStates(entityData.EntityMultiAngleStates);
+        //            //newEntity.ParseDoorStates(entityData.EntityDoorState);
+        //            //newEntity.ParseContainerStates(entityData.EntityContainerState);
+
+        //            //ClientGameManager.Singleton.Gamedata.AddEntityTemplate(newEntity.UID, newEntity);
+
+        //            entityDataProcessed++;
+        //        }
+
+        //        entityFilesProcessed++;
+        //    }
+
+        //    return entityDataProcessed;
+        //}
+        //#endregion
+
+        //#region Sprite Data Processing
+        //private static int ProcessSprites(string[] spriteDatafileNames, out int spriteFileProcess)
+        //{
+        //    int spriteProcessed = 0;
+        //    spriteFileProcess = 0;
+        //    for (int i = 0; i < spriteDatafileNames.Length; i++)
+        //    {
+        //        string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, spriteDatafileNames[i]);
+
+        //        if (!File.Exists(fileAndPath))
+        //        {
+        //            Debug.LogError(string.Format("Unable to load spritedata file '{0}'. Check manifest.json for accuracy", fileAndPath));
+        //            continue;
+        //        }
+
+        //        string rawJson = File.ReadAllText(fileAndPath);
+
+        //        SpriteDataConfig spriteConfig = JsonConvert.DeserializeObject<SpriteDataConfig>(rawJson);
+
+        //        if (spriteConfig == null)
+        //        {
+        //            Debug.LogError(string.Format("Problem loading sprite data config for '{0}'. Please double check it.", fileAndPath));
+        //            continue;
+        //        }
+
+        //        //Now that we have the sprite data file loaded and it appears legit, we need to go through each sprite and try to turn it into a EDSSSprite
+        //        for (int j = 0; j < spriteConfig.SpriteData.Length; j++)
+        //        {
+        //            SpriteDataJson spriteData = spriteConfig.SpriteData[j];
+
+        //            EDSSSprite newSprite = CreateSprite(spriteData);
+
+        //            if (newSprite == null)
+        //                continue;
+
+        //            //ClientGameManager.Singleton.Gamedata.AddSprite(newSprite.UID, newSprite);
+        //            spriteProcessed++;
+        //        }
+
+        //        spriteFileProcess++;
+        //    }
+
+        //    return spriteProcessed;
+        //}
+
+        //public static EDSSSprite CreateSprite(SpriteDataJson spriteData)
+        //{
+        //    //string sheetTypeName = "world";
+        //    //EDSSSpriteSheet.ShaderType shaderType = EDSSSpriteSheet.ShaderType.World;
+        //    ////We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
+        //    //if (spriteData.Flags != null)
+        //    //{
+        //    //    for (int k = 0; k < spriteData.Flags.Length; k++)
+        //    //    {
+        //    //        string flag = spriteData.Flags[k].ToLower();
+
+        //    //        switch (flag)
+        //    //        {
+        //    //            case "billboard":
+        //    //                sheetTypeName = "billboard";
+        //    //                shaderType = EDSSSpriteSheet.ShaderType.Billboard;
+        //    //                break;
+
+        //    //            case "twosided":
+        //    //                sheetTypeName = "twosided";
+        //    //                shaderType = EDSSSpriteSheet.ShaderType.TwoSidedSprite;
+        //    //                break;
+        //    //        }
+        //    //    }
+        //    //}
+
+        //    ////First look if there is a EDSSSpriteSheet
+        //    //EDSSSpriteSheet sheet = null;
+        //    //string sheetname = string.Format("{0}-{1}", spriteData.SpriteSheetFileName, sheetTypeName);
+        //    //bool found = ClientGameManager.Singleton.Gamedata.GetSpriteSheet(sheetname, out sheet);
+
+        //    ////Couldn't find the sheet already created
+        //    //if (!found)
+        //    //{
+        //    //    //So attempt to create
+        //    //    found = AttemptCreateSpriteSheet(spriteData, sheetname, shaderType, out sheet);
+        //    //}
+
+        //    ////It's still not found, so we need to throw an error and move on
+        //    //if (!found)
+        //    //{
+        //    //    Debug.LogError(string.Format("Could not locate a spritesheet for sprite '{0}'. Giving up.", spriteData));
+        //    //    return null;
+        //    //}
+
+        //    ////We've got a sheet somehow, so we're ready to make the sprite
+        //    //EDSSSprite newSprite = sheet.CreateSprite(spriteData.UID, spriteData.SpritePosition, spriteData.SpriteWidthHeight, spriteData.SpriteName, spriteData.Flags);
+
+        //    //return newSprite;
+        //    return null;
+        //}
         #endregion
     }
 }

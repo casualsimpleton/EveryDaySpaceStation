@@ -36,6 +36,7 @@ public abstract class GameManagerAbstract : MonoBehaviour
     protected System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
 
     protected EntityBuildManager _entitybuildManager;
+
     #endregion
 
     #region Gets/Sets

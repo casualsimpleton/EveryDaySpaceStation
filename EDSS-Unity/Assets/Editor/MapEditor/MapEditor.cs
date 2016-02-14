@@ -56,6 +56,8 @@ public class MapEditor : EditorWindow {
     RegionAction _regionCreateRenumDelete = RegionAction.None;
     ushort[] _regionRenumberArray;
 
+    string _blockDataDirectory = "";
+
     MapDataV2 _curMapData = null;
     MapDataV2.MapRegion _curMapRegion = null;
     Vec3Int _curMapRegionSize = Vec3Int.Zero;
@@ -75,7 +77,8 @@ public class MapEditor : EditorWindow {
 
     void StartLoad()
     {
-        Debug.Log(string.Format("Loading Map Editor: {0}", System.Environment.SpecialFolder.ApplicationData));
+        //Debug.Log(string.Format("Loading Map Editor: {0}{1}server", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar));
+        _blockDataDirectory = string.Format("{0}{1}server", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar);
 
         _hasStarted = true;
     }
@@ -97,6 +100,8 @@ public class MapEditor : EditorWindow {
         }
 
         _editorCamera._targetCube.SetActive(false);
+
+        _hasStarted = false;
     }
 
     void OnGUI()
@@ -109,6 +114,30 @@ public class MapEditor : EditorWindow {
         }
 
         _scrollPos = GUILayout.BeginScrollView(_scrollPos);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set Game Data", GUILayout.MaxWidth(160), GUILayout.MinHeight(40)))
+        {
+            if (string.IsNullOrEmpty(_blockDataDirectory))
+            {
+                StartLoad();
+            }
+
+            FileSystem.Init();
+
+            _blockDataDirectory = EditorUtility.OpenFilePanel("Select Game Data Manifest", _blockDataDirectory, "json");
+            //string fileName = FileSystem.GetFileNameWithoutExtension(_blockDataDirectory);
+
+            //string rawJson = System.IO.File.ReadAllText(_blockDataDirectory);
+
+            //FileSystem.ProcessGameManifest(_blockDataDirectory, fileName, rawJson);
+            FileSystem.LoadServerConfig(_blockDataDirectory);
+
+            string text = GameManifestV2.Singleton.DumpToLog();
+
+            Debug.Log(text);
+        }
+        GUILayout.EndHorizontal();
+
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
         {

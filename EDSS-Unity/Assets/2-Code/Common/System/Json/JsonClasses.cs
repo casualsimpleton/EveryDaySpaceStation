@@ -223,8 +223,14 @@ namespace EveryDaySpaceStation.Json
 
     #region Game Data Manifest
     [JsonConverter(typeof(GameManifestJsonConverter))]
-    public class GameManfiest
+    public class GameManifestJson
     {
+        [JsonProperty("manifestname")]
+        public string ManifestName { get; set; }
+
+        [JsonProperty("manifestversion")]
+        public ushort ManifestVersion { get; set; }
+
         [JsonProperty("art")]
         public string[] ArtFileNames { get; set; }
 
@@ -246,7 +252,7 @@ namespace EveryDaySpaceStation.Json
 
         public override bool CanConvert(System.Type objectType)
         {
-            return typeof(GameManfiest).IsAssignableFrom(objectType);
+            return typeof(GameManifestJson).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
@@ -255,7 +261,7 @@ namespace EveryDaySpaceStation.Json
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new GameManfiest());
+                existingValue = (existingValue ?? new GameManifestJson());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;
@@ -280,45 +286,45 @@ namespace EveryDaySpaceStation.Json
 
     #region Block Data
     [JsonConverter(typeof(GameBlockDataJsonConverter))]
-    public class GameBlockDataConfig
+    public class BlockTemplateCollectionJson
     {
         [JsonProperty("blockdata")]
-        public BlockDataJson[] BlockData { get; set; }
+        public BlockTemplateJson[] BlockData { get; set; }
     }
 
-    public class BlockDataJson
+    public class BlockTemplateJson
     {
-        [JsonProperty("uid")]
-        public uint UID { get; set; }
+        [JsonProperty("blockuid")]
+        public uint BlockUID { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("blockname")]
+        public string BlockName { get; set; }
 
-        [JsonProperty("strength")]
-        public int DefaultStrength { get; set; }
+        [JsonProperty("blockstrength")]
+        public int BlockDefaultStrength { get; set; }
 
         [JsonProperty("facez+")]
-        public int FaceZForward { get; set; }
+        public byte FaceZForward { get; set; }
 
         [JsonProperty("facex+")]
-        public int FaceXForward { get; set; }
+        public byte FaceXForward { get; set; }
 
         [JsonProperty("facez-")]
-        public int FaceZBack { get; set; }
+        public byte FaceZBack { get; set; }
 
         [JsonProperty("facex-")]
-        public int FaceXBack { get; set; }
+        public byte FaceXBack { get; set; }
 
-        [JsonProperty("facetop")]
-        public int FaceTop { get; set; }
+        [JsonProperty("facey+")]
+        public byte FaceTop { get; set; }
 
-        [JsonProperty("facebottom")]
-        public int FaceBottom { get; set; }
+        [JsonProperty("facey-")]
+        public byte FaceBottom { get; set; }
 
-        [JsonProperty("flags")]
+        [JsonProperty("blockflags")]
         public string[] Flags { get; set; }
 
-        [JsonProperty("requirement")]
+        [JsonProperty("blockrequirement")]
         public uint Requirement { get; set; }
     }
 
@@ -330,7 +336,7 @@ namespace EveryDaySpaceStation.Json
 
         public override bool CanConvert(System.Type objectType)
         {
-            return typeof(GameBlockDataConfig).IsAssignableFrom(objectType);
+            return typeof(BlockTemplateCollectionJson).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
@@ -339,7 +345,7 @@ namespace EveryDaySpaceStation.Json
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new GameBlockDataConfig());
+                existingValue = (existingValue ?? new BlockTemplateCollectionJson());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;
