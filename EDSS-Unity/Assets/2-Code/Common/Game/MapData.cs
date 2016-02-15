@@ -47,12 +47,12 @@ namespace EveryDaySpaceStation
                 Plasma = 5,
             }
             //2 Byte Ushort - Block Type UID
-            //2 Byte Ushort - Top Face UID
-            //2 Byte Ushort - Bottom Face UID
-            //2 Byte Ushort - Forward Face UID
-            //2 Byte Ushort - Back Face UID
-            //2 Byte Ushort - Right Face UID
-            //2 Byte Ushort - Left Face UID
+            //4 Byte Uint - Top Face UID
+            //4 Byte Uint - Bottom Face UID
+            //4 Byte Uint - Forward Face UID
+            //4 Byte Uint - Back Face UID
+            //4 Byte Uint - Right Face UID
+            //4 Byte Uint - Left Face UID
             //1 Byte - Light Info
             //1 Byte - Pipe Data
                 //Bit 0 - O2
@@ -65,13 +65,13 @@ namespace EveryDaySpaceStation
                 //Bit 7 - TBD
 
             public ushort BlockType { get; set; }
-            public ushort[] BlockFaces { get; set; }
+            public uint[] BlockFaces { get; set; }
             public byte BlockLight { get; set; }
             public byte BlockPipe { get; set; }
 
             public void Init()
             {
-                BlockFaces = new ushort[(int)BlockFace.MAX];
+                BlockFaces = new uint[(int)BlockFace.MAX];
             }
 
             public bool HasPipe(BlockPipeFlags testFlag)

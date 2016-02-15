@@ -167,6 +167,53 @@ namespace EveryDaySpaceStation
 
             GameManifestV2.Singleton.PrepareManifest(manifestFileName, manifestPath, jsonData.ManifestName, jsonData.ManifestVersion);
 
+            //Add default texture to texture dictionary
+            AddDefaultTexture();
+
+            #region Textures and Sprite Sheets
+            int artFilesProcessed = 0;
+            for (int i = 0; i < jsonData.ArtFileNames.Length; i++)
+            {
+                string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, jsonData.ArtFileNames[i]);
+
+                if (!File.Exists(fileAndPath))
+                {
+                    Debug.LogError(string.Format("Unable to load art file '{0}'. Check the manifest for accuracy.", fileAndPath));
+                    continue;
+                }
+
+                artFilesProcessed++;
+                Texture2D tex = LoadImageFromFileAndPath(fileAndPath);
+                tex.name = jsonData.ArtFileNames[i];
+
+                GameManifestV2.Singleton.AddTexture(jsonData.ArtFileNames[i], tex);
+            }
+
+            //Create the default sprite sheet and sprite
+            CreateDefaultSpriteSheetAndSprite();
+            #endregion
+
+            #region Sprite Data
+            int spriteFileProcessed = 0;
+            int spriteDataTemplatesProcessed = 0;
+            for (int i = 0; i < jsonData.SpriteDataFileNames.Length; i++)
+            {
+                spriteFileProcessed++;
+                List<GameManifestV2.SpriteDataTemplate> newSprites = ProcessSpriteTemplates(jsonData.SpriteDataFileNames[i], ref spriteDataTemplatesProcessed);
+
+                if (newSprites == null)
+                {
+                    Debug.LogWarning(string.Format("No sprite templates processed from '{0}'. You might want to check that.", jsonData.SpriteDataFileNames[i]));
+                    continue;
+                }
+
+                for (int j = 0; j < newSprites.Count; j++)
+                {
+                    GameManifestV2.Singleton.AddSprite(newSprites[j].SpriteUID, newSprites[j]);
+                }
+            }
+            #endregion
+
             #region Block Data
             int blockDataFilesProcessed = 0;
             int blockDataTemplatesProcessed = 0;
@@ -216,15 +263,21 @@ namespace EveryDaySpaceStation
                 BlockTemplateJson blockJson = groupBlockDataJson.BlockData[i];
 
                 byte[] blockDrawingFaces = new byte[System.Enum.GetValues(typeof(GameManifestV2.BlockDataTemplate.ShowFaceDirection)).Length];
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus] = blockJson.FaceZForward;
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus] = blockJson.FaceXForward;
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus] = blockJson.FaceTop;
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus] = blockJson.FaceZBack;
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus] = blockJson.FaceXBack;
-                blockDrawingFaces[(int)GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYMinus] = blockJson.FaceBottom;
+
+                for (int j = 0; j < blockDrawingFaces.Length && j < blockJson.FaceDraw.Length; j++)
+                {
+                    blockDrawingFaces[j] = blockJson.FaceDraw[j];
+                }
+
+                uint[] blockDefaultFaceSpriteUIDs = new uint[System.Enum.GetValues(typeof(GameManifestV2.BlockDataTemplate.ShowFaceDirection)).Length];
+
+                for (int j = 0; j < blockDefaultFaceSpriteUIDs.Length && j < blockJson.FaceDefaultSpriteUIDs.Length; j++)
+                {
+                    blockDefaultFaceSpriteUIDs[j] = blockJson.FaceDefaultSpriteUIDs[j];
+                }
 
                 GameManifestV2.BlockDataTemplate newBlock = new GameManifestV2.BlockDataTemplate(blockJson.BlockUID, blockJson.BlockName,
-                    blockJson.BlockDefaultStrength, blockDrawingFaces, blockJson.Flags, blockJson.Requirement);
+                    blockJson.BlockDefaultStrength, blockDrawingFaces, blockJson.Flags, blockDefaultFaceSpriteUIDs, blockJson.Requirement);
 
                 numberOfBlockTemplatesProcessed++;
 
@@ -232,6 +285,194 @@ namespace EveryDaySpaceStation
             }
 
             return newBlockTemplates;
+        }
+
+        private static List<GameManifestV2.SpriteDataTemplate> ProcessSpriteTemplates(string spriteDataFileName, ref int numberOfSpriteTemplatesProcessed)
+        {
+            List<GameManifestV2.SpriteDataTemplate> newSpriteTemplates = new List<GameManifestV2.SpriteDataTemplate>();
+
+            string fileAndPath = Path.Combine(Compiled_ServerModuleDirectory, spriteDataFileName);
+
+            if (!File.Exists(fileAndPath))
+            {
+                Debug.LogError(string.Format("Unable to load sprite template data file '{0}'. Check the manifest json for accuracy.", fileAndPath));
+
+                return null;
+            }
+
+            string rawJson = File.ReadAllText(fileAndPath);
+
+            SpriteTemplateCollectionJson groupSpriteDataJson = JsonConvert.DeserializeObject<SpriteTemplateCollectionJson>(rawJson);
+
+            if (groupSpriteDataJson == null)
+            {
+                Debug.LogError(string.Format("Problem loading sprite template data json for '{0}'. Please double check it.", fileAndPath));
+                return null;
+            }
+
+            for (int i = 0; i < groupSpriteDataJson.SpriteData.Length; i++)
+            {
+                SpriteTemplateJson spriteJson = groupSpriteDataJson.SpriteData[i];
+
+                GameManifestV2.SpriteDataTemplate newSprite = CreateSpriteTemplate(spriteJson);
+
+                if (newSprite == null)
+                    continue;
+
+                newSpriteTemplates.Add(newSprite);
+                numberOfSpriteTemplatesProcessed++;
+            }
+
+            return newSpriteTemplates;
+        }
+
+        public static GameManifestV2.SpriteDataTemplate CreateSpriteTemplate(SpriteTemplateJson spriteJsonData)
+        {
+            string sheetTypeName = "world";
+            GameManifestV2.SpriteSheetDataTemplate.ShaderType shaderType = GameManifestV2.SpriteSheetDataTemplate.ShaderType.World;
+            //We've got to process the flags here as this will determine what kind of material. Hopefully they're well clustered so we don't create excess amounts of materials
+            if (spriteJsonData.Flags != null)
+            {
+                for (int k = 0; k < spriteJsonData.Flags.Length; k++)
+                {
+                    string flag = spriteJsonData.Flags[k].ToLower();
+
+                    switch (flag)
+                    {
+                        case "billboard":
+                            sheetTypeName = "billboard";
+                            shaderType = GameManifestV2.SpriteSheetDataTemplate.ShaderType.Billboard;
+                            break;
+
+                        case "twosided":
+                            sheetTypeName = "twosided";
+                            shaderType = GameManifestV2.SpriteSheetDataTemplate.ShaderType.TwoSided;
+                            break;
+                    }
+                }
+            }
+
+            //First look if there is a SpriteSheet
+            GameManifestV2.SpriteSheetDataTemplate sheet = null;
+            string sheetName = string.Format("{0}-{1}", spriteJsonData.SpriteSheetFileName, sheetTypeName);
+            bool found = GameManifestV2.Singleton.GetSpriteSheet(sheetName, out sheet);
+
+            //Couldn't find the sheet, so we need to create it
+            if (!found)
+            {
+                //Attempt to create it
+                found = AttemptCreateSpriteSheet(spriteJsonData, sheetName, shaderType, out sheet);
+            }
+
+            //It's still not found, so we need to throw an error and move on
+            if (!found)
+            {
+                Debug.LogError(string.Format("Could not locate a spritesheet for sprite '{0}'. Giving up.", spriteJsonData));
+                return null;
+            }
+
+            //We've got a sheet somehow, so we're ready to make the sprite
+            GameManifestV2.SpriteDataTemplate newSprite = sheet.CreateSpriteTemplate(spriteJsonData.UID, spriteJsonData.SpritePosition, spriteJsonData.SpriteWidthHeight, spriteJsonData.SpriteName, spriteJsonData.Flags);
+
+            return newSprite;
+        }
+
+        /// <summary>
+        /// Not the most elengant process, but it copies the default texture into memory, so it can be inserted into the runtime texture dictionary
+        /// </summary>
+        private static void AddDefaultTexture()
+        {
+            Texture2D defaultCopy = new Texture2D(DefaultFiles.defaultTexture.width, DefaultFiles.defaultTexture.height, DefaultFiles.defaultTexture.format, true);
+            Color[] defColors = DefaultFiles.defaultTexture.GetPixels();
+            defaultCopy.SetPixels(defColors);
+            defaultCopy.Apply();
+            defaultCopy.name = DefaultFiles.defaultTexture.name;
+            defaultCopy.filterMode = DefaultFiles.defaultTexture.filterMode;
+            defaultCopy.wrapMode = DefaultFiles.defaultTexture.wrapMode;
+            GameManifestV2.Singleton.AddTexture(defaultCopy.name, defaultCopy);
+
+        }
+
+        /// <summary>
+        /// Create the default sprite sheet and sprites for use
+        /// </summary>
+        private static void CreateDefaultSpriteSheetAndSprite()
+        {
+            GameManifestV2.SpriteSheetDataTemplate sheet = new GameManifestV2.SpriteSheetDataTemplate();
+            uint uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
+            uint matUID = GameManifestV2.Singleton.GetNewMaterialUID();
+
+            Material newMat = new Material(DefaultFiles.defaultShader);
+
+            Texture2D texture = null;
+            //We'll use the same name since we copied that
+            GameManifestV2.Singleton.GetTexture(DefaultFiles.defaultTexture.name, out texture);
+
+            newMat.name = string.Format("{0}", texture);
+            newMat.SetTexture("_MainTex", texture);
+            GameManifestV2.Singleton.AddMaterial(matUID, newMat);
+
+            sheet.CreateSpriteSheetTemplate(uid, matUID, texture, newMat, null);
+
+            GameManifestV2.Singleton.AddSpriteSheet(uid, sheet);
+
+            //Create the default sprite
+            SpriteTemplateJson defaultSpriteJson = new SpriteTemplateJson();
+            defaultSpriteJson.UID = 0;
+            defaultSpriteJson.SpriteName = "Default";
+            defaultSpriteJson.SpriteSheetFileName = texture.name;
+            defaultSpriteJson.SpritePosition = new Vec2Int(0, 0);
+            defaultSpriteJson.SpriteWidthHeight = new Vec2Int(texture.width, texture.height);
+
+            GameManifestV2.SpriteDataTemplate newSprite = CreateSpriteTemplate(defaultSpriteJson);
+            GameManifestV2.DefaultSprite = newSprite;
+            GameManifestV2.Singleton.AddSprite(newSprite.SpriteUID, newSprite);
+        }
+
+        public static bool AttemptCreateSpriteSheet(SpriteTemplateJson spriteDataJson, string sheetName, GameManifestV2.SpriteSheetDataTemplate.ShaderType desiredType, out GameManifestV2.SpriteSheetDataTemplate sheet)
+        {
+            sheet = null;
+
+            //If we arrived here, then we probably couldn't find the sheet by texture name. We're going to assume the textures have all successfull been loaded by now
+            //So we'll first look at the textures to see if we can make a sheet from it
+            Texture2D texture = null;
+            bool found = GameManifestV2.Singleton.GetTexture(spriteDataJson.SpriteSheetFileName, out texture);
+
+            if (!found)
+            {
+                Debug.LogError(string.Format("Attempted to locate texture '{0}' for sprite '{1}' but failed.", spriteDataJson.SpriteSheetFileName, spriteDataJson));
+                return false;
+            }
+
+            sheet = new GameManifestV2.SpriteSheetDataTemplate();
+            uint uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
+            uint matUID = GameManifestV2.Singleton.GetNewMaterialUID();
+
+            //Create a new material and assign the texture
+            Material newMat;
+
+            if (desiredType == GameManifestV2.SpriteSheetDataTemplate.ShaderType.Billboard)
+            {
+                newMat = new Material(DefaultFiles.billboardShader);
+            }
+            else if (desiredType == GameManifestV2.SpriteSheetDataTemplate.ShaderType.TwoSided)
+            {
+                newMat = new Material(DefaultFiles.twoSidedSpriteShader);
+            }
+            else
+            {
+                newMat = new Material(DefaultFiles.defaultShader);
+            }
+
+            newMat.name = string.Format("{0}", sheetName);
+            newMat.SetTexture("_MainTex", texture);
+            GameManifestV2.Singleton.AddMaterial(matUID, newMat);
+
+            sheet.CreateSpriteSheetTemplate(uid, matUID, texture, newMat, null);
+
+            GameManifestV2.Singleton.AddSpriteSheet(uid, sheet);
+
+            return true;
         }
         #endregion
 
@@ -247,12 +488,12 @@ namespace EveryDaySpaceStation
 
         //Each Block
         //2 Byte Ushort - Block Type UID
-        //2 Byte Ushort - Top Face UID
-        //2 Byte Ushort - Bottom Face UID
-        //2 Byte Ushort - Forward Face UID
-        //2 Byte Ushort - Back Face UID
-        //2 Byte Ushort - Right Face UID
-        //2 Byte Ushort - Left Face UID
+        //4 Byte Uint - Top Face UID
+        //4 Byte Uint - Bottom Face UID
+        //4 Byte Uint - Forward Face UID
+        //4 Byte Uint - Back Face UID
+        //4 Byte Uint - Right Face UID
+        //4 Byte Uint - Left Face UID
         //1 Byte - Light Info
         //1 Byte - Pipe Data
         //Bit 0 - O2
@@ -396,11 +637,11 @@ namespace EveryDaySpaceStation
                                     block.BlockType = b.ReadUInt16();
 
                                     //Block Faces
-                                    block.BlockFaces = new ushort[(int)MapDataV2.MapBlock.BlockFace.MAX];
+                                    block.BlockFaces = new uint[(int)MapDataV2.MapBlock.BlockFace.MAX];
 
                                     for (int f = 0; f < block.BlockFaces.Length; f++)
                                     {
-                                        block.BlockFaces[f] = b.ReadUInt16();
+                                        block.BlockFaces[f] = b.ReadUInt32();
                                     }
 
                                     //Block Light Info
@@ -487,13 +728,13 @@ namespace EveryDaySpaceStation
         ///// </summary>
         //private static void PrepareDefaultTextures()
         //{
-        //    Texture2D defaultCopy = new Texture2D(DefaultFiles.Singleton.defaultTexture.width, DefaultFiles.Singleton.defaultTexture.height, DefaultFiles.Singleton.defaultTexture.format, true);
-        //    Color[] defColors = DefaultFiles.Singleton.defaultTexture.GetPixels();
+        //    Texture2D defaultCopy = new Texture2D(DefaultFiles.defaultTexture.width, DefaultFiles.defaultTexture.height, DefaultFiles.defaultTexture.format, true);
+        //    Color[] defColors = DefaultFiles.defaultTexture.GetPixels();
         //    defaultCopy.SetPixels(defColors);
         //    defaultCopy.Apply();
-        //    defaultCopy.name = DefaultFiles.Singleton.defaultTexture.name;
-        //    defaultCopy.filterMode = DefaultFiles.Singleton.defaultTexture.filterMode;
-        //    defaultCopy.wrapMode = DefaultFiles.Singleton.defaultTexture.wrapMode;
+        //    defaultCopy.name = DefaultFiles.defaultTexture.name;
+        //    defaultCopy.filterMode = DefaultFiles.defaultTexture.filterMode;
+        //    defaultCopy.wrapMode = DefaultFiles.defaultTexture.wrapMode;
         //    //ClientGameManager.Singleton.Gamedata.AddTexture(defaultCopy.name, defaultCopy);
         //}
 
@@ -569,15 +810,15 @@ namespace EveryDaySpaceStation
 
         //    //if (desiredType == EDSSSpriteSheet.ShaderType.Billboard)
         //    //{
-        //    //    newMat = new Material(DefaultFiles.Singleton.billboardShader);
+        //    //    newMat = new Material(DefaultFiles.billboardShader);
         //    //}
         //    //else if (desiredType == EDSSSpriteSheet.ShaderType.TwoSidedSprite)
         //    //{
-        //    //    newMat = new Material(DefaultFiles.Singleton.twoSidedSpriteShader);
+        //    //    newMat = new Material(DefaultFiles.twoSidedSpriteShader);
         //    //}
         //    //else
         //    //{
-        //    //    newMat = new Material(DefaultFiles.Singleton.defaultShader);
+        //    //    newMat = new Material(DefaultFiles.defaultShader);
         //    //}
 
         //    //newMat.name = string.Format("{0}", sheetName);
@@ -597,11 +838,11 @@ namespace EveryDaySpaceStation
         //    //uint uid = ClientGameManager.Singleton.Gamedata.GetNewSpriteSheetUID();
         //    //uint matUID = ClientGameManager.Singleton.Gamedata.GetNewMaterialUID();
 
-        //    //Material newMat = new Material(DefaultFiles.Singleton.defaultShader);
+        //    //Material newMat = new Material(DefaultFiles.defaultShader);
 
         //    //Texture2D texture = null;
         //    ////We'll use the same name since we copied that
-        //    //ClientGameManager.Singleton.Gamedata.GetTexture(DefaultFiles.Singleton.defaultTexture.name, out texture);
+        //    //ClientGameManager.Singleton.Gamedata.GetTexture(DefaultFiles.defaultTexture.name, out texture);
 
         //    //newMat.name = string.Format("{0}", texture);
         //    //newMat.SetTexture("_MainTex", texture);

@@ -1,1023 +1,147 @@
 {
-	"spritedata": [{
-		"uid": 1,
-		"spritename": "empty",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Empty"
-		]
-	}, {
-		"uid": 2,
-		"spritename": "red-grey-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 3,
-		"spritename": "glass-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 4,
-		"spritename": "wood-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 5,
-		"spritename": "whitetile-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 6,
-		"spritename": "white-grey-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 7,
-		"spritename": "dark-grey-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 8,
-		"spritename": "reinforced-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 224,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 9,
-		"spritename": "deckplate-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 256,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, 
+	"spritedata" : [
 	{
-		"uid": 10,
-		"spritename": "grille1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 288,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 11,
-		"spritename": "electronic-1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 320,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 12,
-		"spritename": "uglycarpet1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 352,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}, {
-		"uid": 13,
-		"spritename": "blue-white-floor1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 384,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 14,
-		"spritename": "wall1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 288
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 15,
-		"spritename": "wall-left1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 288
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 16,
-		"spritename": "wall-right1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 288
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 17,
-		"spritename": "wall-center1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 288
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	},
-	{
-		"uid": 18,
-		"spritename": "glass-wall1",
-		"spritesheet": "ss13-1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 288
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}
-	,
-	{
-		"uid": 19,
-		"spritename": "chrome",
-		"spritesheet": "test1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"World"
-		]
-	}
-	,
-	{
-		"uid": 20,
-		"spritename": "door1-unpowered-1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 21,
-		"spritename": "door1-unpowered-2",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 22,
-		"spritename": "door1-unpowered-3",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 23,
-		"spritename": "door1-unpowered-4",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 24,
-		"spritename": "door1-unpowered-5",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 25,
-		"spritename": "door1-unpowered-6",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 26,
-		"spritename": "door1-unpowered-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 0
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	},
-	{
-		"uid": 27,
-		"spritename": "door1-powered-1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 28,
-		"spritename": "door1-powered-2",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 29,
-		"spritename": "door1-powered-3",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 30,
-		"spritename": "door1-powered-4",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 31,
-		"spritename": "door1-powered-5",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 32,
-		"spritename": "door1-powered-6",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 33,
-		"spritename": "door1-powered-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 32
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	},
-	{
-		"uid": 34,
-		"spritename": "door1-locked-1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 64
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	},
-	{
-		"uid": 35,
-		"spritename": "door1-locked-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 64
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	},
-	{
-		"uid": 36,
-		"spritename": "door1-access-1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 37,
-		"spritename": "door1-access-2",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 38,
-		"spritename": "door1-access-3",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 39,
-		"spritename": "door1-access-4",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 40,
-		"spritename": "door1-access-5",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 41,
-		"spritename": "door1-access-6",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 42,
-		"spritename": "door1-access-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 96
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	},
-	{
-		"uid": 43,
-		"spritename": "door1-malfunc-1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 44,
-		"spritename": "door1-malfunc-2",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 45,
-		"spritename": "door1-malfunc-3",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 46,
-		"spritename": "door1-malfunc-4",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 47,
-		"spritename": "door1-malfunc-5",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 48,
-		"spritename": "door1-malfunc-6",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 49,
-		"spritename": "door1-malfunc-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 128
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 50,
-		"spritename": "door1-powered-access1",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 0,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 51,
-		"spritename": "door1-powered-access2",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 32,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 52,
-		"spritename": "door1-powered-access3",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 64,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 53,
-		"spritename": "door1-powered-access4",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 96,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 54,
-		"spritename": "door1-powered-access5",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 128,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 55,
-		"spritename": "door1-powered-access6",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 160,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid": 56,
-		"spritename": "door1-powered-access-welded",
-		"spritesheet": "door1.png",
-		"spritepos": {
-			"x": 192,
-			"y": 160
-		},
-		"spritewidthheight": {
-			"x": 32,
-			"y": 32
-		},
-		"flags": [
-			"Twosided"
-		]
-	}
-	,
-	{
-		"uid" : 57,
-		"spritename" : "locker-generic-front",
-		"spritesheet" : "lockers.png",
+		"spriteuid" : 1,
+		"spritename" : "Empty",
+		"spritesheet" : "ss13-1l.png",
 		"spritepos" : {
 			"x" : 0,
-			"y" : 0,
+			"y" : 0
 		},
 		"spritewidthheight" : {
 			"x" : 32,
-			"y" : 32,
+			"y" : 32
 		},
-		"flags" : [	
-			"Billboard"
+		"flags" : [
+			"Empty"
 		]
-	}
-	,
+	},
 	{
-		"uid" : 58,
-		"spritename" : "locker-generic-left",
-		"spritesheet" : "lockers.png",
+		"spriteuid" : 2,
+		"spritename" : "Floor",
+		"spritesheet" : "ss13-1l.png",
 		"spritepos" : {
 			"x" : 32,
-			"y" : 0,
+			"y" : 0
 		},
 		"spritewidthheight" : {
 			"x" : 32,
-			"y" : 32,
+			"y" : 32
 		},
-		"flags" : [	
-			"Billboard"
+		"flags" : [
+			"World"
 		]
-	}
-	,
+	},
 	{
-		"uid" : 59,
-		"spritename" : "locker-generic-right",
-		"spritesheet" : "lockers.png",
+		"spriteuid" : 3,
+		"spritename" : "Ceiling",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 4,
+		"spritename" : "Scaffold",
+		"spritesheet" : "ss13-1l.png",
 		"spritepos" : {
 			"x" : 64,
-			"y" : 0,
+			"y" : 0
 		},
 		"spritewidthheight" : {
 			"x" : 32,
-			"y" : 32,
+			"y" : 32
 		},
-		"flags" : [	
-			"Billboard"
+		"flags" : [
+			"World"
 		]
-	}
-	,
+	},
 	{
-		"uid" : 60,
-		"spritename" : "locker-generic-back",
-		"spritesheet" : "lockers.png",
+		"spriteuid" : 5,
+		"spritename" : "BasicHull",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 0
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 6,
+		"spritename" : "ReinforcedHull",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 0
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 7,
+		"spritename" : "WallPanel1",
+		"spritesheet" : "ss13-1l.png",
 		"spritepos" : {
 			"x" : 96,
-			"y" : 0,
+			"y" : 0
 		},
 		"spritewidthheight" : {
 			"x" : 32,
-			"y" : 32,
-		},
-		"flags" : [	
-			"Billboard"
-		]
-	}
-	,
-	{
-		"uid" : 61,
-		"spritename" : "lockerdoor-generic-front",
-		"spritesheet" : "lockers.png",
-		"spritepos" : {
-			"x" : 16,
-			"y" : 36,
-		},
-		"spritewidthheight" : {
-			"x" : 12,
-			"y" : 25,
+			"y" : 32
 		},
 		"flags" : [
-			"Billboard"
+			"World"
 		]
-	}
-	,
+	},
 	{
-		"uid" : 62,
-		"spritename" : "lockerdoor-generic-back",
-		"spritesheet" : "lockers.png",
+		"spriteuid" : 8,
+		"spritename" : "TestDoor",
+		"spritesheet" : "ss13-1l.png",
 		"spritepos" : {
-			"x" : 4,
-			"y" : 36,
+			"x" : 64,
+			"y" : 32
 		},
 		"spritewidthheight" : {
-			"x" : 12,
-			"y" : 25,
+			"x" : 32,
+			"y" : 32
 		},
 		"flags" : [
-			"Billboard"
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 9,
+		"spritename" : "Grating",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 32
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
 		]
 	}
 	]

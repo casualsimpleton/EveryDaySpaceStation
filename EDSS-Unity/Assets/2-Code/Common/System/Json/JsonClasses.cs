@@ -295,7 +295,7 @@ namespace EveryDaySpaceStation.Json
     public class BlockTemplateJson
     {
         [JsonProperty("blockuid")]
-        public uint BlockUID { get; set; }
+        public ushort BlockUID { get; set; }
 
         [JsonProperty("blockname")]
         public string BlockName { get; set; }
@@ -303,23 +303,11 @@ namespace EveryDaySpaceStation.Json
         [JsonProperty("blockstrength")]
         public int BlockDefaultStrength { get; set; }
 
-        [JsonProperty("facez+")]
-        public byte FaceZForward { get; set; }
+        [JsonProperty("facedraw")]
+        public byte[] FaceDraw { get; set; }
 
-        [JsonProperty("facex+")]
-        public byte FaceXForward { get; set; }
-
-        [JsonProperty("facez-")]
-        public byte FaceZBack { get; set; }
-
-        [JsonProperty("facex-")]
-        public byte FaceXBack { get; set; }
-
-        [JsonProperty("facey+")]
-        public byte FaceTop { get; set; }
-
-        [JsonProperty("facey-")]
-        public byte FaceBottom { get; set; }
+        [JsonProperty("facedefaultspriteuids")]
+        public uint[] FaceDefaultSpriteUIDs { get; set; }
 
         [JsonProperty("blockflags")]
         public string[] Flags { get; set; }
@@ -370,15 +358,15 @@ namespace EveryDaySpaceStation.Json
 
     #region Sprite Data
     [JsonConverter(typeof(SpriteDataJsonConverter))]
-    public class SpriteDataConfig
+    public class SpriteTemplateCollectionJson
     {
         [JsonProperty("spritedata")]
-        public SpriteDataJson[] SpriteData { get; set; }
+        public SpriteTemplateJson[] SpriteData { get; set; }
     }
 
-    public class SpriteDataJson
+    public class SpriteTemplateJson
     {
-        [JsonProperty("uid")]
+        [JsonProperty("spriteuid")]
         public uint UID { get; set; }
 
         [JsonProperty("spritename")]
@@ -416,7 +404,7 @@ namespace EveryDaySpaceStation.Json
 
         public override bool CanConvert(System.Type objectType)
         {
-            return typeof(SpriteDataConfig).IsAssignableFrom(objectType);
+            return typeof(SpriteTemplateCollectionJson).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
@@ -431,7 +419,7 @@ namespace EveryDaySpaceStation.Json
             using (reader = obj.CreateReader())
             {
                 // Using "populate" avoids infinite recursion.
-                existingValue = (existingValue ?? new SpriteDataConfig());
+                existingValue = (existingValue ?? new SpriteTemplateCollectionJson());
                 serializer.Populate(reader, existingValue);
             }
             return existingValue;

@@ -205,7 +205,8 @@ namespace EveryDaySpaceStation
 
             //ChunkRenderer newCR = new ChunkRenderer();
             ChunkRenderer newCR = ChunkRenderer.NewChunkRenderer(ChunkGameObject.transform);
-            newCR.Init(uid, DefaultFiles.Singleton.testMaterials[uid - 1], this);
+            //newCR.Init(uid, DefaultFiles.testMaterials[uid - 1], this);
+            newCR.Init(uid, null, this);
 
             _chunkRenderers.AddUnique(newCR);
 

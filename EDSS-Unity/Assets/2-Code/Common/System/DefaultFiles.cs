@@ -21,33 +21,95 @@ using System.Reflection;
 
 public class DefaultFiles : MonoBehaviour
 {
-    #region Singleton
-    protected static DefaultFiles m_singleton = null;
-    public static DefaultFiles Singleton
+    //#region Singleton
+    //protected static DefaultFiles m_singleton = null;
+    //public static DefaultFiles Singleton
+    //{
+    //    get
+    //    {
+    //        return m_singleton;
+    //    }
+    //}
+
+    //void Awake()
+    //{
+    //    m_singleton = this;
+    //}
+    //#endregion
+
+    static public Texture2D defaultTexture
     {
         get
         {
-            return m_singleton;
+            return (Resources.Load("Defaults/Textures/defaulttexture") as Texture2D);
         }
     }
 
-    void Awake()
+    static public Texture2D colorTint
     {
-        m_singleton = this;
+        get
+        {
+            return (Resources.Load("Defaults/Textures/colortint") as Texture2D);
+        }
     }
-    #endregion
 
-    public Texture2D defaultTexture;
-    public Texture2D colorTint;
-    public Texture2D crosshairTexture;
-    public Material defaultMaterial;
-    public Material crosshairMaterial;
-    public Shader defaultShader;
-    public Shader billboardShader;
-    public Shader twoSidedSpriteShader;
-    public Shader lineDrawingShader;
+    static public Texture2D crosshairTexture
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Textures/crosshair") as Texture2D);
+        }
+    }
 
-    public Material[] testMaterials;
+    static public Material defaultMaterial
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Materials/defaultmaterial") as Material);
+        }
+    }
 
-    public Texture2D[] TestMap;
+    static public Material crosshairMaterial
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Materials/crosshairmaterial") as Material);
+        }
+    }
+
+    static public Shader defaultShader
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Shaders/ZWriteTransparency") as Shader);
+        }
+    }
+
+    static public Shader billboardShader
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Shaders/SpriteBillboard") as Shader);
+        }
+    }
+
+    static public Shader twoSidedSpriteShader
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Shaders/Sprite2Sided") as Shader);
+        }
+    }
+
+    static public Shader lineDrawingShader
+    {
+        get
+        {
+            return (Resources.Load("Defaults/Shaders/LineDrawing") as Shader);
+        }
+    }
+
+    //static public Material[] testMaterials;
+
+    //static public Texture2D[] TestMap;
 }

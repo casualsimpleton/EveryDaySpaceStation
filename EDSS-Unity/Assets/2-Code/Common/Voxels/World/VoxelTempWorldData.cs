@@ -1927,31 +1927,31 @@ namespace EveryDaySpaceStation
             return TempMap;
         }
 
-        public static ushort[, ,] GetMapFromFile()
-        {
-            if (DefaultFiles.Singleton.TestMap == null || DefaultFiles.Singleton.TestMap.Length < 1)
-                return new ushort[1, 1, 1];
+        //public static ushort[, ,] GetMapFromFile()
+        //{
+        //    if (DefaultFiles.TestMap == null || DefaultFiles.TestMap.Length < 1)
+        //        return new ushort[1, 1, 1];
 
-            int xW = DefaultFiles.Singleton.TestMap[0].width;
-            int yH = DefaultFiles.Singleton.TestMap.Length;
-            int zL = DefaultFiles.Singleton.TestMap[0].height;
-            ushort[, ,] loadedData = new ushort[xW, yH, zL];
+        //    int xW = DefaultFiles.TestMap[0].width;
+        //    int yH = DefaultFiles.TestMap.Length;
+        //    int zL = DefaultFiles.TestMap[0].height;
+        //    ushort[, ,] loadedData = new ushort[xW, yH, zL];
 
-            for (int y = 0; y < yH; y++)
-            {
-                Color32[] colors = DefaultFiles.Singleton.TestMap[y].GetPixels32();
+        //    for (int y = 0; y < yH; y++)
+        //    {
+        //        Color32[] colors = DefaultFiles.TestMap[y].GetPixels32();
 
-                for (int x = 0; x < xW; x++)
-                {
-                    for (int z = 0; z < zL; z++)
-                    {
-                        loadedData[x, y, z] = GetBlockFromColor(colors, x, z, xW);
-                    }
-                }
-            }
+        //        for (int x = 0; x < xW; x++)
+        //        {
+        //            for (int z = 0; z < zL; z++)
+        //            {
+        //                loadedData[x, y, z] = GetBlockFromColor(colors, x, z, xW);
+        //            }
+        //        }
+        //    }
 
-            return loadedData;
-        }
+        //    return loadedData;
+        //}
 
         public static ushort GetBlockFromColor(Color32[] colors, int x, int z, int w)
         {

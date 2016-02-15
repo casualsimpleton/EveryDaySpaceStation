@@ -394,7 +394,7 @@ namespace EveryDaySpaceStation
             defaultSpriteJson.SpriteName = "Default";
             defaultSpriteJson.SpriteSheetFileName = texture.name;
             defaultSpriteJson.SpritePosition = new Vec2Int(0, 0);
-            defaultSpriteJson.SpritePosition = new Vec2Int(texture.width, texture.height);
+            defaultSpriteJson.SpriteWidthHeight = new Vec2Int(texture.width, texture.height);
 
             EDSSSprite newSprite = CreateSprite(defaultSpriteJson);
             EveryDaySpaceStation.GameData.DefaultSprite = newSprite;

@@ -403,123 +403,123 @@ namespace EveryDaySpaceStation
         #endregion
 
         #region Vars
-        Dictionary<uint, EDSSSprite> _edssSprites;
-        Dictionary<uint, EDSSSpriteSheet> _edssSpriteSheets;
-        Dictionary<uint, BlockTemplate> _blockTemplates;
-        Dictionary<string, Texture2D> _textures;
-        Dictionary<uint, Material> _materials;
-        Dictionary<uint, EntityDataTemplate> _entityDataTemplates;
+        //Dictionary<uint, EDSSSprite> _edssSprites;
+        //Dictionary<uint, EDSSSpriteSheet> _edssSpriteSheets;
+        //Dictionary<uint, BlockTemplate> _blockTemplates;
+        //Dictionary<string, Texture2D> _textures;
+        //Dictionary<uint, Material> _materials;
+        //Dictionary<uint, EntityDataTemplate> _entityDataTemplates;
 
-        public static EDSSSprite DefaultSprite;
+        //public static EDSSSprite DefaultSprite;
 
         private uint _spriteSheetUID = 1;
         private uint _materialUID = 1;
         #endregion
 
         #region Gets/Sets
-        public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
-        public uint GetNewMaterilUID() { return _materialUID++; }
+        //public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
+        //public uint GetNewMaterilUID() { return _materialUID++; }
 
-        public void AddSprite(uint uid, EDSSSprite sprite)
-        {
-            _edssSprites.Add(uid, sprite);
-        }
+        //public void AddSprite(uint uid, EDSSSprite sprite)
+        //{
+        //    _edssSprites.Add(uid, sprite);
+        //}
 
-        public void AddSpriteSheet(uint uid, EDSSSpriteSheet spriteSheet)
-        {
-            _edssSpriteSheets.Add(uid, spriteSheet);
-        }
+        //public void AddSpriteSheet(uint uid, EDSSSpriteSheet spriteSheet)
+        //{
+        //    _edssSpriteSheets.Add(uid, spriteSheet);
+        //}
 
-        public void AddGameBlock(uint uid, BlockTemplate blockData)
-        {
-            _blockTemplates.Add(uid, blockData);
-        }
+        //public void AddGameBlock(uint uid, BlockTemplate blockData)
+        //{
+        //    _blockTemplates.Add(uid, blockData);
+        //}
 
-        public void AddEntityTemplate(uint uid, EntityDataTemplate entityData)
-        {
-            _entityDataTemplates.Add(uid, entityData);
-        }
+        //public void AddEntityTemplate(uint uid, EntityDataTemplate entityData)
+        //{
+        //    _entityDataTemplates.Add(uid, entityData);
+        //}
 
-        public void AddTexture(string name, Texture2D texture)
-        {
-            _textures.Add(name, texture);
-        }
+        //public void AddTexture(string name, Texture2D texture)
+        //{
+        //    _textures.Add(name, texture);
+        //}
 
-        public void AddMaterial(uint uid, Material material)
-        {
-            _materials.Add(uid, material);
-        }
+        //public void AddMaterial(uint uid, Material material)
+        //{
+        //    _materials.Add(uid, material);
+        //}
 
-        public bool GetSprite(uint uid, out EDSSSprite sprite)
-        {
-            bool exists = _edssSprites.TryGetValue(uid, out sprite);
+        //public bool GetSprite(uint uid, out EDSSSprite sprite)
+        //{
+        //    bool exists = _edssSprites.TryGetValue(uid, out sprite);
 
-            //Return the default sprite
-            if (!exists)
-            {
-                sprite = GameData.DefaultSprite;
-            }
+        //    //Return the default sprite
+        //    if (!exists)
+        //    {
+        //        sprite = GameData.DefaultSprite;
+        //    }
 
-            return exists;
-        }
+        //    return exists;
+        //}
 
-        public bool GetSpriteSheet(uint uid, out EDSSSpriteSheet spriteSheet)
-        {
-            bool exists = _edssSpriteSheets.TryGetValue(uid, out spriteSheet);
+        //public bool GetSpriteSheet(uint uid, out EDSSSpriteSheet spriteSheet)
+        //{
+        //    bool exists = _edssSpriteSheets.TryGetValue(uid, out spriteSheet);
 
-            return exists;
-        }
+        //    return exists;
+        //}
 
-        /// <summary>
-        /// Look for a EDSSSpriteSheet by texture name, since we might not have the UID yet. NOTE - Going to be slower that searching by UID
-        /// </summary>
-        public bool GetSpriteSheet(string name, out EDSSSpriteSheet spriteSheet)
-        {
-            spriteSheet = null;
-            foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _edssSpriteSheets)
-            {
-                if (sheet.Value.Material.name.CompareTo(name) == 0)
-                {
-                    spriteSheet = sheet.Value;
-                    return true;
-                }
-            }
+        ///// <summary>
+        ///// Look for a EDSSSpriteSheet by texture name, since we might not have the UID yet. NOTE - Going to be slower that searching by UID
+        ///// </summary>
+        //public bool GetSpriteSheet(string name, out EDSSSpriteSheet spriteSheet)
+        //{
+        //    spriteSheet = null;
+        //    foreach (KeyValuePair<uint, EDSSSpriteSheet> sheet in _edssSpriteSheets)
+        //    {
+        //        if (sheet.Value.Material.name.CompareTo(name) == 0)
+        //        {
+        //            spriteSheet = sheet.Value;
+        //            return true;
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public bool GetGameBlock(uint uid, out BlockTemplate blockData)
-        {
-            bool exists = _blockTemplates.TryGetValue(uid, out blockData);
+        //public bool GetGameBlock(uint uid, out BlockTemplate blockData)
+        //{
+        //    bool exists = _blockTemplates.TryGetValue(uid, out blockData);
 
-            return exists;
-        }
+        //    return exists;
+        //}
 
-        public bool GetEntityTemplate(uint uid, out EntityDataTemplate template)
-        {
-            bool exists = _entityDataTemplates.TryGetValue(uid, out template);
-            return exists;
-        }
+        //public bool GetEntityTemplate(uint uid, out EntityDataTemplate template)
+        //{
+        //    bool exists = _entityDataTemplates.TryGetValue(uid, out template);
+        //    return exists;
+        //}
 
-        public bool GetTexture(string name, out Texture2D texture)
-        {
-            bool exists = _textures.TryGetValue(name, out texture);
+        //public bool GetTexture(string name, out Texture2D texture)
+        //{
+        //    bool exists = _textures.TryGetValue(name, out texture);
 
-            //Can't find texture, so return default
-            if (!exists)
-            {
-                texture = _textures[DefaultSprite.SpriteSheet.Texture.name];
-            }
+        //    //Can't find texture, so return default
+        //    if (!exists)
+        //    {
+        //        texture = _textures[DefaultSprite.SpriteSheet.Texture.name];
+        //    }
 
-            return exists;
-        }
+        //    return exists;
+        //}
 
-        public bool GetMaterial(uint uid, out Material material)
-        {
-            bool exists = _materials.TryGetValue(uid, out material);
+        //public bool GetMaterial(uint uid, out Material material)
+        //{
+        //    bool exists = _materials.TryGetValue(uid, out material);
 
-            return exists;
-        }
+        //    return exists;
+        //}
         #endregion
 
         public void Cleanup()
@@ -540,34 +540,34 @@ namespace EveryDaySpaceStation
             //    block.Value.Dispose();
             //}
 
-            foreach (KeyValuePair<string, Texture2D> texture in _textures)
-            {
-                GameObject.Destroy(texture.Value);
-            }
+            //foreach (KeyValuePair<string, Texture2D> texture in _textures)
+            //{
+            //    GameObject.Destroy(texture.Value);
+            //}
 
-            foreach (KeyValuePair<uint, Material> material in _materials)
-            {
-                GameObject.Destroy(material.Value);
-            }
+            //foreach (KeyValuePair<uint, Material> material in _materials)
+            //{
+            //    GameObject.Destroy(material.Value);
+            //}
 
-            foreach (KeyValuePair<uint, EntityDataTemplate> template in _entityDataTemplates)
-            {
-                template.Value.Cleanup();
-            }
+            //foreach (KeyValuePair<uint, EntityDataTemplate> template in _entityDataTemplates)
+            //{
+            //    template.Value.Cleanup();
+            //}
 
-            _edssSprites.Clear();
-            _edssSpriteSheets.Clear();
-            _blockTemplates.Clear();
-            _textures.Clear();
-            _materials.Clear();
-            _entityDataTemplates.Clear();
+            //_edssSprites.Clear();
+            //_edssSpriteSheets.Clear();
+            //_blockTemplates.Clear();
+            //_textures.Clear();
+            //_materials.Clear();
+            //_entityDataTemplates.Clear();
 
-            _edssSprites = null;
-            _edssSpriteSheets = null;
-            _blockTemplates = null;
-            _textures = null;
-            _materials = null;
-            _entityDataTemplates = null;
+            //_edssSprites = null;
+            //_edssSpriteSheets = null;
+            //_blockTemplates = null;
+            //_textures = null;
+            //_materials = null;
+            //_entityDataTemplates = null;
         }
     }
 }
