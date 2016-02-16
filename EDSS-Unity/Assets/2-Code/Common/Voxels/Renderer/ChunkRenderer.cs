@@ -56,7 +56,7 @@ namespace EveryDaySpaceStation
         public Mesh CollisionMesh;
         public MeshCollider MeshCollider;
 
-        public Material ChunkRendererMaterial { get; private set; }
+        public Material ChunkRendererMaterial; //{ get; private set; }
 
         public void Init(ushort chunkMaterialUID, Material material, VoxelChunk parent)
         {

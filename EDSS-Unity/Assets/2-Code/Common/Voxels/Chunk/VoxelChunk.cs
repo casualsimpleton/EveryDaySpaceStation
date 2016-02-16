@@ -228,7 +228,7 @@ namespace EveryDaySpaceStation
             List<ChunkRenderer> crs = _chunkRenderers.List;
             for (int i = 0; i < crs.Count; i++)
             {
-                GameObject.Destroy(crs[i]);
+                GameObject.Destroy(crs[i].gameObject);
             }
 
             _chunkRenderers.Clear();

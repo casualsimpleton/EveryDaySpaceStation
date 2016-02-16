@@ -558,9 +558,20 @@ namespace EveryDaySpaceStation
                                     bWriter.Write(block.BlockType);
                                     
                                     //Faces UID - Top, Bottom, Forward, Back, Right, Left
-                                    for (ushort f = 0; f < block.BlockFaces.Length; f++)
+                                    if (block.BlockFaces == null)
                                     {
-                                        bWriter.Write(block.BlockFaces[f]);
+                                        //If faces don't exist, write all 0s
+                                        for (int f = 0; f < (int)MapDataV2.MapBlock.BlockFace.MAX; f++)
+                                        {
+                                            bWriter.Write((uint)0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int f = 0; f < block.BlockFaces.Length; f++)
+                                        {
+                                            bWriter.Write(block.BlockFaces[f]);
+                                        }
                                     }
 
                                     //Block Light Info

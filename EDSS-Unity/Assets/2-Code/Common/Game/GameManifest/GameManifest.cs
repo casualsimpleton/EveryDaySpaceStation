@@ -181,6 +181,11 @@ namespace EveryDaySpaceStation
         {
             return _blockDataTemplates.TryGetValue(uid, out blockTemplate);
         }
+
+        public Dictionary<uint, BlockDataTemplate> GetAllBlockTemplates()
+        {
+            return _blockDataTemplates;
+        }
         #endregion
 
         #region Art

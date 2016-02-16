@@ -27,7 +27,7 @@ public class MapEditor : EditorWindow {
         EditorWindow.GetWindow<MapEditor>().Show();
     }
 
-    string fileName;
+    string _fileName;
     string path;
     bool isDirty = false;
 
@@ -73,14 +73,21 @@ public class MapEditor : EditorWindow {
     MapEditorCamera _editorCamera;
     VoxelWorld _vw;
 
+    GameManifestV2.BlockDataTemplate[] _blockDataTemplates;
+
     bool _hasStarted = false;
 
     void StartLoad()
     {
         //Debug.Log(string.Format("Loading Map Editor: {0}{1}server", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar));
         _blockDataDirectory = string.Format("{0}{1}server", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar);
-
+        isDirty = false;
         _hasStarted = true;
+    }
+
+    void SaveMap()
+    {
+        FileSystem.WriteMap(_curMapData, _fileName);
     }
 
     void Reset()
@@ -93,6 +100,7 @@ public class MapEditor : EditorWindow {
         _importRegionTextures = null;
         _mapColorDefinitions = null;
         _scrollPos = new Vector2();
+        isDirty = false;
 
         if (_editorCamera == null)
         {
@@ -142,8 +150,8 @@ public class MapEditor : EditorWindow {
         if (GUILayout.Button("New Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
         {
             //EditorWindow.GetWindow<MapEditorNewMap>().Show();
-            fileName = EditorUtility.SaveFilePanel("New Map", string.Format("{0}{1}maps", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar), "newmap", "edss");
-            Debug.Log("Filename " + fileName);
+            _fileName = EditorUtility.SaveFilePanel("New Map", string.Format("{0}{1}maps", Application.persistentDataPath, System.IO.Path.DirectorySeparatorChar), "newmap", "edss");
+            Debug.Log("Filename " + _fileName);
 
             if (!EditorApplication.isPlaying)
             {
@@ -152,7 +160,7 @@ public class MapEditor : EditorWindow {
             }
 
             _curMapData = new MapDataV2();
-            _curMapData.MapName = FileSystem.GetFileNameWithoutExtension(fileName);
+            _curMapData.MapName = FileSystem.GetFileNameWithoutExtension(_fileName);
         }
 
         if (GUILayout.Button("Load Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
@@ -163,6 +171,7 @@ public class MapEditor : EditorWindow {
         {
             if (GUILayout.Button("Save Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
             {
+                SaveMap();
             }
         }
         GUILayout.EndHorizontal();
@@ -188,11 +197,11 @@ public class MapEditor : EditorWindow {
             _curMapData.MapVersion = mapVersion;
         }
 
-        GUILayout.Space(5);
+        GUILayout.Space(15);
 
-        GUILayout.Label(string.Format("Block Definitions: {0}", blockDefinition), GUILayout.MaxWidth(250), GUILayout.MinHeight(40));
-        
-        GUILayout.Space(5);
+        GUILayout.Label(string.Format("Block Definitions: {0}", blockDefinition), GUILayout.MaxWidth(250));
+        DrawBlocks();
+        GUILayout.Space(15);
 
         GUILayout.Label(string.Format("Current Region: {0}", _curRegion), GUILayout.MaxWidth(250));
         GUILayout.BeginHorizontal();
@@ -205,6 +214,7 @@ public class MapEditor : EditorWindow {
             _importRegionTextures.Clear();
             showImportRegionTextures = false;
             _assetSelectorObject = null;
+            isDirty = true;
         }
 
         if (GUILayout.Button("Renum. Region", GUILayout.MaxWidth(100), GUILayout.MinHeight(30)))
@@ -216,11 +226,13 @@ public class MapEditor : EditorWindow {
             {
                 _regionRenumberArray[i] = _curMapData.MapRegions[i].RegionUID;
             }
+            isDirty = true;
         }
 
         if (GUILayout.Button("Del Region", GUILayout.MaxWidth(100), GUILayout.MinHeight(30)))
         {
             _regionCreateRenumDelete = RegionAction.Delete;
+            isDirty = true;
         }
         GUILayout.EndHorizontal();
 
@@ -404,6 +416,7 @@ public class MapEditor : EditorWindow {
 
             if (GUILayout.Button("Create Region", GUILayout.MaxWidth(350), GUILayout.MinHeight(60)))
             {
+                isDirty = true;
                 _regionCreateRenumDelete = RegionAction.None;
                 _curMapRegion = new MapDataV2.MapRegion();
                 _curMapRegion.RegionSize = new Vec3Int(_curMapRegionSize);
@@ -594,7 +607,46 @@ public class MapEditor : EditorWindow {
 
         ProcessMouseCameraEvent();
     }
-    
+
+    void DrawBlocks()
+    {
+        //May need to build them
+        if(_blockDataTemplates == null)
+        {
+            Dictionary<uint, GameManifestV2.BlockDataTemplate> allBlocks = GameManifestV2.Singleton.GetAllBlockTemplates();
+
+            if(allBlocks != null)
+            {
+                _blockDataTemplates = new GameManifestV2.BlockDataTemplate[allBlocks.Count];
+
+                int index = 0;
+                foreach(KeyValuePair<uint, GameManifestV2.BlockDataTemplate> block in allBlocks)
+                {
+                    _blockDataTemplates[index] = block.Value;
+                    index++;
+                }
+            }
+        }
+
+        if (_blockDataTemplates != null)
+        {
+            for (int i = 0; i < _blockDataTemplates.Length; i++)
+            {
+                if (_blockDataTemplates[i] == null)
+                    continue;
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Label(string.Format("{0}", _blockDataTemplates[i].BlockName), GUILayout.MaxWidth(120));
+                GUILayout.Label(string.Format("UID: {0}", _blockDataTemplates[i].BlockUID), GUILayout.MaxWidth(60));
+                GUILayout.Label(string.Format("Req: {0}", _blockDataTemplates[i].BlockRequirement), GUILayout.MaxWidth(60));
+                GUILayout.Label(string.Format("Str: {0}", _blockDataTemplates[i].BlockStrength), GUILayout.MaxWidth(60));
+
+                GUILayout.EndHorizontal();
+            }
+        }
+    }
+
     /// <summary>
     /// Since the mouse has no reliable way to send messages to the editor window, we need to check the editor mouse to see if it has any new mouse events to process
     /// </summary>
@@ -619,6 +671,7 @@ public class MapEditor : EditorWindow {
 
         if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.AddBlock)
         {
+            isDirty = true;
             MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
             newBlock.BlockType = 1;
             _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
@@ -631,6 +684,7 @@ public class MapEditor : EditorWindow {
                 return;
             }
 
+            isDirty = true;
             MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
             newBlock.BlockType = 0;
             _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
