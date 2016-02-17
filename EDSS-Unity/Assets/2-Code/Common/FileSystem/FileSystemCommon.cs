@@ -507,7 +507,7 @@ namespace EveryDaySpaceStation
 
         public static void WriteMap(MapDataV2 mapData, string filePath)
         {
-            using (Stream s = File.Open(filePath, FileMode.OpenOrCreate))
+            using (Stream s = File.Open(filePath, FileMode.Create))
             {
                 using (BinaryWriter bWriter = new BinaryWriter(s))
                 {
@@ -558,7 +558,7 @@ namespace EveryDaySpaceStation
                                     bWriter.Write(block.BlockType);
                                     
                                     //Faces UID - Top, Bottom, Forward, Back, Right, Left
-                                    if (block.BlockFaces == null)
+                                    if (block.BlockFacesSpriteUIDs == null)
                                     {
                                         //If faces don't exist, write all 0s
                                         for (int f = 0; f < (int)MapDataV2.MapBlock.BlockFace.MAX; f++)
@@ -568,9 +568,9 @@ namespace EveryDaySpaceStation
                                     }
                                     else
                                     {
-                                        for (int f = 0; f < block.BlockFaces.Length; f++)
+                                        for (int f = 0; f < block.BlockFacesSpriteUIDs.Length; f++)
                                         {
-                                            bWriter.Write(block.BlockFaces[f]);
+                                            bWriter.Write(block.BlockFacesSpriteUIDs[f]);
                                         }
                                     }
 
@@ -579,10 +579,14 @@ namespace EveryDaySpaceStation
 
                                     //Block Pipe Info
                                     bWriter.Write(block.BlockPipe);
+
+                                    Debug.Log(string.Format("{0},{1},{2} len: {3}", x, y, z, bWriter.BaseStream.Position));
                                 }
                             }
                         }
                     }
+
+                    Debug.Log(string.Format("Wrote {0} Regions. Writer Position: {1} File length: {2}", mapData.MapRegions.Count, bWriter.BaseStream.Position, bWriter.BaseStream.Length));
                 }
             }
         }
@@ -648,11 +652,11 @@ namespace EveryDaySpaceStation
                                     block.BlockType = b.ReadUInt16();
 
                                     //Block Faces
-                                    block.BlockFaces = new uint[(int)MapDataV2.MapBlock.BlockFace.MAX];
+                                    block.BlockFacesSpriteUIDs = new uint[(int)MapDataV2.MapBlock.BlockFace.MAX];
 
-                                    for (int f = 0; f < block.BlockFaces.Length; f++)
+                                    for (int f = 0; f < block.BlockFacesSpriteUIDs.Length; f++)
                                     {
-                                        block.BlockFaces[f] = b.ReadUInt32();
+                                        block.BlockFacesSpriteUIDs[f] = b.ReadUInt32();
                                     }
 
                                     //Block Light Info

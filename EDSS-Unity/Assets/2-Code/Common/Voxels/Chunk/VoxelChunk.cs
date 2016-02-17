@@ -54,57 +54,57 @@ namespace EveryDaySpaceStation
 
         public void TestRandomChunkData()
         {
-            int xw = _blocks.GetLength(0);
-            int yh = _blocks.GetLength(1);
-            int zl = _blocks.GetLength(2);
+            //int xw = _blocks.GetLength(0);
+            //int yh = _blocks.GetLength(1);
+            //int zl = _blocks.GetLength(2);
 
-            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
-            timer.Start();
-            for (int x = 0; x < xw; x++)
-            {
-                for (int y = 0; y < yh; y++)
-                {
-                    for (int z = 0; z < zl; z++)
-                    {
-                        Random.seed = 10 + x + y + z;
-                        int random = Random.Range(0, 3);
+            //System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            //timer.Start();
+            //for (int x = 0; x < xw; x++)
+            //{
+            //    for (int y = 0; y < yh; y++)
+            //    {
+            //        for (int z = 0; z < zl; z++)
+            //        {
+            //            Random.seed = 10 + x + y + z;
+            //            int random = Random.Range(0, 3);
 
-                        _blocks[x, y, z] = new VoxelBlock((ushort)random, this);
-                        //Debug.Log("X " + x + " Y " + y + " Z " + z + " Random " + random);
-                    }
-                }
-            }
-            timer.Stop();
-            Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
+            //            _blocks[x, y, z] = new VoxelBlock((ushort)random, this);
+            //            //Debug.Log("X " + x + " Y " + y + " Z " + z + " Random " + random);
+            //        }
+            //    }
+            //}
+            //timer.Stop();
+            //Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
 
-            NeedsRebuilt = true;
-            IsDirty = true;
+            //NeedsRebuilt = true;
+            //IsDirty = true;
         }
 
         public void LoadChunkData(ushort[, ,] data)
         {
-            int xw = _blocks.GetLength(0);
-            int yh = _blocks.GetLength(1);
-            int zl = _blocks.GetLength(2);
+            //int xw = _blocks.GetLength(0);
+            //int yh = _blocks.GetLength(1);
+            //int zl = _blocks.GetLength(2);
 
-            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
-            timer.Start();
-            for (int x = 0; x < xw; x++)
-            {
-                for (int y = 0; y < yh; y++)
-                {
-                    for (int z = 0; z < zl; z++)
-                    {
-                        _blocks[x, y, z] = new VoxelBlock(data[x, y, z], this);
-                        //Debug.Log("X " + x + " Y " + y + " Z " + z + " Random " + random);
-                    }
-                }
-            }
-            timer.Stop();
-            Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
+            //System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            //timer.Start();
+            //for (int x = 0; x < xw; x++)
+            //{
+            //    for (int y = 0; y < yh; y++)
+            //    {
+            //        for (int z = 0; z < zl; z++)
+            //        {
+            //            _blocks[x, y, z] = new VoxelBlock(data[x, y, z], this);
+            //            //Debug.Log("X " + x + " Y " + y + " Z " + z + " Random " + random);
+            //        }
+            //    }
+            //}
+            //timer.Stop();
+            //Debug.Log("Created " + (xw * yh * zl) + " blocks in " + timer.ElapsedMilliseconds);
 
-            IsDirty = true;
-            NeedsRebuilt = true;
+            //IsDirty = true;
+            //NeedsRebuilt = true;
         }
 
         public void LoadChunkDataPreSet(Vec3Int chunkSize)
@@ -136,7 +136,7 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block.BlockType, this);
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block.BlockType, this);
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this);
 
             //If the new block type is 0 (empty) we need to handle it separately
             if (block.BlockType == 0)
@@ -268,7 +268,7 @@ namespace EveryDaySpaceStation
                         VoxelBlock block = _blocks[x, y, z];
 
                         //Don't draw blocks "0"
-                        if (block.BlockData.BlockUID == 0)
+                        if (block.BlockDataTemplate.BlockUID == 0)
                         {
                             Vec3Int xyz = new Vec3Int(x, y, z);
                             if (!_removedBlocks.Contains(xyz))
@@ -279,7 +279,7 @@ namespace EveryDaySpaceStation
                             _removedBlocks.Remove(xyz);
                         }
 
-                        for (int f = 0; f < block.BlockData.BlockFaces.Length; f++)
+                        for (int f = 0; f < block.BlockDataTemplate.BlockDrawFaces.Length; f++)
                         {
                             ChunkRenderer cr = lastCR;
 
@@ -287,9 +287,9 @@ namespace EveryDaySpaceStation
                             bool found = true;
 
                             //Check if its the same, so we don't have to look it up again
-                            if (lastSprite == null || lastSprite.SpriteUID != block.BlockData.BlockDefaultFaceUIDs[f])
+                            if (lastSprite == null || lastSprite.SpriteUID != block.BlockDataTemplate.BlockDefaultFaceUIDs[f])
                             {
-                                found = GameManifestV2.Singleton.GetSprite(block.BlockData.BlockDefaultFaceUIDs[f], out sprite);
+                                found = GameManifestV2.Singleton.GetSprite(block.BlockDataTemplate.BlockDefaultFaceUIDs[f], out sprite);
                             }
                              
                             uint spriteMaterialUID = 0;
@@ -336,7 +336,7 @@ namespace EveryDaySpaceStation
             int maxX, int maxY, int maxZ)
         {
             //Empty block
-            if (block.BlockType == 0)
+            if (block.MapBlock.BlockType == 0)
             {
                 return;
             }
@@ -359,7 +359,7 @@ namespace EveryDaySpaceStation
                     //It's at the bottom, so add bottom face
                     needBottomFace = true;
                 }
-                else if (_blocks[curX, curY - 1, curZ].BlockType == 0)
+                else if (_blocks[curX, curY - 1, curZ].MapBlock.BlockType == 0)
                 {
                     //Bottom neighbor is empty
                     needBottomFace = true;
@@ -374,7 +374,7 @@ namespace EveryDaySpaceStation
                     //It's the top, so add top face
                     needTopFace = true;
                 }
-                else if (_blocks[curX, curY + 1, curZ].BlockType == 0)
+                else if (_blocks[curX, curY + 1, curZ].MapBlock.BlockType == 0)
                 {
                     //Top neighbor is empty
                     needTopFace = true;
@@ -389,7 +389,7 @@ namespace EveryDaySpaceStation
                     //It's the front (Z+) most block, so add front face
                     needFrontFace = true;
                 }
-                else if (_blocks[curX, curY, curZ + 1].BlockType == 0)
+                else if (_blocks[curX, curY, curZ + 1].MapBlock.BlockType == 0)
                 {
                     //Front neighbor is empty
                     needFrontFace = true;
@@ -404,7 +404,7 @@ namespace EveryDaySpaceStation
                     //It's the back most block, so add back face
                     needBackFace = true;
                 }
-                else if (_blocks[curX, curY, curZ - 1].BlockType == 0)
+                else if (_blocks[curX, curY, curZ - 1].MapBlock.BlockType == 0)
                 {
                     //Back neighbor is empty
                     needBackFace = true;
@@ -419,7 +419,7 @@ namespace EveryDaySpaceStation
                     //It's the right most block, so add right face
                     needRightFace = true;
                 }
-                else if (_blocks[curX + 1, curY, curZ].BlockType == 0)
+                else if (_blocks[curX + 1, curY, curZ].MapBlock.BlockType == 0)
                 {
                     //Right neighbor is empty
                     needRightFace = true;
@@ -434,7 +434,7 @@ namespace EveryDaySpaceStation
                     //It's the left most block, so add left face
                     needLeftFace = true;
                 }
-                else if (_blocks[curX - 1, curY, curZ].BlockType == 0)
+                else if (_blocks[curX - 1, curY, curZ].MapBlock.BlockType == 0)
                 {
                     //Left neighbor is empty
                     needLeftFace = true;

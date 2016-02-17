@@ -39,7 +39,7 @@ namespace EveryDaySpaceStation
             public ushort BlockUID { get; private set; }
             public string BlockName { get; private set; }
             public int BlockStrength { get; private set; }
-            public byte[] BlockFaces { get; private set; }
+            public byte[] BlockDrawFaces { get; private set; }
             public uint[] BlockDefaultFaceUIDs { get; private set; }
             public string[] BlockFlags { get; private set; }
             public uint BlockRequirement { get; private set; }
@@ -50,7 +50,7 @@ namespace EveryDaySpaceStation
                 BlockUID = blockUID;
                 BlockName = blockName;
                 BlockStrength = blockStength;
-                BlockFaces = blockFaces;
+                BlockDrawFaces = blockFaces;
                 BlockFlags = blockFlags;
                 BlockRequirement = blockRequirement;
                 BlockDefaultFaceUIDs = blockDefaultFaceUIDs;
@@ -318,12 +318,12 @@ namespace EveryDaySpaceStation
                     blockTemplate.Value.BlockName, blockTemplate.Value.BlockStrength);
                 str.AppendLine();
                 str.AppendFormat("--{0} {1} {2} {3} {4} {5}",
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceZPlus],
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceXPlus],
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceYPlus],
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceZMinus],
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceXMinus],
-                    blockTemplate.Value.BlockFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceYMinus]);
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceZPlus],
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceXPlus],
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceYPlus],
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceZMinus],
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceXMinus],
+                    blockTemplate.Value.BlockDrawFaces[(int)BlockDataTemplate.ShowFaceDirection.FaceYMinus]);
                 str.AppendLine();
                 str.AppendLine("-- Flags:");
                 for (int i = 0; i < blockTemplate.Value.BlockFlags.Length; i++)

@@ -65,13 +65,13 @@ namespace EveryDaySpaceStation
                 //Bit 7 - TBD
 
             public ushort BlockType { get; set; }
-            public uint[] BlockFaces { get; set; }
+            public uint[] BlockFacesSpriteUIDs { get; set; }
             public byte BlockLight { get; set; }
             public byte BlockPipe { get; set; }
 
             public void Init()
             {
-                BlockFaces = new uint[(int)BlockFace.MAX];
+                BlockFacesSpriteUIDs = new uint[(int)BlockFace.MAX];
             }
 
             public bool HasPipe(BlockPipeFlags testFlag)
@@ -87,6 +87,22 @@ namespace EveryDaySpaceStation
             public void RemovePipe(BlockPipeFlags flag)
             {
                 BlockPipe = (byte)(BlockPipe & ~(byte)flag);
+            }
+
+            public MapBlock(MapBlock blockToCopy)
+            {
+                BlockType = blockToCopy.BlockType;
+                BlockFacesSpriteUIDs = (uint[])blockToCopy.BlockFacesSpriteUIDs.Clone();
+                BlockLight = blockToCopy.BlockLight;
+                BlockPipe = blockToCopy.BlockPipe;
+            }
+
+            public void SetBlockFaceSpriteUIDs(uint[] blockFaceUIDs)
+            {
+                for (int i = 0; i < BlockFacesSpriteUIDs.Length; i++)
+                {
+                    BlockFacesSpriteUIDs[i] = blockFaceUIDs[i];
+                }
             }
         }
 

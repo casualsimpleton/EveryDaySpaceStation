@@ -36,29 +36,35 @@ namespace EveryDaySpaceStation
 
         public static Vector3 DefaultBlockSize = new Vector3(1f, 1f, 1f);
 
-        public ushort BlockType { get; private set; }
+        //public ushort BlockType { get; private set; }
         public byte LightValue { get; private set; }
         public byte IsModified { get; private set; }
-        public GameManifestV2.BlockDataTemplate BlockData { get; private set; }
+        public GameManifestV2.BlockDataTemplate BlockDataTemplate { get; private set; }
+        public MapDataV2.MapBlock MapBlock { get; private set; }
         //public bool IsDirty { get; private set; }
 
         public VoxelChunk ParentChunk { get; private set; }
 
-        public VoxelBlock(ushort blockType, VoxelChunk parent)
+        public VoxelBlock(MapDataV2.MapBlock mapBlock, VoxelChunk parent)
         {
-            BlockType = blockType;
             ParentChunk = parent;
 
+            MapBlock = mapBlock;
+
+            LightValue = MapBlock.BlockLight;
+
             GameManifestV2.BlockDataTemplate blockTemplate = null;
-            GameManifestV2.Singleton.GetBlockTemplate(blockType, out blockTemplate);
+            GameManifestV2.Singleton.GetBlockTemplate(MapBlock.BlockType, out blockTemplate);
             if (blockTemplate == null)
             {
-                BlockData = VoxelBlock.DefaultBlockData;
+                BlockDataTemplate = VoxelBlock.DefaultBlockData;
             }
             else
             {
-                BlockData = blockTemplate;
+                BlockDataTemplate = blockTemplate;
             }
+
+            MapBlock.SetBlockFaceSpriteUIDs(BlockDataTemplate.BlockDefaultFaceUIDs);
         }
 
         public void SetLight(byte newLight)

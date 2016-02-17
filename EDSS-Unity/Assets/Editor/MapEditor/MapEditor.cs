@@ -89,6 +89,17 @@ public class MapEditor : EditorWindow {
     void SaveMap()
     {
         FileSystem.WriteMap(_curMapData, _fileName);
+        Debug.Log(string.Format("Saving map to {0}", _fileName));
+    }
+
+    void LoadMap()
+    {
+        _curMapData = FileSystem.LoadMapData(_fileName);
+        _curMapRegion = _curMapData.MapRegions[0];
+        Debug.Log(string.Format("Loaded map {0} from {1}", _curMapData.MapName, _fileName));
+
+        _vw = GameObject.FindObjectOfType<VoxelWorld>();
+        _vw.CreateWorld(_curMapRegion.RegionBlocks);
     }
 
     void Reset()
@@ -166,6 +177,7 @@ public class MapEditor : EditorWindow {
 
         if (GUILayout.Button("Load Map", GUILayout.MaxWidth(80), GUILayout.MinHeight(40)))
         {
+            LoadMap();
         }
 
         if (isDirty)
@@ -679,13 +691,16 @@ public class MapEditor : EditorWindow {
         {
             isDirty = true;
 
+            //If current block is empty
             if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
             {
                 MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+                newBlock.Init();
                 newBlock.BlockType = _selectedBlockType;
                 prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
                 _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
             }
+            //Block isn't empty
             else
             {
                 prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
@@ -702,6 +717,7 @@ public class MapEditor : EditorWindow {
 
             isDirty = true;
             MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+            newBlock.Init();
             newBlock.BlockType = 0;
             prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
             _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
