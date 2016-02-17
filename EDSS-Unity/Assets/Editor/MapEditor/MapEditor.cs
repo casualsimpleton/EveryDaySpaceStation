@@ -72,6 +72,7 @@ public class MapEditor : EditorWindow {
 
     MapEditorCamera _editorCamera;
     VoxelWorld _vw;
+    ushort _selectedBlockType = 1;
 
     GameManifestV2.BlockDataTemplate[] _blockDataTemplates;
 
@@ -514,6 +515,7 @@ public class MapEditor : EditorWindow {
             if (_selDelAddButtons == SelectDeleteAdd.BlockEdit)
             {
                 GUILayout.Label(string.Format("Select Anchor: {0},{1},{2}", _editorCamera._curTargetBlockPos.x, _editorCamera._curTargetBlockPos.y, _editorCamera._curTargetBlockPos.z));
+                _selectedBlockType = (ushort)EditorGUILayout.IntField("Block Type:", (int)_selectedBlockType);
             }
         }
 
@@ -613,14 +615,14 @@ public class MapEditor : EditorWindow {
         //May need to build them
         if(_blockDataTemplates == null)
         {
-            Dictionary<uint, GameManifestV2.BlockDataTemplate> allBlocks = GameManifestV2.Singleton.GetAllBlockTemplates();
+            Dictionary<ushort, GameManifestV2.BlockDataTemplate> allBlocks = GameManifestV2.Singleton.GetAllBlockTemplates();
 
             if(allBlocks != null)
             {
                 _blockDataTemplates = new GameManifestV2.BlockDataTemplate[allBlocks.Count];
 
                 int index = 0;
-                foreach(KeyValuePair<uint, GameManifestV2.BlockDataTemplate> block in allBlocks)
+                foreach(KeyValuePair<ushort, GameManifestV2.BlockDataTemplate> block in allBlocks)
                 {
                     _blockDataTemplates[index] = block.Value;
                     index++;
@@ -646,13 +648,16 @@ public class MapEditor : EditorWindow {
             }
         }
     }
-
+    
     /// <summary>
     /// Since the mouse has no reliable way to send messages to the editor window, we need to check the editor mouse to see if it has any new mouse events to process
     /// </summary>
     public void ProcessMouseCameraEvent()
     {
         if(_curMapRegion == null)
+            return;
+
+        if (_editorCamera == null)
             return;
 
         MapEditorCamera.MouseActionEvent mouseEditEvent = _editorCamera.GetMouseAction();
@@ -669,12 +674,23 @@ public class MapEditor : EditorWindow {
             return;
         }
 
+        ushort prevBlockType = 0;
         if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.AddBlock)
         {
             isDirty = true;
-            MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
-            newBlock.BlockType = 1;
-            _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
+
+            if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
+            {
+                MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+                newBlock.BlockType = _selectedBlockType;
+                prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
+                _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
+            }
+            else
+            {
+                prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
+                _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType = _selectedBlockType;
+            }
         }
         else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.RemoveBlock)
         {
@@ -687,11 +703,12 @@ public class MapEditor : EditorWindow {
             isDirty = true;
             MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
             newBlock.BlockType = 0;
+            prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
             _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
         }
 
         //VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
-        _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z]);
+        _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z], prevBlockType);
     }
 
     public void AdjustRegionSize(ref MapDataV2.MapRegion region, Vec3Int newSize)

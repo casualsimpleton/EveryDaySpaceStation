@@ -79,21 +79,31 @@ namespace EveryDaySpaceStation
 
             int xChunkNum = Mathf.CeilToInt((float)TempMap.GetLength(0) / (float)ChunkSize.x);
             int zChunkNum = Mathf.CeilToInt((float)TempMap.GetLength(2) / (float)ChunkSize.z);
+            int yChunkNum = Mathf.CeilToInt((float)TempMap.GetLength(1) / (float)ChunkSize.y);
 
-            _voxelChunks = new VoxelChunkOrganizer[xChunkNum, 1, zChunkNum];
+            _voxelChunks = new VoxelChunkOrganizer[xChunkNum, yChunkNum, zChunkNum];
 
             //Prepare chunks
-            for (int x = 0; x < xChunkNum; x++)
+            for (int y = 0; y < yChunkNum; y++)
             {
-                for (int z = 0; z < zChunkNum; z++)
+                for (int x = 0; x < xChunkNum; x++)
                 {
-                    VoxelChunkOrganizer vco = GetVoxelChunk(x, z);
-                    _voxelChunks[x, 0, z] = vco;
-                    vco.Init(ChunkSize.x, ChunkSize.y, ChunkSize.z);
-                    vco.transform.parent = myTransform;
-                    vco.transform.localPosition = new Vector3(x * VoxelBlock.DefaultBlockSize.x * ChunkSize.x, 0, z * VoxelBlock.DefaultBlockSize.z * ChunkSize.z);
+                    for (int z = 0; z < zChunkNum; z++)
+                    {
+                        int xChunkSize = x * ChunkSize.x;
+                        int zChunkSize = z * ChunkSize.z;
+                        int yChunkSize = y * ChunkSize.y;
+                        xChunkSize = Mathf.Min(TempMap.GetLength(0) - xChunkSize, ChunkSize.x);
+                        yChunkSize = Mathf.Min(TempMap.GetLength(1) - yChunkSize, ChunkSize.y);
+                        zChunkSize = Mathf.Min(TempMap.GetLength(2) - zChunkSize, ChunkSize.z);
+                        VoxelChunkOrganizer vco = GetVoxelChunk(x, z);
+                        _voxelChunks[x, y, z] = vco;
+                        vco.Init(xChunkSize, yChunkSize, zChunkSize);
+                        vco.transform.parent = myTransform;
+                        vco.transform.localPosition = new Vector3(x * VoxelBlock.DefaultBlockSize.x * ChunkSize.x, 0, z * VoxelBlock.DefaultBlockSize.z * ChunkSize.z);
 
-                    vco.LoadChunkDataPreSet(ChunkSize);
+                        vco.LoadChunkDataPreSet(new Vec3Int(xChunkSize, yChunkSize, zChunkSize));
+                    }
                 }
             }
 
@@ -131,7 +141,7 @@ namespace EveryDaySpaceStation
             Debug.Log(string.Format("World Created in {0}ms for {1},{2},{3}", _timer.ElapsedMilliseconds, TempMap.GetLength(0), TempMap.GetLength(1), TempMap.GetLength(2)));
         }
 
-        public void UpdateBlock(Vec3Int position, MapDataV2.MapBlock newBlock)
+        public void UpdateBlock(Vec3Int position, MapDataV2.MapBlock newBlock, ushort prevBlockType)
         {
             int chunkX = position.x / ChunkSize.x;
             int chunkY = position.y / ChunkSize.y;
@@ -139,7 +149,7 @@ namespace EveryDaySpaceStation
 
             Vec3Int localPos = new Vec3Int(position.x % ChunkSize.x, position.y % ChunkSize.y, position.z % ChunkSize.z);
 
-            _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataBlock(newBlock, localPos);
+            _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataBlock(newBlock, prevBlockType, localPos);
         }
     }
 }

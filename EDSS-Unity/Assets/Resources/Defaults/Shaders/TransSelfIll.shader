@@ -12,10 +12,12 @@ Subshader {
 	//Material {  Emission [_Color]  }
 
  Pass {
-	  ZTest Always Cull Off ZWrite On
+	  //ZTest Always Cull Off ZWrite On
+	  //ZTest Always
+	  //ZWrite Off
 	  Fog { Mode off }      
-	  ColorMask RGBA
-	  Cull Back
+	  //ColorMask RGBA
+	  //Cull Front
 	  Blend SrcAlpha OneMinusSrcAlpha
 	  BindChannels
 	  {

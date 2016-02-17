@@ -28,11 +28,18 @@ namespace EveryDaySpaceStation
     [System.Serializable]
     public struct VoxelBlock
     {
+        //Less than ideal since we're constructing this here, but can't do a runtime value length
+        public static GameManifestV2.BlockDataTemplate DefaultBlockData =
+            new GameManifestV2.BlockDataTemplate(1, "DefaultEditorBlock", 1000,
+                new byte[] { 1, 1, 1, 1, 1, 1 },
+                null, new uint[] { 1, 1, 1, 1, 1, 1 }, 0);
+
         public static Vector3 DefaultBlockSize = new Vector3(1f, 1f, 1f);
 
         public ushort BlockType { get; private set; }
         public byte LightValue { get; private set; }
         public byte IsModified { get; private set; }
+        public GameManifestV2.BlockDataTemplate BlockData { get; private set; }
         //public bool IsDirty { get; private set; }
 
         public VoxelChunk ParentChunk { get; private set; }
@@ -41,6 +48,17 @@ namespace EveryDaySpaceStation
         {
             BlockType = blockType;
             ParentChunk = parent;
+
+            GameManifestV2.BlockDataTemplate blockTemplate = null;
+            GameManifestV2.Singleton.GetBlockTemplate(blockType, out blockTemplate);
+            if (blockTemplate == null)
+            {
+                BlockData = VoxelBlock.DefaultBlockData;
+            }
+            else
+            {
+                BlockData = blockTemplate;
+            }
         }
 
         public void SetLight(byte newLight)

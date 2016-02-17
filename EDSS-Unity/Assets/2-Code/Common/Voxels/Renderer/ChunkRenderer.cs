@@ -42,7 +42,7 @@ namespace EveryDaySpaceStation
         public VoxelChunk ParentChunk { get; private set; }
         public Transform myTransform { get; private set; }
 
-        public ushort ChunkMaterialUID { get; private set; }
+        public uint ChunkMaterialUID { get; private set; }
         public List<Vector3> Vertices = new List<Vector3>();
         public List<Vector3> Normals = new List<Vector3>();
         public List<int> Triangles = new List<int>();
@@ -58,7 +58,7 @@ namespace EveryDaySpaceStation
 
         public Material ChunkRendererMaterial; //{ get; private set; }
 
-        public void Init(ushort chunkMaterialUID, Material material, VoxelChunk parent)
+        public void Init(uint chunkMaterialUID, Material material, VoxelChunk parent)
         {
             ChunkMaterialUID = chunkMaterialUID;
             ChunkRendererMaterial = material;

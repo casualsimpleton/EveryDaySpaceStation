@@ -35,6 +35,7 @@ namespace EveryDaySpaceStation
                 FaceYMinus
             }
 
+
             public ushort BlockUID { get; private set; }
             public string BlockName { get; private set; }
             public int BlockStrength { get; private set; }
@@ -76,8 +77,9 @@ namespace EveryDaySpaceStation
                 if (_uvCoords == Vector4.zero)
                 {
                     float xPos = (float)TopLeft.x / (float)SpriteSheetTemplate.Texture.width;
-                    float yPos = (float)(TopLeft.x + WidthHeight.y) / (float)SpriteSheetTemplate.Texture.height;
-                    float width = (float)WidthHeight.x / (float)SpriteSheetTemplate.Texture.width;
+                    //float yPos = (float)(TopLeft.y + WidthHeight.y) / (float)SpriteSheetTemplate.Texture.height;
+                    float yPos = (float)(TopLeft.y) / (float)SpriteSheetTemplate.Texture.height;
+                    float width = (float)(WidthHeight.x) / (float)SpriteSheetTemplate.Texture.width;
                     float height = (float)WidthHeight.y / (float)SpriteSheetTemplate.Texture.height;
 
                     _uvCoords = new Vector4(xPos, yPos, width, height);
@@ -170,19 +172,19 @@ namespace EveryDaySpaceStation
         #endregion
 
         #region Block Data
-        Dictionary<uint, BlockDataTemplate> _blockDataTemplates;
+        Dictionary<ushort, BlockDataTemplate> _blockDataTemplates;
 
         public void AddBlockTemplate(BlockDataTemplate newBlock)
         {
             _blockDataTemplates.Add(newBlock.BlockUID, newBlock);
         }
 
-        public bool GetBlockTemplate(uint uid, out BlockDataTemplate blockTemplate)
+        public bool GetBlockTemplate(ushort uid, out BlockDataTemplate blockTemplate)
         {
             return _blockDataTemplates.TryGetValue(uid, out blockTemplate);
         }
 
-        public Dictionary<uint, BlockDataTemplate> GetAllBlockTemplates()
+        public Dictionary<ushort, BlockDataTemplate> GetAllBlockTemplates()
         {
             return _blockDataTemplates;
         }
@@ -288,7 +290,7 @@ namespace EveryDaySpaceStation
             ManifestName = manifestName;
             ManifestVersion = manifestVersion;
 
-            _blockDataTemplates = new Dictionary<uint, BlockDataTemplate>();
+            _blockDataTemplates = new Dictionary<ushort, BlockDataTemplate>();
             _spritesTemplates = new Dictionary<uint, SpriteDataTemplate>();
             _spriteSheetsTemplates = new Dictionary<uint, SpriteSheetDataTemplate>();
             _textures = new Dictionary<string, Texture2D>();
@@ -310,7 +312,7 @@ namespace EveryDaySpaceStation
             str.AppendLine();
             str.AppendLine();
             str.AppendLine("Block Templates++++++++++++++++++++++++++");
-            foreach (KeyValuePair<uint, BlockDataTemplate> blockTemplate in _blockDataTemplates)
+            foreach (KeyValuePair<ushort, BlockDataTemplate> blockTemplate in _blockDataTemplates)
             {
                 str.AppendFormat("--BlockUID: {0}\t\tBlockName: {1}\t\tBlockStrength: {2}", blockTemplate.Value.BlockUID,
                     blockTemplate.Value.BlockName, blockTemplate.Value.BlockStrength);

@@ -144,7 +144,7 @@ namespace EveryDaySpaceStation
         /// </summary>
         /// <param name="block"></param>
         /// <param name="xyz"></param>
-        public void ChangeDataBlock(MapDataV2.MapBlock block, Vec3Int xyz)
+        public void ChangeDataBlock(MapDataV2.MapBlock block, ushort prevBlockType, Vec3Int xyz)
         {
             if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
             {
@@ -172,6 +172,10 @@ namespace EveryDaySpaceStation
                 _removedBlocks.Add(xyz);
                 NeedsRebuilt = true;
             }
+            else if (block.BlockType != prevBlockType)
+            {
+                NeedsRebuilt = true;
+            }
 
             IsDirty = true;
         }
@@ -186,7 +190,7 @@ namespace EveryDaySpaceStation
             IsDirty = true;
         }
 
-        public ChunkRenderer GetChunkRenderer(ushort uid)
+        public ChunkRenderer GetChunkRenderer(uint uid)
         {
             //Special case
             if(uid == 0)
@@ -206,7 +210,9 @@ namespace EveryDaySpaceStation
             //ChunkRenderer newCR = new ChunkRenderer();
             ChunkRenderer newCR = ChunkRenderer.NewChunkRenderer(ChunkGameObject.transform);
             //newCR.Init(uid, DefaultFiles.testMaterials[uid - 1], this);
-            newCR.Init(uid, null, this);
+            Material mat = null;
+            GameManifestV2.Singleton.GetMaterial(uid, out mat);
+            newCR.Init(uid, mat, this);
 
             _chunkRenderers.AddUnique(newCR);
 
@@ -251,6 +257,7 @@ namespace EveryDaySpaceStation
             int zl = _blocks.GetLength(2);
 
             ChunkRenderer lastCR = null;
+            GameManifestV2.SpriteDataTemplate lastSprite = null;
 
             for (int x = 0; x < xw; x++)
             {
@@ -261,7 +268,7 @@ namespace EveryDaySpaceStation
                         VoxelBlock block = _blocks[x, y, z];
 
                         //Don't draw blocks "0"
-                        if (block.BlockType == 0)
+                        if (block.BlockData.BlockUID == 0)
                         {
                             Vec3Int xyz = new Vec3Int(x, y, z);
                             if (!_removedBlocks.Contains(xyz))
@@ -272,16 +279,41 @@ namespace EveryDaySpaceStation
                             _removedBlocks.Remove(xyz);
                         }
 
-                        ChunkRenderer cr = lastCR;
-
-                        if (cr == null || cr.ChunkMaterialUID != block.BlockType)
+                        for (int f = 0; f < block.BlockData.BlockFaces.Length; f++)
                         {
-                            cr = GetChunkRenderer(block.BlockType);
-                        }                        
+                            ChunkRenderer cr = lastCR;
 
-                        UpdateChunkRendererBlock(cr, block, x, y, z, xw, yh, zl);
+                            GameManifestV2.SpriteDataTemplate sprite = lastSprite;
+                            bool found = true;
 
-                        lastCR = cr;
+                            //Check if its the same, so we don't have to look it up again
+                            if (lastSprite == null || lastSprite.SpriteUID != block.BlockData.BlockDefaultFaceUIDs[f])
+                            {
+                                found = GameManifestV2.Singleton.GetSprite(block.BlockData.BlockDefaultFaceUIDs[f], out sprite);
+                            }
+                             
+                            uint spriteMaterialUID = 0;
+
+                            if (found)
+                            {
+                                spriteMaterialUID = sprite.SpriteSheetTemplate.MaterialUID;
+                            }
+                            else
+                            {
+                                sprite = GameManifestV2.DefaultSprite;
+                                spriteMaterialUID = sprite.SpriteSheetTemplate.MaterialUID;
+                            }
+
+                            if (cr == null || cr.ChunkMaterialUID != spriteMaterialUID)
+                            {
+                                cr = GetChunkRenderer(spriteMaterialUID);
+                            }
+
+                            UpdateChunkRendererBlock(cr, block, (GameManifestV2.BlockDataTemplate.ShowFaceDirection)f, sprite, x, y, z, xw, yh, zl);
+
+                            lastCR = cr;
+                            lastSprite = sprite;
+                        }
                     }
                 }
             }
@@ -298,6 +330,8 @@ namespace EveryDaySpaceStation
         }
 
         protected void UpdateChunkRendererBlock(ChunkRenderer chunkRenderer, VoxelBlock block, 
+            GameManifestV2.BlockDataTemplate.ShowFaceDirection blockFace,
+            GameManifestV2.SpriteDataTemplate sprite,
             int curX, int curY, int curZ,
             int maxX, int maxY, int maxZ)
         {
@@ -315,76 +349,96 @@ namespace EveryDaySpaceStation
             bool needRightFace = false;
             bool needLeftFace = false;
 
+            Vector4 uvs = sprite.GetUVCoords();
+
             //Check bottom
-            if (curY == 0)
+            if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYMinus)
             {
-                //It's at the bottom, so add bottom face
-                needBottomFace = true;
-            }
-            else if (_blocks[curX, curY - 1, curZ].BlockType == 0)
-            {
-                //Bottom neighbor is empty
-                needBottomFace = true;
+                if (curY == 0)
+                {
+                    //It's at the bottom, so add bottom face
+                    needBottomFace = true;
+                }
+                else if (_blocks[curX, curY - 1, curZ].BlockType == 0)
+                {
+                    //Bottom neighbor is empty
+                    needBottomFace = true;
+                }
             }
 
             //Check top
-            if (curY == maxY - 1)
+            else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus)
             {
-                //It's the top, so add top face
-                needTopFace = true;
-            }
-            else if (_blocks[curX, curY + 1, curZ].BlockType == 0)
-            {
-                //Top neighbor is empty
-                needTopFace = true;
+                if (curY == maxY - 1)
+                {
+                    //It's the top, so add top face
+                    needTopFace = true;
+                }
+                else if (_blocks[curX, curY + 1, curZ].BlockType == 0)
+                {
+                    //Top neighbor is empty
+                    needTopFace = true;
+                }
             }
 
             //Check front
-            if (curZ == maxZ - 1)
+            else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus)
             {
-                //It's the front (Z+) most block, so add front face
-                needFrontFace = true;
-            }
-            else if (_blocks[curX, curY, curZ + 1].BlockType == 0)
-            {
-                //Front neighbor is empty
-                needFrontFace = true;
+                if (curZ == maxZ - 1)
+                {
+                    //It's the front (Z+) most block, so add front face
+                    needFrontFace = true;
+                }
+                else if (_blocks[curX, curY, curZ + 1].BlockType == 0)
+                {
+                    //Front neighbor is empty
+                    needFrontFace = true;
+                }
             }
 
             //Check back
-            if (curZ == 0)
+            else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus)
             {
-                //It's the back most block, so add back face
-                needBackFace = true;
-            }
-            else if (_blocks[curX, curY, curZ - 1].BlockType == 0)
-            {
-                //Back neighbor is empty
-                needBackFace = true;
+                if (curZ == 0)
+                {
+                    //It's the back most block, so add back face
+                    needBackFace = true;
+                }
+                else if (_blocks[curX, curY, curZ - 1].BlockType == 0)
+                {
+                    //Back neighbor is empty
+                    needBackFace = true;
+                }
             }
 
             //Check right
-            if (curX == maxX - 1)
+            else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus)
             {
-                //It's the right most block, so add right face
-                needRightFace = true;
-            }
-            else if (_blocks[curX + 1, curY, curZ].BlockType == 0)
-            {
-                //Right neighbor is empty
-                needRightFace = true;
+                if (curX == maxX - 1)
+                {
+                    //It's the right most block, so add right face
+                    needRightFace = true;
+                }
+                else if (_blocks[curX + 1, curY, curZ].BlockType == 0)
+                {
+                    //Right neighbor is empty
+                    needRightFace = true;
+                }
             }
 
             //Check left
-            if (curX == 0)
+            else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus)
             {
-                //It's the left most block, so add left face
-                needLeftFace = true;
-            }
-            else if (_blocks[curX - 1, curY, curZ].BlockType == 0)
-            {
-                //Left neighbor is empty
-                needLeftFace = true;
+                if (curX == 0)
+                {
+                    //It's the left most block, so add left face
+                    needLeftFace = true;
+                }
+                else if (_blocks[curX - 1, curY, curZ].BlockType == 0)
+                {
+                    //Left neighbor is empty
+                    needLeftFace = true;
+                }
             }
             #endregion
 
@@ -395,25 +449,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.up, new Vector2(0f, 0f));
+                    Vector3.up, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.up, new Vector2(0f, 1f));
+                    Vector3.up, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.up, new Vector2(1f, 1f));
+                    Vector3.up, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.up, new Vector2(1f, 0f));
+                    Vector3.up, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -424,25 +478,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(0f, 1f));
+                    -Vector3.up, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(0f, 0f));
+                    -Vector3.up, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.up, new Vector2(1f, 0f));
+                    -Vector3.up, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.up, new Vector2(1f, 1f));
+                    -Vector3.up, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }
@@ -453,25 +507,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 1f));
+                    Vector3.forward, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(1f, 0f));
+                    Vector3.forward, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 0f));
+                    Vector3.forward, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.forward, new Vector2(0f, 1f));
+                    Vector3.forward, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -482,25 +536,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.forward, new Vector2(0f, 1f));
+                    -Vector3.forward, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.forward, new Vector2(0f, 0f));
+                    -Vector3.forward, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.forward, new Vector2(1f, 0f));
+                    -Vector3.forward, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.forward, new Vector2(1f, 1f));
+                    -Vector3.forward, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }
@@ -511,25 +565,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.right, new Vector2(0f, 1f));
+                    Vector3.right, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.right, new Vector2(1f, 1f));
+                    Vector3.right, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    Vector3.right, new Vector2(1f, 0f));
+                    Vector3.right, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX) + (VoxelBlock.DefaultBlockSize.x),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    Vector3.right, new Vector2(0f, 0f));
+                    Vector3.right, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex, firstIndex + 1, firstIndex + 2, firstIndex + 3, true);
             }
@@ -540,25 +594,25 @@ namespace EveryDaySpaceStation
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.right, new Vector2(1f, 1f));
+                    -Vector3.right, new Vector2(uvs.x + uvs.w, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY) + (VoxelBlock.DefaultBlockSize.y),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.right, new Vector2(0f, 1f));
+                    -Vector3.right, new Vector2(uvs.x, uvs.y + uvs.z));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ) + (VoxelBlock.DefaultBlockSize.z)),
-                    -Vector3.right, new Vector2(0f, 0f));
+                    -Vector3.right, new Vector2(uvs.x, uvs.y));
 
                 chunkRenderer.AddVertexAndUV(new Vector3(
                     (VoxelBlock.DefaultBlockSize.x * curX),
                     (VoxelBlock.DefaultBlockSize.y * curY),
                     (VoxelBlock.DefaultBlockSize.z * curZ)),
-                    -Vector3.right, new Vector2(1f, 0f));
+                    -Vector3.right, new Vector2(uvs.x + uvs.w, uvs.y));
 
                 chunkRenderer.AddQuadFace(firstIndex, firstIndex + 2, firstIndex + 1, firstIndex, firstIndex + 3, true);
             }
