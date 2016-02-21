@@ -158,6 +158,8 @@ namespace EveryDaySpaceStation
         public string ManifestFilePath { get; private set; }
         public string ManifestName { get; private set; }
         public ushort ManifestVersion { get; private set; }
+
+        public bool IsLoaded { get; private set; }
         #endregion
 
         #region Class Variables
@@ -281,6 +283,7 @@ namespace EveryDaySpaceStation
         {
             _spriteSheetUID = 0;
             _materialUID = 0;
+            IsLoaded = false;
         }
 
         public void PrepareManifest(string manifestFileName, string manifestFilePath, string manifestName, ushort manifestVersion)
@@ -295,6 +298,11 @@ namespace EveryDaySpaceStation
             _spriteSheetsTemplates = new Dictionary<uint, SpriteSheetDataTemplate>();
             _textures = new Dictionary<string, Texture2D>();
             _materials = new Dictionary<uint, Material>();
+        }
+
+        public void DoneLoaded()
+        {
+            IsLoaded = true;
         }
 
         public string DumpToLog()

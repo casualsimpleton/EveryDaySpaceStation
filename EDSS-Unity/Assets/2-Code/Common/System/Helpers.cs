@@ -151,6 +151,24 @@ namespace EveryDaySpaceStation.Utils
                     throw new System.InvalidCastException("You can't cast a weird value to a bool!");
             }
         }
+
+        public static bool ContainsFlag(this string[] str, string flag)
+        {
+            if(str == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i].CompareTo(flag) == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         #endregion
 
         #region Lights

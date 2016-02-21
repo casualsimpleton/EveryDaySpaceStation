@@ -8,12 +8,17 @@
 
 Subshader {
 	Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
-
+	
+	
+	
  Pass {
 	  //ZTest Always Cull Off ZWrite On
+	  Blend SrcAlpha OneMinusSrcAlpha
+	  ZWrite On
+	  ZTest LEqual
 	  Fog { Mode off }      
 	  ColorMask RGBA
-	  Cull Back
+	  //Cull Back
 	  BindChannels
 	  {
 		Bind "Color", color
@@ -68,8 +73,8 @@ Subshader {
 	fixed4 frag(v2f i) : COLOR
 	{
 		fixed4 c = tex2D(_MainTex,i.uv) * _Color;
-		clip(c.a - 0.5f);
-		c.a *= 0;
+		//clip(c.a - 0.5f);
+		//c.a *= 0;
 		c.rgb = BlendOverlay(c.rgb, i.color.rgb * (_ExtraColor * 2));
 		return c;
 	}

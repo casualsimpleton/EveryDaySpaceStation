@@ -359,85 +359,222 @@ namespace EveryDaySpaceStation
                     //It's at the bottom, so add bottom face
                     needBottomFace = true;
                 }
-                else if (_blocks[curX, curY - 1, curZ].MapBlock.BlockType == 0)
+                else //if (_blocks[curX, curY - 1, curZ].MapBlock.BlockType == 0)
                 {
+                    GameManifestV2.BlockDataTemplate templateBottom;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX, curY - 1, curZ].MapBlock.BlockType, out templateBottom);
+
+                    if (templateBottom.BlockUID == 0)
+                    {
+                        needBottomFace = true;
+                    }
+                    else if (templateBottom.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needBottomFace = true;
+                    }
+
                     //Bottom neighbor is empty
-                    needBottomFace = true;
+                    //needBottomFace = true;
                 }
+                //else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                //{
+                //    needBottomFace = true; 
+                //}
+
+
             }
 
             //Check top
             else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus)
             {
+                //if (curY == maxY - 1)
+                //{
+                //    //It's the top, so add top face
+                //    needTopFace = true;
+                //}
+                //else if (_blocks[curX, curY + 1, curZ].MapBlock.BlockType == 0)
+                //{
+                //    //Top neighbor is empty
+                //    needTopFace = true;
+                //}
+                ////else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                ////{
+                ////    needTopFace = true;
+                ////}
+
                 if (curY == maxY - 1)
                 {
-                    //It's the top, so add top face
+                    //It's at the bottom, so add bottom face
                     needTopFace = true;
                 }
-                else if (_blocks[curX, curY + 1, curZ].MapBlock.BlockType == 0)
+                else
                 {
-                    //Top neighbor is empty
-                    needTopFace = true;
+                    GameManifestV2.BlockDataTemplate templateTop;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX, curY + 1, curZ].MapBlock.BlockType, out templateTop);
+
+                    if (templateTop.BlockUID == 0)
+                    {
+                        needTopFace = true;
+                    }
+                    else if (templateTop.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needTopFace = true;
+                    }
                 }
             }
 
             //Check front
             else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus)
             {
+                //if (curZ == maxZ - 1)
+                //{
+                //    //It's the front (Z+) most block, so add front face
+                //    needFrontFace = true;
+                //}
+                //else if (_blocks[curX, curY, curZ + 1].MapBlock.BlockType == 0)
+                //{
+                //    //Front neighbor is empty
+                //    needFrontFace = true;
+                //}
+                ////else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                ////{
+                ////    needFrontFace = true;
+                ////}
                 if (curZ == maxZ - 1)
                 {
-                    //It's the front (Z+) most block, so add front face
+                    //It's at the bottom, so add bottom face
                     needFrontFace = true;
                 }
-                else if (_blocks[curX, curY, curZ + 1].MapBlock.BlockType == 0)
+                else
                 {
-                    //Front neighbor is empty
-                    needFrontFace = true;
+                    GameManifestV2.BlockDataTemplate templateFront;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX, curY, curZ + 1].MapBlock.BlockType, out templateFront);
+
+                    if (templateFront.BlockUID == 0)
+                    {
+                        needFrontFace = true;
+                    }
+                    else if (templateFront.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needFrontFace = true;
+                    }
                 }
             }
 
             //Check back
             else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus)
             {
+                //if (curZ == 0)
+                //{
+                //    //It's the back most block, so add back face
+                //    needBackFace = true;
+                //}
+                //else if (_blocks[curX, curY, curZ - 1].MapBlock.BlockType == 0)
+                //{
+                //    //Back neighbor is empty
+                //    needBackFace = true;
+                //}
+                ////else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                ////{
+                ////    needBackFace = true;
+                ////}
+
                 if (curZ == 0)
                 {
-                    //It's the back most block, so add back face
+                    //It's at the bottom, so add bottom face
                     needBackFace = true;
                 }
-                else if (_blocks[curX, curY, curZ - 1].MapBlock.BlockType == 0)
+                else
                 {
-                    //Back neighbor is empty
-                    needBackFace = true;
+                    GameManifestV2.BlockDataTemplate templateBack;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX, curY, curZ - 1].MapBlock.BlockType, out templateBack);
+
+                    if (templateBack.BlockUID == 0)
+                    {
+                        needBackFace = true;
+                    }
+                    else if (templateBack.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needBackFace = true;
+                    }
                 }
             }
 
             //Check right
             else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus)
             {
+                //if (curX == maxX - 1)
+                //{
+                //    //It's the right most block, so add right face
+                //    needRightFace = true;
+                //}
+                //else if (_blocks[curX + 1, curY, curZ].MapBlock.BlockType == 0)
+                //{
+                //    //Right neighbor is empty
+                //    needRightFace = true;
+                //}
+                ////else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                ////{
+                ////    needRightFace = true;
+                ////}
+
                 if (curX == maxX - 1)
                 {
-                    //It's the right most block, so add right face
+                    //It's at the bottom, so add bottom face
                     needRightFace = true;
                 }
-                else if (_blocks[curX + 1, curY, curZ].MapBlock.BlockType == 0)
+                else
                 {
-                    //Right neighbor is empty
-                    needRightFace = true;
+                    GameManifestV2.BlockDataTemplate templateRight;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX + 1, curY, curZ].MapBlock.BlockType, out templateRight);
+
+                    if (templateRight.BlockUID == 0)
+                    {
+                        needRightFace = true;
+                    }
+                    else if (templateRight.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needRightFace = true;
+                    }
                 }
             }
 
             //Check left
             else if (blockFace == GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus)
             {
+                //if (curX == 0)
+                //{
+                //    //It's the left most block, so add left face
+                //    needLeftFace = true;
+                //}
+                //else if (_blocks[curX - 1, curY, curZ].MapBlock.BlockType == 0)
+                //{
+                //    //Left neighbor is empty
+                //    needLeftFace = true;
+                //}
+                ////else if (block.BlockDataTemplate.BlockFlags.ContainsFlag("Transparent"))
+                ////{
+                ////    needLeftFace = true;
+                ////}
+
                 if (curX == 0)
                 {
-                    //It's the left most block, so add left face
+                    //It's at the bottom, so add bottom face
                     needLeftFace = true;
                 }
-                else if (_blocks[curX - 1, curY, curZ].MapBlock.BlockType == 0)
+                else
                 {
-                    //Left neighbor is empty
-                    needLeftFace = true;
+                    GameManifestV2.BlockDataTemplate templateLeft;
+                    GameManifestV2.Singleton.GetBlockTemplate(_blocks[curX - 1, curY, curZ].MapBlock.BlockType, out templateLeft);
+
+                    if (templateLeft.BlockUID == 0)
+                    {
+                        needLeftFace = true;
+                    }
+                    else if (templateLeft.BlockFlags.ContainsFlag("Transparent"))
+                    {
+                        needLeftFace = true;
+                    }
                 }
             }
             #endregion

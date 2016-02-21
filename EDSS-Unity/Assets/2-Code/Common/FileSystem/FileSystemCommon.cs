@@ -234,6 +234,8 @@ namespace EveryDaySpaceStation
                 }
             }
             #endregion
+
+            GameManifestV2.Singleton.DoneLoaded();
         }
 
         private static List<GameManifestV2.BlockDataTemplate> ProcessBlockTemplates(string blockDataFileName, ref int numberOfBlockTemplatesProcessed)
@@ -507,6 +509,8 @@ namespace EveryDaySpaceStation
 
         public static void WriteMap(MapDataV2 mapData, string filePath)
         {
+            System.Diagnostics.Stopwatch writeTimer = new System.Diagnostics.Stopwatch();
+            writeTimer.Start();
             using (Stream s = File.Open(filePath, FileMode.Create))
             {
                 using (BinaryWriter bWriter = new BinaryWriter(s))
@@ -580,7 +584,7 @@ namespace EveryDaySpaceStation
                                     //Block Pipe Info
                                     bWriter.Write(block.BlockPipe);
 
-                                    Debug.Log(string.Format("{0},{1},{2} len: {3}", x, y, z, bWriter.BaseStream.Position));
+                                    //Debug.Log(string.Format("{0},{1},{2} len: {3}", x, y, z, bWriter.BaseStream.Position));
                                 }
                             }
                         }
@@ -589,6 +593,9 @@ namespace EveryDaySpaceStation
                     Debug.Log(string.Format("Wrote {0} Regions. Writer Position: {1} File length: {2}", mapData.MapRegions.Count, bWriter.BaseStream.Position, bWriter.BaseStream.Length));
                 }
             }
+
+            writeTimer.Stop();
+            Debug.Log(string.Format("Finished writing {0} to file. Dur: {1}s", mapData.MapName, (writeTimer.ElapsedMilliseconds / 1000f)));
         }
 
         public static MapDataV2 LoadMapData(string fileAndPath)

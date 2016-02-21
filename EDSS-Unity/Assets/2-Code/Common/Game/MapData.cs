@@ -99,6 +99,11 @@ namespace EveryDaySpaceStation
 
             public void SetBlockFaceSpriteUIDs(uint[] blockFaceUIDs)
             {
+                if (BlockFacesSpriteUIDs == null)
+                {
+                    BlockFacesSpriteUIDs = new uint[blockFaceUIDs.Length];
+                }
+
                 for (int i = 0; i < BlockFacesSpriteUIDs.Length; i++)
                 {
                     BlockFacesSpriteUIDs[i] = blockFaceUIDs[i];

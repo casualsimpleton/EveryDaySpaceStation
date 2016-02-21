@@ -94,6 +94,7 @@ public class MapEditor : EditorWindow {
 
     void LoadMap()
     {
+        _fileName = EditorUtility.OpenFilePanel("Load Map", _blockDataDirectory, "edss");
         _curMapData = FileSystem.LoadMapData(_fileName);
         _curMapRegion = _curMapData.MapRegions[0];
         Debug.Log(string.Format("Loaded map {0} from {1}", _curMapData.MapName, _fileName));
@@ -135,26 +136,29 @@ public class MapEditor : EditorWindow {
 
         _scrollPos = GUILayout.BeginScrollView(_scrollPos);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set Game Data", GUILayout.MaxWidth(160), GUILayout.MinHeight(40)))
+        if (GameManifestV2.Singleton == null || !GameManifestV2.Singleton.IsLoaded)
         {
-            if (string.IsNullOrEmpty(_blockDataDirectory))
+            if (GUILayout.Button("Set Game Data", GUILayout.MaxWidth(160), GUILayout.MinHeight(40)))
             {
-                StartLoad();
+                if (string.IsNullOrEmpty(_blockDataDirectory))
+                {
+                    StartLoad();
+                }
+
+                FileSystem.Init();
+
+                _blockDataDirectory = EditorUtility.OpenFilePanel("Select Game Data Manifest", _blockDataDirectory, "json");
+                //string fileName = FileSystem.GetFileNameWithoutExtension(_blockDataDirectory);
+
+                //string rawJson = System.IO.File.ReadAllText(_blockDataDirectory);
+
+                //FileSystem.ProcessGameManifest(_blockDataDirectory, fileName, rawJson);
+                FileSystem.LoadServerConfig(_blockDataDirectory);
+
+                string text = GameManifestV2.Singleton.DumpToLog();
+
+                Debug.Log(text);
             }
-
-            FileSystem.Init();
-
-            _blockDataDirectory = EditorUtility.OpenFilePanel("Select Game Data Manifest", _blockDataDirectory, "json");
-            //string fileName = FileSystem.GetFileNameWithoutExtension(_blockDataDirectory);
-
-            //string rawJson = System.IO.File.ReadAllText(_blockDataDirectory);
-
-            //FileSystem.ProcessGameManifest(_blockDataDirectory, fileName, rawJson);
-            FileSystem.LoadServerConfig(_blockDataDirectory);
-
-            string text = GameManifestV2.Singleton.DumpToLog();
-
-            Debug.Log(text);
         }
         GUILayout.EndHorizontal();
 
@@ -284,6 +288,11 @@ public class MapEditor : EditorWindow {
             
             showImportRegionTextures = EditorGUILayout.BeginToggleGroup("Import From Texture", showImportRegionTextures);
 
+            if (GUILayout.Button("Add New Texture"))
+            {
+                EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", -1);
+            }
+
             GUILayout.Space(10);
 
             if(_importRegionTextures == null)
@@ -381,11 +390,6 @@ public class MapEditor : EditorWindow {
                 GUILayout.EndHorizontal();
             }
             
-            if (GUILayout.Button("Add New Texture"))
-            {
-                EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", -1);
-            }
-
             GUILayout.Space(10);
 
             GUILayout.Label("Color / Block Tile Type Definitions", GUILayout.MaxHeight(18));
@@ -814,15 +818,11 @@ public class MapEditor : EditorWindow {
             int index = 0;
             Color32[] colors = importTextures[y].GetPixels32();
 
-            //Because of how Unity reads in the pixels, we need to swap the X and the Z in order to get the same orientation as the source image
-            //So we swap X and Z, but also need to swap bounds check 
-            int height = importTextures[y].height;
-            for (int x = 0; x < height && x < newSize.x; x++)
-            {                
-                for (int z = 0; z < width && z < newSize.z; z++)
+            for (int z = 0; z < newSize.z; z++)
+            {
+                for (int x = 0; x < newSize.x; x++)
                 {
-                    //We're going to flip the z and x import here so it matches the same from any image it's imported from
-                    region.RegionBlocks[z, y, x] = MapBlockFromColor(colors[index], colorBlockDefs);
+                    region.RegionBlocks[x, y, z] = MapBlockFromColor(colors[index], colorBlockDefs);
                     index++;
                 }
             }
