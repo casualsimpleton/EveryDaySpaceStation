@@ -40,12 +40,12 @@ namespace EveryDaySpaceStation
             public string BlockName { get; private set; }
             public int BlockStrength { get; private set; }
             public byte[] BlockDrawFaces { get; private set; }
-            public uint[] BlockDefaultFaceUIDs { get; private set; }
+            public ushort[] BlockDefaultFaceUIDs { get; private set; }
             public string[] BlockFlags { get; private set; }
-            public uint BlockRequirement { get; private set; }
+            public ushort BlockRequirement { get; private set; }
 
             public BlockDataTemplate(ushort blockUID, string blockName, int blockStength, byte[] blockFaces,
-                string[] blockFlags, uint[] blockDefaultFaceUIDs, uint blockRequirement)
+                string[] blockFlags, ushort[] blockDefaultFaceUIDs, ushort blockRequirement)
             {
                 BlockUID = blockUID;
                 BlockName = blockName;
@@ -60,7 +60,7 @@ namespace EveryDaySpaceStation
 
         public class SpriteDataTemplate
         {
-            public uint SpriteUID { get; private set; }
+            public ushort SpriteUID { get; private set; }
             public string SpriteName { get; private set; }
             public Vec2Int TopLeft { get; private set; }
             public Vec2Int WidthHeight { get; private set; }
@@ -88,7 +88,7 @@ namespace EveryDaySpaceStation
                 return _uvCoords;
             }
 
-            public void CreateSprite(uint spriteUID, Vec2Int topLeft, Vec2Int widthHeigh, SpriteSheetDataTemplate spriteSheet, string spriteName, string[] flags)
+            public void CreateSprite(ushort spriteUID, Vec2Int topLeft, Vec2Int widthHeigh, SpriteSheetDataTemplate spriteSheet, string spriteName, string[] flags)
             {
                 SpriteUID = spriteUID;
                 SpriteName = spriteName;
@@ -110,14 +110,14 @@ namespace EveryDaySpaceStation
                 TwoSided
             }
 
-            public uint SpriteSheetUID { get; private set; }
-            public uint MaterialUID { get; private set; }
+            public ushort SpriteSheetUID { get; private set; }
+            public ushort MaterialUID { get; private set; }
             public Texture2D Texture { get; private set; }
             public List<SpriteDataTemplate> Sprites { get; private set; }
             public Material Material { get; private set; }
             public ShaderType MaterialType { get; private set; }
 
-            public void CreateSpriteSheetTemplate(uint uid, uint materialUID, Texture2D art, Material mat, List<SpriteDataTemplate> existingSprites = null)
+            public void CreateSpriteSheetTemplate(ushort uid, ushort materialUID, Texture2D art, Material mat, List<SpriteDataTemplate> existingSprites = null)
             {
                 SpriteSheetUID = uid;
                 MaterialUID = materialUID;
@@ -136,7 +136,7 @@ namespace EveryDaySpaceStation
                 Sprites.Remove(sprite);
             }
 
-            public SpriteDataTemplate CreateSpriteTemplate(uint spriteUID, Vec2Int xyPos, Vec2Int widthHeight, string spriteName, string[] spriteFlags)
+            public SpriteDataTemplate CreateSpriteTemplate(ushort spriteUID, Vec2Int xyPos, Vec2Int widthHeight, string spriteName, string[] spriteFlags)
             {
                 SpriteDataTemplate newSprite = new SpriteDataTemplate();
                 newSprite.CreateSprite(spriteUID, xyPos, widthHeight, this, spriteName, spriteFlags);
@@ -164,13 +164,13 @@ namespace EveryDaySpaceStation
 
         #region Class Variables
         public static SpriteDataTemplate DefaultSprite;
-        private uint _spriteSheetUID = 0;
-        private uint _materialUID = 0;
+        private ushort _spriteSheetUID = 0;
+        private ushort _materialUID = 0;
         #endregion
 
         #region Gets/Sets
-        public uint GetNewSpriteSheetUID() { return _spriteSheetUID++; }
-        public uint GetNewMaterialUID() { return _materialUID++; }
+        public ushort GetNewSpriteSheetUID() { return _spriteSheetUID++; }
+        public ushort GetNewMaterialUID() { return _materialUID++; }
         #endregion
 
         #region Block Data
@@ -194,7 +194,7 @@ namespace EveryDaySpaceStation
 
         #region Art
         Dictionary<string, Texture2D> _textures;
-        Dictionary<uint, Material> _materials;
+        Dictionary<ushort, Material> _materials;
 
         public void AddTexture(string name, Texture2D texture)
         {
@@ -215,27 +215,27 @@ namespace EveryDaySpaceStation
             return exists;
         }
 
-        public void AddMaterial(uint uid, Material material)
+        public void AddMaterial(ushort uid, Material material)
         {
             _materials.Add(uid, material);
         }
 
-        public bool GetMaterial(uint uid, out Material material)
+        public bool GetMaterial(ushort uid, out Material material)
         {
             return _materials.TryGetValue(uid, out material);
         }
         #endregion
 
         #region Sprite Data
-        Dictionary<uint, SpriteDataTemplate> _spritesTemplates;
-        Dictionary<uint, SpriteSheetDataTemplate> _spriteSheetsTemplates;
+        Dictionary<ushort, SpriteDataTemplate> _spritesTemplates;
+        Dictionary<ushort, SpriteSheetDataTemplate> _spriteSheetsTemplates;
 
-        public void AddSprite(uint uid, SpriteDataTemplate sprite)
+        public void AddSprite(ushort uid, SpriteDataTemplate sprite)
         {
             _spritesTemplates.Add(uid, sprite);
         }
 
-        public bool GetSprite(uint uid, out SpriteDataTemplate sprite)
+        public bool GetSprite(ushort uid, out SpriteDataTemplate sprite)
         {
             bool exists = _spritesTemplates.TryGetValue(uid, out sprite);
 
@@ -248,12 +248,12 @@ namespace EveryDaySpaceStation
             return exists;
         }
 
-        public void AddSpriteSheet(uint uid, SpriteSheetDataTemplate spriteSheet)
+        public void AddSpriteSheet(ushort uid, SpriteSheetDataTemplate spriteSheet)
         {
             _spriteSheetsTemplates.Add(uid, spriteSheet);
         }
 
-        public bool GetSpriteSheet(uint uid, out SpriteSheetDataTemplate spriteSheet)
+        public bool GetSpriteSheet(ushort uid, out SpriteSheetDataTemplate spriteSheet)
         {
             return _spriteSheetsTemplates.TryGetValue(uid, out spriteSheet);
         }
@@ -264,7 +264,7 @@ namespace EveryDaySpaceStation
         public bool GetSpriteSheet(string name, out SpriteSheetDataTemplate spriteSheet)
         {
             spriteSheet = null;
-            foreach (KeyValuePair<uint, SpriteSheetDataTemplate> sheet in _spriteSheetsTemplates)
+            foreach (KeyValuePair<ushort, SpriteSheetDataTemplate> sheet in _spriteSheetsTemplates)
             {
                 if (sheet.Value.Material.name.CompareTo(name) == 0)
                 {
@@ -294,10 +294,10 @@ namespace EveryDaySpaceStation
             ManifestVersion = manifestVersion;
 
             _blockDataTemplates = new Dictionary<ushort, BlockDataTemplate>();
-            _spritesTemplates = new Dictionary<uint, SpriteDataTemplate>();
-            _spriteSheetsTemplates = new Dictionary<uint, SpriteSheetDataTemplate>();
+            _spritesTemplates = new Dictionary<ushort, SpriteDataTemplate>();
+            _spriteSheetsTemplates = new Dictionary<ushort, SpriteSheetDataTemplate>();
             _textures = new Dictionary<string, Texture2D>();
-            _materials = new Dictionary<uint, Material>();
+            _materials = new Dictionary<ushort, Material>();
         }
 
         public void DoneLoaded()
@@ -347,7 +347,7 @@ namespace EveryDaySpaceStation
             str.AppendLine();
             str.AppendLine();
             str.AppendLine("Sprite Templates++++++++++++++++++++++++++");
-            foreach (KeyValuePair<uint, SpriteDataTemplate> spriteTemplate in _spritesTemplates)
+            foreach (KeyValuePair<ushort, SpriteDataTemplate> spriteTemplate in _spritesTemplates)
             {
                 str.AppendFormat("--Sprite UID: {0}\tSpriteName: {1}", spriteTemplate.Value.SpriteUID, spriteTemplate.Value.SpriteName);
                 str.AppendLine();

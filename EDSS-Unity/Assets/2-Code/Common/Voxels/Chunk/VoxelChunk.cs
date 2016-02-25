@@ -190,7 +190,7 @@ namespace EveryDaySpaceStation
             IsDirty = true;
         }
 
-        public ChunkRenderer GetChunkRenderer(uint uid)
+        public ChunkRenderer GetChunkRenderer(ushort uid)
         {
             //Special case
             if(uid == 0)
@@ -292,7 +292,7 @@ namespace EveryDaySpaceStation
                                 found = GameManifestV2.Singleton.GetSprite(block.BlockDataTemplate.BlockDefaultFaceUIDs[f], out sprite);
                             }
                              
-                            uint spriteMaterialUID = 0;
+                            ushort spriteMaterialUID = 0;
 
                             if (found)
                             {

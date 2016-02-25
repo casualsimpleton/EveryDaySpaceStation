@@ -307,13 +307,13 @@ namespace EveryDaySpaceStation.Json
         public byte[] FaceDraw { get; set; }
 
         [JsonProperty("facedefaultspriteuids")]
-        public uint[] FaceDefaultSpriteUIDs { get; set; }
+        public ushort[] FaceDefaultSpriteUIDs { get; set; }
 
         [JsonProperty("blockflags")]
         public string[] Flags { get; set; }
 
         [JsonProperty("blockrequirement")]
-        public uint Requirement { get; set; }
+        public ushort Requirement { get; set; }
     }
 
     public class GameBlockDataJsonConverter : JsonConverter
@@ -367,7 +367,7 @@ namespace EveryDaySpaceStation.Json
     public class SpriteTemplateJson
     {
         [JsonProperty("spriteuid")]
-        public uint UID { get; set; }
+        public ushort UID { get; set; }
 
         [JsonProperty("spritename")]
         public string SpriteName { get; set; }
@@ -505,7 +505,7 @@ namespace EveryDaySpaceStation.Json
         public string StateName { get; set; }
 
         [JsonProperty("spriteuid")]
-        public uint SpriteUID { get; set; }
+        public ushort SpriteUID { get; set; }
 
         /// <summary>
         /// Position offset for display plane
@@ -585,19 +585,19 @@ namespace EveryDaySpaceStation.Json
         /// UID for type of tool necessary to toggle whether the entity is anchored (bolted to ground) or free
         /// </summary>
         [JsonProperty("toggletooltype")]
-        public uint[] EntityFixedToggleToolType { get; set; }
+        public ushort[] EntityFixedToggleToolType { get; set; }
 
         /// <summary>
         /// UID for type of tool necessary to break the entity free from its anchoring
         /// </summary>
         [JsonProperty("breakabletooltype")]
-        public uint[] EntityFixedBreakbleToolType { get; set; }
+        public ushort[] EntityFixedBreakbleToolType { get; set; }
 
         /// <summary>
         /// UID for type of tool necessary to repair the anchoring if it's been broken
         /// </summary>
         [JsonProperty("repairtooltype")]
-        public uint[] EntityFixedRepairToolType { get; set; }
+        public ushort[] EntityFixedRepairToolType { get; set; }
     }
 
     public class EntityPoweredStateJson : EntityTypeComponentBaseJson

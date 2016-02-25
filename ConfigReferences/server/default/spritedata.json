@@ -143,6 +143,38 @@
 		"flags" : [
 			"World"
 		]
+	},
+	{
+		"spriteuid" : 10,
+		"spritename" : "GlassWall",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 32
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 11,
+		"spritename" : "ReinforcedGlassWall",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 32
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
 	}
 	]
 }

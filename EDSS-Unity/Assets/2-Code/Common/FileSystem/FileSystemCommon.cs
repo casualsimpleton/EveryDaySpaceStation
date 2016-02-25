@@ -271,7 +271,7 @@ namespace EveryDaySpaceStation
                     blockDrawingFaces[j] = blockJson.FaceDraw[j];
                 }
 
-                uint[] blockDefaultFaceSpriteUIDs = new uint[System.Enum.GetValues(typeof(GameManifestV2.BlockDataTemplate.ShowFaceDirection)).Length];
+                ushort[] blockDefaultFaceSpriteUIDs = new ushort[System.Enum.GetValues(typeof(GameManifestV2.BlockDataTemplate.ShowFaceDirection)).Length];
 
                 for (int j = 0; j < blockDefaultFaceSpriteUIDs.Length && j < blockJson.FaceDefaultSpriteUIDs.Length; j++)
                 {
@@ -401,8 +401,8 @@ namespace EveryDaySpaceStation
         private static void CreateDefaultSpriteSheetAndSprite()
         {
             GameManifestV2.SpriteSheetDataTemplate sheet = new GameManifestV2.SpriteSheetDataTemplate();
-            uint uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
-            uint matUID = GameManifestV2.Singleton.GetNewMaterialUID();
+            ushort uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
+            ushort matUID = GameManifestV2.Singleton.GetNewMaterialUID();
 
             Material newMat = new Material(DefaultFiles.defaultShader);
 
@@ -447,8 +447,8 @@ namespace EveryDaySpaceStation
             }
 
             sheet = new GameManifestV2.SpriteSheetDataTemplate();
-            uint uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
-            uint matUID = GameManifestV2.Singleton.GetNewMaterialUID();
+            ushort uid = GameManifestV2.Singleton.GetNewSpriteSheetUID();
+            ushort matUID = GameManifestV2.Singleton.GetNewMaterialUID();
 
             //Create a new material and assign the texture
             Material newMat;
@@ -490,12 +490,12 @@ namespace EveryDaySpaceStation
 
         //Each Block
         //2 Byte Ushort - Block Type UID
-        //4 Byte Uint - Top Face UID
-        //4 Byte Uint - Bottom Face UID
-        //4 Byte Uint - Forward Face UID
-        //4 Byte Uint - Back Face UID
-        //4 Byte Uint - Right Face UID
-        //4 Byte Uint - Left Face UID
+        //2 Byte Ushort - Top Face UID
+        //2 Byte Ushort - Bottom Face UID
+        //2 Byte Ushort - Forward Face UID
+        //2 Byte Ushort - Back Face UID
+        //2 Byte Ushort - Right Face UID
+        //2 Byte Ushort - Left Face UID
         //1 Byte - Light Info
         //1 Byte - Pipe Data
         //Bit 0 - O2
@@ -567,7 +567,7 @@ namespace EveryDaySpaceStation
                                         //If faces don't exist, write all 0s
                                         for (int f = 0; f < (int)MapDataV2.MapBlock.BlockFace.MAX; f++)
                                         {
-                                            bWriter.Write((uint)0);
+                                            bWriter.Write((ushort)0);
                                         }
                                     }
                                     else
@@ -659,11 +659,11 @@ namespace EveryDaySpaceStation
                                     block.BlockType = b.ReadUInt16();
 
                                     //Block Faces
-                                    block.BlockFacesSpriteUIDs = new uint[(int)MapDataV2.MapBlock.BlockFace.MAX];
+                                    block.BlockFacesSpriteUIDs = new ushort[(int)MapDataV2.MapBlock.BlockFace.MAX];
 
                                     for (int f = 0; f < block.BlockFacesSpriteUIDs.Length; f++)
                                     {
-                                        block.BlockFacesSpriteUIDs[f] = b.ReadUInt32();
+                                        block.BlockFacesSpriteUIDs[f] = b.ReadUInt16();
                                     }
 
                                     //Block Light Info

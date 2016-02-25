@@ -3,162 +3,126 @@
 	[
 		{
 			"blockuid" : 0,
-			"name" : "Air",
-			"strength" : -1,
-			"facez+" : 0,
-			"facex+" : 0,
-			"facez-" : 0,
-			"facex-" : 0,
-			"facey+" : 0,
-			"facey-" : 0,
-			"flags" :
+			"blockname" : "Air",
+			"blockstrength" : -1,
+			"facedraw" : [ 0, 0, 0, 0, 0, 0 ],
+			"facedefaultspriteuids" : [ 1, 1, 1, 1, 1, 1],
+			"blockflags" :
 			[
 				"Empty"
 			],
-			"requirement" : 0
+			"blockrequirement" : 0
 		}
 		,
 		{
 			"blockuid" : 1,
-			"name" : "Scaffold",
-			"strength" : 100,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Scaffold",
+			"blockstrength" : 100,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 4, 4, 4, 4, 4, 4],
+			"blockflags" :
 			[
 				"Scaffold",
 				"Transparent"
 			],
-			"requirement" : 0
+			"blockrequirement" : 0
 		}
 		,
 		{		
 			"blockuid" : 2,
-			"name" : "Hull",
-			"strength" : 1000,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Hull",
+			"blockstrength" : 1000,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 5, 5, 5, 5, 5, 5],
+			"blockflags" :
 			[
 				"Hull",
 				"BlocksLight"
 			],
-			"requirement" : 1
+			"blockrequirement" : 1
 		}
 		,
 		{		
 			"blockuid" : 3,
-			"name" : "Reinforced Hull",
-			"strength" : 5000,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Reinforced Hull",
+			"blockstrength" : 5000,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 6, 6, 6, 6, 6, 6],
+			"blockflags" :
 			[
 				"Reinforced Hull",
 				"BlocksLight"
 			],
-			"requirement" : 2
+			"blockrequirement" : 2
 		}
 		,
 		{		
 			"blockuid" : 4,
-			"name" : "Basic Door",
-			"strength" : 500,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Basic Door",
+			"blockstrength" : 500,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 8, 8, 8, 8, 8, 8],
+			"blockflags" :
 			[
 				"Door",
 				"BlocksLight"
 			],
-			"requirement" : 0
+			"blockrequirement" : 0
 		}
 		,
 		{		
 			"blockuid" : 5,
-			"name" : "Heavy Door",
-			"strength" : 1500,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Heavy Door",
+			"blockstrength" : 1500,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 8, 8, 8, 8, 8, 8],
+			"blockflags" :
 			[
 				"Heavy Door",
 				"BlocksLight"
 			],
-			"requirement" : 4
+			"blockrequirement" : 4
 		}
 		,
 		{		
 			"blockuid" : 6,
-			"name" : "Glass",
-			"strength" : 500,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Glass",
+			"blockstrength" : 500,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 10, 10, 10, 10, 10, 10],
+			"blockflags" :
 			[
 				"Glass",
 				"Transparent"
 			],
-			"requirement" : 0
+			"blockrequirement" : 0
 		}
 		,
 		{		
 			"blockuid" : 7,
-			"name" : "Reinforced Glass",
-			"strength" : 2500,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Reinforced Glass",
+			"blockstrength" : 2500,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 11, 11, 11, 11, 11, 11],
+			"blockflags" :
 			[
 				"Reinforced Glass",
 				"Transparent"
 			],
-			"requirement" : 6
+			"blockrequirement" : 6
 		}
 		,
 		{		
 			"blockuid" : 8,
-			"name" : "Grating",
-			"strength" : 2000,
-			"facez+" : 1,
-			"facex+" : 1,
-			"facez-" : 1,
-			"facex-" : 1,
-			"facey+" : 1,
-			"facey-" : 1,
-			"flags" :
+			"blockname" : "Grating",
+			"blockstrength" : 2000,
+			"facedraw" : [ 1, 1, 1, 1, 1, 1 ],
+			"facedefaultspriteuids" : [ 9, 9, 9, 9, 9, 9],
+			"blockflags" :
 			[
 				"Porous"
 			],
-			"requirement" : 0
+			"blockrequirement" : 0
 		}
 	]
 }

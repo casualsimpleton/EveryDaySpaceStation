@@ -32,7 +32,7 @@ namespace EveryDaySpaceStation
         public static GameManifestV2.BlockDataTemplate DefaultBlockData =
             new GameManifestV2.BlockDataTemplate(1, "DefaultEditorBlock", 1000,
                 new byte[] { 1, 1, 1, 1, 1, 1 },
-                null, new uint[] { 1, 1, 1, 1, 1, 1 }, 0);
+                null, new ushort[] { 1, 1, 1, 1, 1, 1 }, 0);
 
         public static Vector3 DefaultBlockSize = new Vector3(1f, 1f, 1f);
 

@@ -44,12 +44,12 @@ namespace EveryDaySpaceStation
         {
             public ushort StateUID { get; private set; }
             public string StateName { get; private set; }
-            public uint SpriteUID { get; private set; }
+            public ushort SpriteUID { get; private set; }
             public Vector3 StateGraphicsSize { get; private set; }
             public Vector3 StateColliderSize { get; private set; }
             public Vector3 StatePositionOffset { get; private set; }
 
-            public EntityStateTemplate(ushort uid, string name, uint spriteUID, Vector3 graphicsSize, Vector3 colliderSize, Vector3 offset)
+            public EntityStateTemplate(ushort uid, string name, ushort spriteUID, Vector3 graphicsSize, Vector3 colliderSize, Vector3 offset)
             {
                 StateUID = uid;
                 StateName = name;
@@ -274,7 +274,7 @@ namespace EveryDaySpaceStation
             #endregion
 
             #region Vars
-            public uint UID { get; private set; }
+            public ushort UID { get; private set; }
             public string Name { get; private set; }
             public int DefaultBlockStrength { get; private set; }
             public List<BlockFlags> Flags { get; private set; }
@@ -286,13 +286,13 @@ namespace EveryDaySpaceStation
             /// The UID for the type of block that must be present in order for this block to be placed. Not required for mapping, 
             /// but will be used during run-time for dynamic building
             /// </summary>
-            public uint RequirementUID { get; private set; }
+            public ushort RequirementUID { get; private set; }
 
             public FaceInfo[] Faceinfo;
             #endregion
 
             #region Constructor
-            public BlockTemplate(uint uid, string name, int defaultStrength, string[] flags, uint requirementUID)
+            public BlockTemplate(ushort uid, string name, int defaultStrength, string[] flags, ushort requirementUID)
             {
                 UID = uid;
                 Name = name;
@@ -412,8 +412,8 @@ namespace EveryDaySpaceStation
 
         //public static EDSSSprite DefaultSprite;
 
-        private uint _spriteSheetUID = 1;
-        private uint _materialUID = 1;
+        private ushort _spriteSheetUID = 1;
+        private ushort _materialUID = 1;
         #endregion
 
         #region Gets/Sets

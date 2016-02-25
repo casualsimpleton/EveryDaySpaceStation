@@ -44,6 +44,13 @@ public class MapEditor : EditorWindow {
         EntityEdit
     }
 
+    public enum BlockEdit
+    {
+        None,
+        PaintFace,
+        ClearFace //Reset to default for block
+    }
+
     public enum RegionAction
     {
         None,
@@ -53,6 +60,7 @@ public class MapEditor : EditorWindow {
     }
 
     SelectDeleteAdd _selDelAddButtons = SelectDeleteAdd.None;
+    BlockEdit _blockEditAction = BlockEdit.None;
     RegionAction _regionCreateRenumDelete = RegionAction.None;
     ushort[] _regionRenumberArray;
 
@@ -108,6 +116,7 @@ public class MapEditor : EditorWindow {
         _curMapData = null;
         _curMapRegion = null;
         _selDelAddButtons = SelectDeleteAdd.None;
+        _blockEditAction = BlockEdit.None;
         _regionCreateRenumDelete = RegionAction.None;
         _regionRenumberArray = null;
         _importRegionTextures = null;

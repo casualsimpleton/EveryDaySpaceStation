@@ -47,12 +47,12 @@ namespace EveryDaySpaceStation
                 Plasma = 5,
             }
             //2 Byte Ushort - Block Type UID
-            //4 Byte Uint - Top Face UID
-            //4 Byte Uint - Bottom Face UID
-            //4 Byte Uint - Forward Face UID
-            //4 Byte Uint - Back Face UID
-            //4 Byte Uint - Right Face UID
-            //4 Byte Uint - Left Face UID
+            //2 Byte Ushort - Top Face UID
+            //2 Byte Ushort - Bottom Face UID
+            //2 Byte Ushort - Forward Face UID
+            //2 Byte Ushort - Back Face UID
+            //2 Byte Ushort - Right Face UID
+            //2 Byte Ushort - Left Face UID
             //1 Byte - Light Info
             //1 Byte - Pipe Data
                 //Bit 0 - O2
@@ -65,13 +65,13 @@ namespace EveryDaySpaceStation
                 //Bit 7 - TBD
 
             public ushort BlockType { get; set; }
-            public uint[] BlockFacesSpriteUIDs { get; set; }
+            public ushort[] BlockFacesSpriteUIDs { get; set; }
             public byte BlockLight { get; set; }
             public byte BlockPipe { get; set; }
 
             public void Init()
             {
-                BlockFacesSpriteUIDs = new uint[(int)BlockFace.MAX];
+                BlockFacesSpriteUIDs = new ushort[(int)BlockFace.MAX];
             }
 
             public bool HasPipe(BlockPipeFlags testFlag)
@@ -92,16 +92,16 @@ namespace EveryDaySpaceStation
             public MapBlock(MapBlock blockToCopy)
             {
                 BlockType = blockToCopy.BlockType;
-                BlockFacesSpriteUIDs = (uint[])blockToCopy.BlockFacesSpriteUIDs.Clone();
+                BlockFacesSpriteUIDs = (ushort[])blockToCopy.BlockFacesSpriteUIDs.Clone();
                 BlockLight = blockToCopy.BlockLight;
                 BlockPipe = blockToCopy.BlockPipe;
             }
 
-            public void SetBlockFaceSpriteUIDs(uint[] blockFaceUIDs)
+            public void SetBlockFaceSpriteUIDs(ushort[] blockFaceUIDs)
             {
                 if (BlockFacesSpriteUIDs == null)
                 {
-                    BlockFacesSpriteUIDs = new uint[blockFaceUIDs.Length];
+                    BlockFacesSpriteUIDs = new ushort[blockFaceUIDs.Length];
                 }
 
                 for (int i = 0; i < BlockFacesSpriteUIDs.Length; i++)
@@ -202,7 +202,7 @@ namespace EveryDaySpaceStation
         public Color32 LightColor { get; set; }
 
         public uint?[] FaceSpritesUID { get; set; }
-        public uint[] UnderLayerFaceSpritesUID { get; set; }
+        public ushort[] UnderLayerFaceSpritesUID { get; set; }
 
         public bool HasScaffold { get; set; }
         public uint ScaffoldingUID { get; set; }
