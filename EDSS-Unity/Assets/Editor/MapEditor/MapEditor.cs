@@ -41,14 +41,9 @@ public class MapEditor : EditorWindow {
     {
         None,
         BlockEdit,
-        EntityEdit
-    }
-
-    public enum BlockEdit
-    {
-        None,
+        EntityEdit,
         PaintFace,
-        ClearFace //Reset to default for block
+        ClearFace
     }
 
     public enum RegionAction
@@ -60,7 +55,6 @@ public class MapEditor : EditorWindow {
     }
 
     SelectDeleteAdd _selDelAddButtons = SelectDeleteAdd.None;
-    BlockEdit _blockEditAction = BlockEdit.None;
     RegionAction _regionCreateRenumDelete = RegionAction.None;
     ushort[] _regionRenumberArray;
 
@@ -116,7 +110,6 @@ public class MapEditor : EditorWindow {
         _curMapData = null;
         _curMapRegion = null;
         _selDelAddButtons = SelectDeleteAdd.None;
-        _blockEditAction = BlockEdit.None;
         _regionCreateRenumDelete = RegionAction.None;
         _regionRenumberArray = null;
         _importRegionTextures = null;
@@ -565,6 +558,23 @@ public class MapEditor : EditorWindow {
             _selDelAddButtons = SelectDeleteAdd.EntityEdit;
         }
 
+        if (GUILayout.Button("Paint Face", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
+        {
+            _selDelAddButtons = SelectDeleteAdd.PaintFace;
+
+            if (_editorCamera == null)
+            {
+                _editorCamera = FindObjectOfType<MapEditorCamera>();
+            }
+
+            _editorCamera.MouseSelectionMode = MapEditorCamera.MouseEditMode.FaceEdit;
+        }
+
+        if (GUILayout.Button("Clear Face", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
+        {
+            _selDelAddButtons = SelectDeleteAdd.ClearFace;
+        }
+
         if (_selDelAddButtons != SelectDeleteAdd.None)
         {
             if (GUILayout.Button("Clear", GUILayout.MaxWidth(60), GUILayout.MinHeight(30)))
@@ -582,6 +592,10 @@ public class MapEditor : EditorWindow {
         GUILayout.EndHorizontal();
 
         GUILayout.Space(5);
+
+        GUILayout.BeginHorizontal();
+        
+        GUILayout.EndHorizontal();
 
         //if (_selDelAddButtons == SelectDeleteAdd.Select)
         //{

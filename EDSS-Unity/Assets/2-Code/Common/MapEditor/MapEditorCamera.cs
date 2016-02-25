@@ -25,13 +25,16 @@ public class MapEditorCamera : MonoBehaviour
     {
         None,
         BlockEdit,
-        EntitySelect
+        EntitySelect,
+        FaceEdit
     }
 
     public enum MouseActionType
     {
         AddBlock,
-        RemoveBlock
+        RemoveBlock,
+        PaintFace,
+        ClearFace
     }
 
     public class MouseActionEvent
@@ -42,8 +45,16 @@ public class MapEditorCamera : MonoBehaviour
             _position = pos;
         }
 
+        public MouseActionEvent(MouseActionType actionType, Vec3Int pos, GameManifestV2.BlockDataTemplate.ShowFaceDirection face)
+        {
+            _mouseActionType = actionType;
+            _position = pos;
+            _face = face;
+        }
+
         public MouseActionType _mouseActionType;
         public Vec3Int _position;
+        public GameManifestV2.BlockDataTemplate.ShowFaceDirection _face;
     }
 
     Transform _transform;
@@ -61,6 +72,7 @@ public class MapEditorCamera : MonoBehaviour
     public Vector3 cameraMoveModifier = Vector3.one;
 
     public Vec3Int _curTargetBlockPos = Vec3Int.Zero;
+    public GameManifestV2.BlockDataTemplate.ShowFaceDirection _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus;
 
     public GameObject _targetCube;
 
@@ -98,6 +110,12 @@ public class MapEditorCamera : MonoBehaviour
         _pendingMouseActions.Enqueue(new MouseActionEvent(actionType, pos));
     }
 
+    public void AddMouseAction(MouseActionType actionType, Vec3Int pos, GameManifestV2.BlockDataTemplate.ShowFaceDirection face)
+    {
+        Debug.Log(string.Format("Mouse action: {0} Pos: {1} Face: {2}", actionType, pos, face));
+        _pendingMouseActions.Enqueue(new MouseActionEvent(actionType, pos, face));
+    }
+
     void Start()
     {
         _transform = this.gameObject.transform;
@@ -126,6 +144,7 @@ public class MapEditorCamera : MonoBehaviour
         //_lineBoundsDrawer.Detach();
 
         _curTargetBlockPos = Vec3Int.Zero;
+        _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus;
     }
 
     void Update()
@@ -177,6 +196,7 @@ public class MapEditorCamera : MonoBehaviour
             {
                 if (Input.GetMouseButtonUp(0))
                 {
+                    //Remove block
                     AddMouseAction(MouseActionType.RemoveBlock, _curTargetBlockPos);
                 }
             }
@@ -184,7 +204,28 @@ public class MapEditorCamera : MonoBehaviour
             {
                 if (Input.GetMouseButtonUp(0))
                 {
+                    //Add block
                     AddMouseAction(MouseActionType.AddBlock, _curTargetBlockPos);
+                }
+            }
+        }
+
+        if (_mouseSelectMode == MouseEditMode.FaceEdit)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //Clear face
+                    AddMouseAction(MouseActionType.ClearFace, _curTargetBlockPos, _curTargetFace);
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //Paint face
+                    AddMouseAction(MouseActionType.PaintFace, _curTargetBlockPos, _curTargetFace);
                 }
             }
         }
@@ -236,6 +277,11 @@ public class MapEditorCamera : MonoBehaviour
         {
             CheckForBlock();
         }
+        else if (_mouseSelectMode == MouseEditMode.FaceEdit)
+        {
+            CheckForBlock();
+            CalculateFace();
+        }
     }
 
     void CheckForBlock()
@@ -256,6 +302,65 @@ public class MapEditorCamera : MonoBehaviour
         _curTargetBlockPos.z = Mathf.FloorToInt(targetPos.z);
 
         _targetCube.transform.position = targetPos;
+    }
+
+    void CalculateFace()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 0;
+        Ray camRay = _theCamera.ScreenPointToRay(mousePos);
+        RaycastHit hitInfo;
+        bool didHit = Physics.Raycast(camRay, out hitInfo, 15f);
+
+        if (didHit)
+        {
+            Debug.Log("Hit point " + hitInfo.point + " object " + hitInfo.collider.gameObject.name + " normal " + hitInfo.normal);
+            Debug.DrawLine(this._transform.position, hitInfo.point, Color.red, 0.1f);
+            Debug.DrawRay(hitInfo.point, hitInfo.normal * 0.2f, Color.yellow, 0.1f);
+
+            if (hitInfo.normal.y == 0f)
+            {
+                if (hitInfo.normal.x == 0f)
+                {
+                    //Z+ Front
+                    if (hitInfo.normal.z > 0)
+                    {
+                        _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus;
+                    }
+                    //Z - back
+                    else
+                    {
+                        _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus;
+                    }
+                }
+                else
+                {
+                    //X+ Right
+                    if (hitInfo.normal.x > 0)
+                    {
+                        _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus;
+                    }
+                    //X- Left
+                    else
+                    {
+                        _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus;
+                    }
+                }
+            }
+            else
+            {
+                //Top face
+                if (hitInfo.normal.y > 0)
+                {
+                    _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus;
+                }
+                //Bottom face
+                else
+                {
+                    _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYMinus;
+                }
+            }
+        }
     }
 
     public void ResetSelectionBlock()
