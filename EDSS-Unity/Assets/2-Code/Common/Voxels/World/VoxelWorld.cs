@@ -151,5 +151,16 @@ namespace EveryDaySpaceStation
 
             _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataBlock(newBlock, prevBlockType, localPos);
         }
+
+        public void UpdateBlockFace(Vec3Int position, GameManifestV2.BlockDataTemplate.ShowFaceDirection faceSide, ushort newBlockFaceUID)
+        {
+            int chunkX = position.x / ChunkSize.x;
+            int chunkY = position.y / ChunkSize.y;
+            int chunkZ = position.z / ChunkSize.z;
+
+            Vec3Int localPos = new Vec3Int(position.x % ChunkSize.x, position.y % ChunkSize.y, position.z % ChunkSize.z);
+
+            _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataFace(localPos, faceSide, newBlockFaceUID);
+        }
     }
 }

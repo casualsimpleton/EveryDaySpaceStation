@@ -180,6 +180,43 @@ namespace EveryDaySpaceStation
             IsDirty = true;
         }
 
+        /// <summary>
+        /// Change a single face of a block
+        /// </summary>
+        /// <param name="faceSide"></param>
+        /// <param name="newBlockFaceUID"></param>
+        public void ChangeDataFace(Vec3Int xyz, GameManifestV2.BlockDataTemplate.ShowFaceDirection faceSide, ushort newBlockFaceUID)
+        {
+            if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
+            {
+                Debug.Log(string.Format("Block is out of bounds {0}", xyz));
+                return;
+            }
+
+            if (xyz.y < 0 || xyz.y > ChunkSize.y - 1)
+            {
+                Debug.Log(string.Format("Block is out of bounds {0}", xyz));
+                return;
+            }
+
+            if (xyz.z < 0 || xyz.z > ChunkSize.z - 1)
+            {
+                Debug.Log(string.Format("Block is out of bounds {0}", xyz));
+                return;
+            }
+
+            VoxelBlock block = _blocks[xyz.x, xyz.y, xyz.z];
+
+            if (block.MapBlock.BlockFacesSpriteUIDs[(int)faceSide] == newBlockFaceUID)
+            {
+                Debug.Log(string.Format("Block face is the same: {0}", newBlockFaceUID));
+                return;
+            }
+
+            block.MapBlock.BlockFacesSpriteUIDs[(int)faceSide] = newBlockFaceUID;
+            NeedsRebuilt = true;
+            IsDirty = true;
+        }
 
         public void LoadChunkDataPostSet()
         {
@@ -287,9 +324,11 @@ namespace EveryDaySpaceStation
                             bool found = true;
 
                             //Check if its the same, so we don't have to look it up again
-                            if (lastSprite == null || lastSprite.SpriteUID != block.BlockDataTemplate.BlockDefaultFaceUIDs[f])
+                            //if (lastSprite == null || lastSprite.SpriteUID != block.BlockDataTemplate.BlockDefaultFaceUIDs[f])
+                            if (lastSprite == null || lastSprite.SpriteUID != block.MapBlock.BlockFacesSpriteUIDs[f])
                             {
-                                found = GameManifestV2.Singleton.GetSprite(block.BlockDataTemplate.BlockDefaultFaceUIDs[f], out sprite);
+                                //found = GameManifestV2.Singleton.GetSprite(block.BlockDataTemplate.BlockDefaultFaceUIDs[f], out sprite);
+                                found = GameManifestV2.Singleton.GetSprite(block.MapBlock.BlockFacesSpriteUIDs[f], out sprite);
                             }
                              
                             ushort spriteMaterialUID = 0;

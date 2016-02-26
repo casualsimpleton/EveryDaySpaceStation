@@ -70,6 +70,11 @@ namespace EveryDaySpaceStation
             _chunk.ChangeDataBlock(block, prevBlockType, xyz);
         }
 
+        public void ChangeDataFace(Vec3Int localPos, GameManifestV2.BlockDataTemplate.ShowFaceDirection faceSide, ushort newBlockFaceUID)
+        {
+            _chunk.ChangeDataFace(localPos, faceSide, newBlockFaceUID);
+        }
+
         void Update()
         {
             _chunk.ChunkUpdate();

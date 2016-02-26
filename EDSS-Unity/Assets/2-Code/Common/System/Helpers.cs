@@ -262,7 +262,7 @@ namespace EveryDaySpaceStation.Utils
             return false;
         }
         #endregion
-
+        
         public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
         {
             Vector3 perp = Vector3.Cross(fwd, targetDir);
@@ -278,6 +278,11 @@ namespace EveryDaySpaceStation.Utils
             }
 
             return 0f;
+        }
+
+        public static Vector3 Multiply(this Vector3 m, Vector3 n)
+        {
+            return new Vector3(m.x * n.x, m.y * n.y, m.z * n.z);
         }
     }
 }

@@ -215,6 +215,11 @@ namespace EveryDaySpaceStation
             return exists;
         }
 
+        public Dictionary<string, Texture2D> GetAllTextures()
+        {
+            return _textures;
+        }
+
         public void AddMaterial(ushort uid, Material material)
         {
             _materials.Add(uid, material);
@@ -246,6 +251,11 @@ namespace EveryDaySpaceStation
             }
 
             return exists;
+        }
+
+        public Dictionary<ushort, SpriteDataTemplate> GetAllSprites()
+        {
+            return _spritesTemplates;
         }
 
         public void AddSpriteSheet(ushort uid, SpriteSheetDataTemplate spriteSheet)

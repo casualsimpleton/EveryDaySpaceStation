@@ -42,8 +42,7 @@ public class MapEditor : EditorWindow {
         None,
         BlockEdit,
         EntityEdit,
-        PaintFace,
-        ClearFace
+        FaceEdit
     }
 
     public enum RegionAction
@@ -71,12 +70,15 @@ public class MapEditor : EditorWindow {
     List<Tuple<Color32, ushort>> _mapColorDefinitions = new List<Tuple<Color32,ushort>>();
 
     Vector2 _scrollPos = new Vector2();
+    Vector2 _textureScrollPos = new Vector2();
+    int _textureSelIndex = 0;
 
     MapEditorCamera _editorCamera;
     VoxelWorld _vw;
     ushort _selectedBlockType = 1;
 
     GameManifestV2.BlockDataTemplate[] _blockDataTemplates;
+    Tuple<ushort, Texture2D, string>[] _textureTemplates;
 
     bool _hasStarted = false;
 
@@ -123,6 +125,7 @@ public class MapEditor : EditorWindow {
         }
 
         _editorCamera._targetCube.SetActive(false);
+        _editorCamera._targetPlane.SetActive(false);
 
         _hasStarted = false;
     }
@@ -140,12 +143,9 @@ public class MapEditor : EditorWindow {
         GUILayout.BeginHorizontal();
         if (GameManifestV2.Singleton == null || !GameManifestV2.Singleton.IsLoaded)
         {
-            if (GUILayout.Button("Set Game Data", GUILayout.MaxWidth(160), GUILayout.MinHeight(40)))
+            if(!string.IsNullOrEmpty(_blockDataDirectory))
             {
-                if (string.IsNullOrEmpty(_blockDataDirectory))
-                {
-                    StartLoad();
-                }
+                StartLoad();
 
                 FileSystem.Init();
 
@@ -160,6 +160,31 @@ public class MapEditor : EditorWindow {
                 string text = GameManifestV2.Singleton.DumpToLog();
 
                 Debug.Log(text);
+            }
+            else
+            {
+
+                if (GUILayout.Button("Set Game Data", GUILayout.MaxWidth(160), GUILayout.MinHeight(40)))
+                {
+                    if (string.IsNullOrEmpty(_blockDataDirectory))
+                    {
+                        StartLoad();
+                    }
+
+                    FileSystem.Init();
+
+                    _blockDataDirectory = EditorUtility.OpenFilePanel("Select Game Data Manifest", _blockDataDirectory, "json");
+                    //string fileName = FileSystem.GetFileNameWithoutExtension(_blockDataDirectory);
+
+                    //string rawJson = System.IO.File.ReadAllText(_blockDataDirectory);
+
+                    //FileSystem.ProcessGameManifest(_blockDataDirectory, fileName, rawJson);
+                    FileSystem.LoadServerConfig(_blockDataDirectory);
+
+                    string text = GameManifestV2.Singleton.DumpToLog();
+
+                    Debug.Log(text);
+                }
             }
         }
         GUILayout.EndHorizontal();
@@ -551,6 +576,7 @@ public class MapEditor : EditorWindow {
 
             _editorCamera.MouseSelectionMode = MapEditorCamera.MouseEditMode.BlockEdit;
             _editorCamera._targetCube.SetActive(true);
+            _editorCamera._targetPlane.SetActive(false);
         }
 
         if (GUILayout.Button("Entity Edit", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
@@ -560,7 +586,7 @@ public class MapEditor : EditorWindow {
 
         if (GUILayout.Button("Paint Face", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
         {
-            _selDelAddButtons = SelectDeleteAdd.PaintFace;
+            _selDelAddButtons = SelectDeleteAdd.FaceEdit;
 
             if (_editorCamera == null)
             {
@@ -568,11 +594,8 @@ public class MapEditor : EditorWindow {
             }
 
             _editorCamera.MouseSelectionMode = MapEditorCamera.MouseEditMode.FaceEdit;
-        }
-
-        if (GUILayout.Button("Clear Face", GUILayout.MaxWidth(80), GUILayout.MinHeight(30)))
-        {
-            _selDelAddButtons = SelectDeleteAdd.ClearFace;
+            _editorCamera._targetPlane.SetActive(true);
+            _editorCamera._targetCube.SetActive(false);
         }
 
         if (_selDelAddButtons != SelectDeleteAdd.None)
@@ -587,15 +610,21 @@ public class MapEditor : EditorWindow {
                 }
 
                 _editorCamera._targetCube.SetActive(false);
+                _editorCamera._targetPlane.SetActive(false);
             }
         }
         GUILayout.EndHorizontal();
 
         GUILayout.Space(5);
 
-        GUILayout.BeginHorizontal();
-        
-        GUILayout.EndHorizontal();
+        if (_selDelAddButtons == SelectDeleteAdd.FaceEdit)
+        {
+            GUILayout.Label("--- AVAILABLE TEXTURES ---");
+            GUILayout.BeginHorizontal();
+
+            DrawTextures();
+            GUILayout.EndHorizontal();
+        }
 
         //if (_selDelAddButtons == SelectDeleteAdd.Select)
         //{
@@ -687,6 +716,69 @@ public class MapEditor : EditorWindow {
             }
         }
     }
+
+    void DrawTextures()
+    {
+        if(_textureTemplates == null)
+        {
+            Dictionary<ushort, GameManifestV2.SpriteDataTemplate> allSprites = GameManifestV2.Singleton.GetAllSprites();
+
+            List<Tuple<ushort, Texture2D, string>> allTextures = new List<Tuple<ushort, Texture2D, string>>();
+
+            if (allSprites == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<ushort, GameManifestV2.SpriteDataTemplate> s in allSprites)
+            {
+                //Hard code, shouldn't be able to paint "empty"
+                if (s.Key == 1)
+                {
+                    continue;
+                }
+
+                Texture2D newTex = new Texture2D(s.Value.WidthHeight.x, s.Value.WidthHeight.y, s.Value.SpriteSheetTemplate.Texture.format, false);
+
+                Color[] c = s.Value.SpriteSheetTemplate.Texture.GetPixels(s.Value.TopLeft.x, s.Value.TopLeft.y, newTex.width, newTex.height);
+
+                newTex.SetPixels(c);
+                newTex.filterMode = s.Value.SpriteSheetTemplate.Texture.filterMode;
+                newTex.wrapMode = s.Value.SpriteSheetTemplate.Texture.wrapMode;
+                newTex.Apply();
+
+                allTextures.Add(Tuple.New<ushort, Texture2D, string>(s.Key, newTex, s.Value.SpriteName));
+            }
+
+            _textureTemplates = allTextures.ToArray();
+        }
+
+        _textureScrollPos = GUILayout.BeginScrollView(_textureScrollPos);
+        for (int i = 0; i < _textureTemplates.Length; i++)
+        {
+            if (_textureSelIndex == i)
+            {
+                GUILayout.Label(string.Format("----> Name: {0}", _textureTemplates[i].Third));
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("----> ", GUILayout.MaxWidth(36));
+                if (GUILayout.Button(_textureTemplates[i].Second, GUILayout.MaxWidth(128), GUILayout.MaxHeight(128)))
+                {
+                    _textureSelIndex = i;
+                }
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                GUILayout.Label(string.Format("Name: {0}", _textureTemplates[i].Third));
+                if (GUILayout.Button(_textureTemplates[i].Second, GUILayout.MaxWidth(128), GUILayout.MaxHeight(128)))
+                {
+                    _textureSelIndex = i;
+                }
+            }
+            GUILayout.Space(10);
+        }
+        GUILayout.EndScrollView();
+    }
     
     /// <summary>
     /// Since the mouse has no reliable way to send messages to the editor window, we need to check the editor mouse to see if it has any new mouse events to process
@@ -726,12 +818,16 @@ public class MapEditor : EditorWindow {
                 newBlock.BlockType = _selectedBlockType;
                 prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
                 _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
+
+                _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z], prevBlockType);
             }
             //Block isn't empty
             else
             {
                 prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
                 _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType = _selectedBlockType;
+
+                _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z], prevBlockType);
             }
         }
         else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.RemoveBlock)
@@ -748,10 +844,20 @@ public class MapEditor : EditorWindow {
             newBlock.BlockType = 0;
             prevBlockType = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType;
             _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z] = newBlock;
-        }
 
-        //VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
-        _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z], prevBlockType);
+            _vw.UpdateBlock(mouseEditEvent._position, _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z], prevBlockType);
+        }
+        else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.PaintFace)
+        {
+            //If block is empty, don't allow face paint
+            if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
+            {
+                return;
+            }
+
+            isDirty = true;
+            _vw.UpdateBlockFace(mouseEditEvent._position, mouseEditEvent._face, _textureTemplates[_textureSelIndex].First);
+        }
     }
 
     public void AdjustRegionSize(ref MapDataV2.MapRegion region, Vec3Int newSize)

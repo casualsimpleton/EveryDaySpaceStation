@@ -75,6 +75,7 @@ public class MapEditorCamera : MonoBehaviour
     public GameManifestV2.BlockDataTemplate.ShowFaceDirection _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus;
 
     public GameObject _targetCube;
+    public GameObject _targetPlane;
 
     //protected EntitySpriteGameObject _curHighLightESGO;
     //protected EntitySpriteGameObject _prevHighLightESGO;
@@ -127,11 +128,19 @@ public class MapEditorCamera : MonoBehaviour
             _targetCube.collider.enabled = false;
         }
 
+        if (_targetPlane == null)
+        {
+            _targetPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            _targetPlane.collider.enabled = false;
+        }
+
         _pendingMouseActions = new Queue<MouseActionEvent>();
 
         _targetCube.transform.localScale = (VoxelBlock.DefaultBlockSize * 1.02f);
+        _targetPlane.transform.localScale = (VoxelBlock.DefaultBlockSize * 1.02f);
 
         _targetCube.SetActive(false);
+        _targetPlane.SetActive(false);
 
         if (_theCamera == null)
         {
@@ -279,7 +288,7 @@ public class MapEditorCamera : MonoBehaviour
         }
         else if (_mouseSelectMode == MouseEditMode.FaceEdit)
         {
-            CheckForBlock();
+            //CheckForBlock();
             CalculateFace();
         }
     }
@@ -304,6 +313,21 @@ public class MapEditorCamera : MonoBehaviour
         _targetCube.transform.position = targetPos;
     }
 
+    void CheckForBlock(Vector3 targetPos)
+    {
+        targetPos.x = Mathf.Floor(targetPos.x / VoxelBlock.DefaultBlockSize.x);
+        targetPos.y = Mathf.Floor(targetPos.y / VoxelBlock.DefaultBlockSize.y);
+        targetPos.z = Mathf.Floor(targetPos.z / VoxelBlock.DefaultBlockSize.z);
+
+        targetPos += Vector3.one * 0.5f;
+
+        _curTargetBlockPos.x = Mathf.FloorToInt(targetPos.x);
+        _curTargetBlockPos.y = Mathf.FloorToInt(targetPos.y);
+        _curTargetBlockPos.z = Mathf.FloorToInt(targetPos.z);
+
+        _targetCube.transform.position = targetPos;
+    }
+
     void CalculateFace()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -312,11 +336,16 @@ public class MapEditorCamera : MonoBehaviour
         RaycastHit hitInfo;
         bool didHit = Physics.Raycast(camRay, out hitInfo, 15f);
 
+        Vector3 facePlanePos = Vector3.zero;
+        Vector3 facePlaneRot = Vector3.zero;
+
         if (didHit)
         {
-            Debug.Log("Hit point " + hitInfo.point + " object " + hitInfo.collider.gameObject.name + " normal " + hitInfo.normal);
-            Debug.DrawLine(this._transform.position, hitInfo.point, Color.red, 0.1f);
-            Debug.DrawRay(hitInfo.point, hitInfo.normal * 0.2f, Color.yellow, 0.1f);
+            //Debug.Log("Hit point " + hitInfo.point + " object " + hitInfo.collider.gameObject.name + " normal " + hitInfo.normal);
+            //Debug.DrawLine(this._transform.position, hitInfo.point, Color.red, 0.1f);
+            //Debug.DrawRay(hitInfo.point, hitInfo.normal * 0.2f, Color.yellow, 0.1f);
+
+            CheckForBlock(hitInfo.point + -hitInfo.normal.Multiply(VoxelBlock.DefaultBlockSize * 0.05f));
 
             if (hitInfo.normal.y == 0f)
             {
@@ -326,11 +355,22 @@ public class MapEditorCamera : MonoBehaviour
                     if (hitInfo.normal.z > 0)
                     {
                         _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZPlus;
+                        facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x + (VoxelBlock.DefaultBlockSize.x * 0.5f);
+                        facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y + (VoxelBlock.DefaultBlockSize.y * 0.5f);
+                        facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z + 0.02f;
+
+                        facePlaneRot.y = 180;
                     }
                     //Z - back
                     else
                     {
                         _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceZMinus;
+
+                        facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x + (VoxelBlock.DefaultBlockSize.x * 0.5f);
+                        facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y + (VoxelBlock.DefaultBlockSize.y * 0.5f);
+                        facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z - 0.02f;
+
+                        facePlaneRot.y = 0;
                     }
                 }
                 else
@@ -339,11 +379,23 @@ public class MapEditorCamera : MonoBehaviour
                     if (hitInfo.normal.x > 0)
                     {
                         _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXPlus;
+
+                        facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x + 0.02f;
+                        facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y + (VoxelBlock.DefaultBlockSize.y * 0.5f);
+                        facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z + (VoxelBlock.DefaultBlockSize.z * 0.5f);
+
+                        facePlaneRot.y = 270f;
                     }
                     //X- Left
                     else
                     {
                         _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceXMinus;
+
+                        facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x - 0.02f;
+                        facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y + (VoxelBlock.DefaultBlockSize.y * 0.5f);
+                        facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z + (VoxelBlock.DefaultBlockSize.z * 0.5f);
+
+                        facePlaneRot.y = 90f;
                     }
                 }
             }
@@ -353,19 +405,37 @@ public class MapEditorCamera : MonoBehaviour
                 if (hitInfo.normal.y > 0)
                 {
                     _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYPlus;
+
+                    facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x + (VoxelBlock.DefaultBlockSize.x * 0.5f);
+                    facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y + 0.02f;
+                    facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z + (VoxelBlock.DefaultBlockSize.z * 0.5f);
+
+                    facePlaneRot.x = 90f;
                 }
                 //Bottom face
                 else
                 {
                     _curTargetFace = GameManifestV2.BlockDataTemplate.ShowFaceDirection.FaceYMinus;
+
+                    facePlanePos.x = (int)hitInfo.point.x * VoxelBlock.DefaultBlockSize.x + (VoxelBlock.DefaultBlockSize.x * 0.5f);
+                    facePlanePos.y = (int)hitInfo.point.y * VoxelBlock.DefaultBlockSize.y - 0.02f;
+                    facePlanePos.z = (int)hitInfo.point.z * VoxelBlock.DefaultBlockSize.z + (VoxelBlock.DefaultBlockSize.z * 0.5f);
+
+                    facePlaneRot.x = 270f;
                 }
             }
+
+            //Debug.Log("Pos " + facePlanePos + " rot " + facePlaneRot);
+
+            _targetPlane.transform.position = facePlanePos;
+            _targetPlane.transform.rotation = Quaternion.Euler(facePlaneRot);
         }
     }
 
     public void ResetSelectionBlock()
     {
         _targetCube.transform.localScale = Vector3.one;
+        _targetPlane.transform.localScale = Vector3.one;
     }
 
     void OnPostRender()
