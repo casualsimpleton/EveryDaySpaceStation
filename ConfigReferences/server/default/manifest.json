@@ -1,21 +1,14 @@
 {
+	"manifestname" : "Default Manifest",
+	"manifestversion" : 1,
+
 	"art" :
 	[
-		"ss13-1.png",
-		"test1.png",
-		"clown1.png",
-		"underlayer1.png",
-		"lights1.png",
-		"furniture.png",
-		"door1.png",
-		"lockers.png"
+		"ss13-1l.png"
 	],
 	"spritedata" :
 	[
-		"spritedata.json",
-		"clown.json",
-		"underlayer-spritedata.json",
-		"lights1.json",
+		"spritedata.json"
 	],
 	"blockdata" :
 	[
@@ -23,9 +16,6 @@
 	],
 	"entitydata" :
 	[
-		"lightentities.json",
-		"chair.json",
-		"door1.json",
-		"lockerentity.json"
+		
 	]
 }

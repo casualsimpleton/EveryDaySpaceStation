@@ -858,6 +858,47 @@ public class MapEditor : EditorWindow {
             isDirty = true;
             _vw.UpdateBlockFace(mouseEditEvent._position, mouseEditEvent._face, _textureTemplates[_textureSelIndex].First);
         }
+        else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.ClearFace)
+        {
+            //If block is empty, don't allow face paint
+            if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
+            {
+                return;
+            }
+
+            GameManifestV2.BlockDataTemplate blockTemplate;
+
+            bool canFind = GameManifestV2.Singleton.GetBlockTemplate(_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType,
+                out blockTemplate);
+
+            if (canFind)
+            {
+                isDirty = true;
+                _vw.UpdateBlockFace(mouseEditEvent._position, mouseEditEvent._face, blockTemplate.BlockDefaultFaceUIDs[(int)mouseEditEvent._face]);
+            }
+        }
+        else if (mouseEditEvent._mouseActionType == MapEditorCamera.MouseActionType.SampleFace)
+        {
+            //If block is empty, don't allow face paint
+            if (_curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockType == 0)
+            {
+                return;
+            }
+
+            ushort faceSpriteUID = _curMapRegion.RegionBlocks[mouseEditEvent._position.x, mouseEditEvent._position.y, mouseEditEvent._position.z].BlockFacesSpriteUIDs[(int)mouseEditEvent._face];
+
+            //Try to find the actual index based on the sprite UID
+            if (_textureTemplates != null)
+            {
+                for (int i = 0; i < _textureTemplates.Length; i++)
+                {
+                    if (_textureTemplates[i].First == faceSpriteUID)
+                    {
+                        _textureSelIndex = i;
+                    }
+                }
+            }
+        }
     }
 
     public void AdjustRegionSize(ref MapDataV2.MapRegion region, Vec3Int newSize)
@@ -943,7 +984,7 @@ public class MapEditor : EditorWindow {
 
         for (int y = 0; y < importTextures.Count && y < newSize.y; y++)
         {
-            int width = importTextures[y].width;
+            //int width = importTextures[y].width;
             int index = 0;
             Color32[] colors = importTextures[y].GetPixels32();
 

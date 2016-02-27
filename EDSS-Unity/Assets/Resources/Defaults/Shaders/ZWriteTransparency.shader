@@ -2,6 +2,7 @@
 {
 	Properties {
 		_MainTex("Main Texture", 2D) = "white" {}
+		//_OverlayTex("Overlay Texture", 2D) = "white" {}
 		_Color("Color",Color) = (0.5,0.5,0.5,1)
 		_ExtraColor("Extra Color", Color) = (0.5,0.5,0.5,1)
 	}
@@ -38,6 +39,7 @@ Subshader {
 	{
 		float4 pos : SV_POSITION;
 		half2 uv  : TEXCOORD0;
+		half2 uv2 : TEXCOORD1;
 		fixed4 color : COLOR;
 	};
 
@@ -45,12 +47,15 @@ Subshader {
 	{
 		float4 vertex : POSITION;
 		half2 uv : TEXCOORD0;
+		half2 uv2 : TEXCOORD1;
 		fixed4 color : COLOR;
 	};
 				
 	sampler2D _MainTex;
+	//sampler2D _OverlayTex;
 
 	fixed4 _MainTex_ST;
+	//fixed4 _OverlayTex_ST;
 	fixed4 _Color;
 	fixed4 _ExtraColor;
 
@@ -66,6 +71,7 @@ Subshader {
 		v2f o;
 		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 		o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+		//o.uv2 = TRANSFORM_TEX(v.uv2, _OverlayTex);
 		o.color = v.color;
 		return o;
 	}
@@ -73,9 +79,11 @@ Subshader {
 	fixed4 frag(v2f i) : COLOR
 	{
 		fixed4 c = tex2D(_MainTex,i.uv) * _Color;
+		//fixed4 c2 = tex2D(_OverlayTex, i.uv2) * _Color;
 		//clip(c.a - 0.5f);
 		//c.a *= 0;
 		c.rgb = BlendOverlay(c.rgb, i.color.rgb * (_ExtraColor * 2));
+		//c.rgb = lerp(BlendOverlay(c.rgb, i.color.rgb * (_ExtraColor * 2)), BlendOverlay(c2.rgb, i.color.rgb * (_ExtraColor * 2)), c2.a);
 		return c;
 	}
 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	 		 	 	  	 	  	 	  	 	

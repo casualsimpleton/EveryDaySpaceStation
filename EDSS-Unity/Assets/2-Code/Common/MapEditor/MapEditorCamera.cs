@@ -34,7 +34,8 @@ public class MapEditorCamera : MonoBehaviour
         AddBlock,
         RemoveBlock,
         PaintFace,
-        ClearFace
+        ClearFace,
+        SampleFace //Get the texture from the face and select it in editor if possible
     }
 
     public class MouseActionEvent
@@ -236,6 +237,12 @@ public class MapEditorCamera : MonoBehaviour
                     //Paint face
                     AddMouseAction(MouseActionType.PaintFace, _curTargetBlockPos, _curTargetFace);
                 }
+            }
+
+            //Middle mouse
+            if (Input.GetMouseButtonUp(2))
+            {
+                AddMouseAction(MouseActionType.SampleFace, _curTargetBlockPos, _curTargetFace);
             }
         }
 
