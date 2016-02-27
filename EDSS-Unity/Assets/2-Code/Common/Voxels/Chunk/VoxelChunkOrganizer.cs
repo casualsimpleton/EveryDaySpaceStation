@@ -55,9 +55,9 @@ namespace EveryDaySpaceStation
             _chunk.LoadChunkDataPreSet(chunkSize);
         }
 
-        public void LoadChunkDataPiecemeal(MapDataV2.MapBlock block, Vec3Int xyz)
+        public void LoadChunkDataPiecemeal(MapDataV2.MapBlock block, Vec3Int xyz, bool useBlockDefaults = true)
         {
-            _chunk.LoadChunkDataPiecemeal(block, xyz);
+            _chunk.LoadChunkDataPiecemeal(block, xyz, useBlockDefaults);
         }
 
         public void LoadChunkDataPostSet()

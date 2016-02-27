@@ -116,7 +116,7 @@ namespace EveryDaySpaceStation
             ChunkSize = chunkSize;
         }
 
-        public void LoadChunkDataPiecemeal(MapDataV2.MapBlock block, Vec3Int xyz)
+        public void LoadChunkDataPiecemeal(MapDataV2.MapBlock block, Vec3Int xyz, bool useBlockDefaults = true)
         {
             if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
             {
@@ -136,7 +136,7 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this);
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this, useBlockDefaults);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace EveryDaySpaceStation
         /// </summary>
         /// <param name="block"></param>
         /// <param name="xyz"></param>
-        public void ChangeDataBlock(MapDataV2.MapBlock block, ushort prevBlockType, Vec3Int xyz)
+        public void ChangeDataBlock(MapDataV2.MapBlock block, ushort prevBlockType, Vec3Int xyz, bool useBlockDefaults = true)
         {
             if (xyz.x < 0 || xyz.x > ChunkSize.x - 1)
             {
@@ -164,7 +164,7 @@ namespace EveryDaySpaceStation
                 return;
             }
 
-            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this);
+            _blocks[xyz.x, xyz.y, xyz.z] = new VoxelBlock(block, this, useBlockDefaults);
 
             //If the new block type is 0 (empty) we need to handle it separately
             if (block.BlockType == 0)

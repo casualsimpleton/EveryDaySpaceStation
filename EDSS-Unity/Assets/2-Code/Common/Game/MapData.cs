@@ -69,6 +69,11 @@ namespace EveryDaySpaceStation
             public byte BlockLight { get; set; }
             public byte BlockPipe { get; set; }
 
+            //public MapBlock()
+            //{
+            //    Init();
+            //}
+
             public void Init()
             {
                 BlockFacesSpriteUIDs = new ushort[(int)BlockFace.MAX];

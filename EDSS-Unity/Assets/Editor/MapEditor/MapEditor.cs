@@ -104,7 +104,7 @@ public class MapEditor : EditorWindow {
         Debug.Log(string.Format("Loaded map {0} from {1}", _curMapData.MapName, _fileName));
 
         _vw = GameObject.FindObjectOfType<VoxelWorld>();
-        _vw.CreateWorld(_curMapRegion.RegionBlocks);
+        _vw.CreateWorld(_curMapRegion.RegionBlocks, false);
     }
 
     void Reset()
@@ -477,7 +477,7 @@ public class MapEditor : EditorWindow {
 
                 //VoxelWorld vw = GameObject.FindObjectOfType<VoxelWorld>();
                 _vw = GameObject.FindObjectOfType<VoxelWorld>();
-                _vw.CreateWorld(_curMapRegion.RegionBlocks);
+                _vw.CreateWorld(_curMapRegion.RegionBlocks, true);
 
                 _curMapData.MapRegions.Add(_curMapRegion);
                 //_curMapRegion = null;
@@ -965,6 +965,7 @@ public class MapEditor : EditorWindow {
             if (color.Compare(colorBlockDefs[i].First))
             {
                 MapDataV2.MapBlock newBlock = new MapDataV2.MapBlock();
+                newBlock.Init();
                 newBlock.BlockType = colorBlockDefs[i].Second;
 
                 return newBlock;
@@ -972,6 +973,7 @@ public class MapEditor : EditorWindow {
         }
 
         MapDataV2.MapBlock blankBlock = new MapDataV2.MapBlock();
+        blankBlock.Init();
         blankBlock.BlockType = 0;
 
         return blankBlock;

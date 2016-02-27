@@ -64,7 +64,7 @@ namespace EveryDaySpaceStation
             myTransform = this.transform;
         }
 
-        public void CreateWorld(MapDataV2.MapBlock[, ,] blockData)
+        public void CreateWorld(MapDataV2.MapBlock[, ,] blockData, bool useBlockDefaults = true)
         {
             if (myTransform == null)
             {
@@ -124,7 +124,7 @@ namespace EveryDaySpaceStation
 
                         Vec3Int localPos = new Vec3Int(x % ChunkSize.x, y % ChunkSize.y, z % ChunkSize.z);
 
-                        _voxelChunks[chunkX, chunkY, chunkZ].LoadChunkDataPiecemeal(TempMap[x, y, z], localPos);
+                        _voxelChunks[chunkX, chunkY, chunkZ].LoadChunkDataPiecemeal(TempMap[x, y, z], localPos, useBlockDefaults);
                     }
                 }
             }

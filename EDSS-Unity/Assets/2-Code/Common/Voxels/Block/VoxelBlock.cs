@@ -45,7 +45,7 @@ namespace EveryDaySpaceStation
 
         public VoxelChunk ParentChunk { get; private set; }
 
-        public VoxelBlock(MapDataV2.MapBlock mapBlock, VoxelChunk parent)
+        public VoxelBlock(MapDataV2.MapBlock mapBlock, VoxelChunk parent, bool useDefaults = true)
         {
             ParentChunk = parent;
 
@@ -64,7 +64,10 @@ namespace EveryDaySpaceStation
                 BlockDataTemplate = blockTemplate;
             }
 
-            MapBlock.SetBlockFaceSpriteUIDs(BlockDataTemplate.BlockDefaultFaceUIDs);
+            if (useDefaults)
+            {
+                MapBlock.SetBlockFaceSpriteUIDs(BlockDataTemplate.BlockDefaultFaceUIDs);
+            }
         }
 
         public void SetLight(byte newLight)
