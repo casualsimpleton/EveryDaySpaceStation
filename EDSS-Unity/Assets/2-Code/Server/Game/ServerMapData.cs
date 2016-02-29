@@ -20,27 +20,27 @@ using EveryDaySpaceStation.Json;
 
 namespace EveryDaySpaceStation
 {
-    [System.Serializable]
-    public class ServerMapData : MapData
-    {
-        public override bool LoadMap(MapDataConfig mapConfig)
-        {
-            return true;
-        }
+    //[System.Serializable]
+    //public class ServerMapData : MapData
+    //{
+    //    public override bool LoadMap(MapDataConfig mapConfig)
+    //    {
+    //        return true;
+    //    }
 
-        public override bool LoadEntities(MapEntityDataConfig mapEntities)
-        {
-            return true;
-        }
-    }
-
-    [System.Serializable]
-    public class ServerMapTileData : MapTileData
-    {
-    }
+    //    public override bool LoadEntities(MapEntityDataConfig mapEntities)
+    //    {
+    //        return true;
+    //    }
+    //}
 
     //[System.Serializable]
-    //public class ServerEntityData : EntityData
+    //public class ServerMapTileData : MapTileData
     //{
     //}
+
+    ////[System.Serializable]
+    ////public class ServerEntityData : EntityData
+    ////{
+    ////}
 }

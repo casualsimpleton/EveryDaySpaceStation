@@ -84,11 +84,12 @@ namespace EveryDaySpaceStation
         /// <summary>
         /// Adds a vertex and corresponding uv coordiate. Returns vert index
         /// </summary>
-        public int AddVertexAndUV(Vector3 vert, Vector3 norm, Vector2 uv)
+        public int AddVertexAndUV(Vector3 vert, Vector3 norm, Vector2 uv, Color32 color)
         {
             Vertices.Add(vert);
             Normals.Add(norm);
             UVs.Add(uv);
+            Colors.Add(color);
 
             return Vertices.Count - 1;
         }
@@ -142,6 +143,7 @@ namespace EveryDaySpaceStation
             RenderMesh.triangles = Triangles.ToArray();
             RenderMesh.normals = Normals.ToArray();
             RenderMesh.uv = UVs.ToArray();
+            RenderMesh.colors32 = Colors.ToArray();
 
 
             if (CollisionMesh == null)

@@ -93,5 +93,10 @@ namespace EveryDaySpaceStation
                 new Vector3(_chunk.ChunkSize.x * 0.5f * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.y * 0.5f * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.z * 0.5f * VoxelBlock.DefaultBlockSize.x)
                  + transform.position, new Vector3(_chunk.ChunkSize.x * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.y * VoxelBlock.DefaultBlockSize.x, _chunk.ChunkSize.z * VoxelBlock.DefaultBlockSize.x));
         }
+
+        public void UpdateLights()
+        {
+
+        }
     }
 }

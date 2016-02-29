@@ -784,6 +784,1047 @@
 		"flags" : [
 			"World"
 		]
+	},
+	{
+		"spriteuid" : 50,
+		"spritename" : "BlueFloor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 51,
+		"spritename" : "Blue2Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	}
+	,
+	{
+		"spriteuid" : 52,
+		"spritename" : "Blue3Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 53,
+		"spritename" : "Blue4Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 54,
+		"spritename" : "Blue5Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 55,
+		"spritename" : "Blue6Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 56,
+		"spritename" : "Blue7Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 192,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 57,
+		"spritename" : "Blue8Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 224,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 58,
+		"spritename" : "Blue9Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 256,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 59,
+		"spritename" : "Blue10Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 288,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 60,
+		"spritename" : "Blue11Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 320,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 61,
+		"spritename" : "Blue12Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 352,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 62,
+		"spritename" : "Blue13Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 384,
+			"y" : 128
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 63,
+		"spritename" : "PurpleFloor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 64,
+		"spritename" : "Purple2Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 65,
+		"spritename" : "Purple3Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 66,
+		"spritename" : "Purple4Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 67,
+		"spritename" : "Purple5Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 68,
+		"spritename" : "Purple6Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 69,
+		"spritename" : "Purple7Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 192,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 70,
+		"spritename" : "Purple8Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 224,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 71,
+		"spritename" : "Purple9Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 256,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 72,
+		"spritename" : "Purple10Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 288,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 73,
+		"spritename" : "Purple11Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 320,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 74,
+		"spritename" : "Purple12Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 352,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 75,
+		"spritename" : "Purple13Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 384,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 76,
+		"spritename" : "OrageFloor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 77,
+		"spritename" : "Orage2Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 78,
+		"spritename" : "Orage3Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 79,
+		"spritename" : "Orage4Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 80,
+		"spritename" : "Orage5Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 81,
+		"spritename" : "Orage6Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 82,
+		"spritename" : "Orage7Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 192,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 83,
+		"spritename" : "Orage8Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 224,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 84,
+		"spritename" : "Orage9Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 256,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 85,
+		"spritename" : "Orage10Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 288,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 86,
+		"spritename" : "Orage11Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 320,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 87,
+		"spritename" : "Orage12Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 352,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 88,
+		"spritename" : "Orage13Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 384,
+			"y" : 192
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 89,
+		"spritename" : "GreenFloor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 90,
+		"spritename" : "Green2Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 91,
+		"spritename" : "Green3Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 92,
+		"spritename" : "Green4Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 93,
+		"spritename" : "Green5Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 94,
+		"spritename" : "Green6Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 95,
+		"spritename" : "Green7Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 192,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 96,
+		"spritename" : "Green8Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 224,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 97,
+		"spritename" : "Green9Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 256,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 98,
+		"spritename" : "Green10Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 288,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 99,
+		"spritename" : "Green11Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 320,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 100,
+		"spritename" : "Green12Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 352,
+			"y" : 224
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 101,
+		"spritename" : "Green13Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 384,
+			"y" : 160
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 102,
+		"spritename" : "RedFloor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 0,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 103,
+		"spritename" : "Red2Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 32,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 104,
+		"spritename" : "Red3Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 64,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 105,
+		"spritename" : "Red4Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 96,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 106,
+		"spritename" : "Red5Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 128,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 107,
+		"spritename" : "Red6Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 160,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 108,
+		"spritename" : "Red7Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 192,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 109,
+		"spritename" : "Red8Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 224,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 110,
+		"spritename" : "Red9Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 256,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 111,
+		"spritename" : "Red10Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 288,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 112,
+		"spritename" : "Red11Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 320,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 113,
+		"spritename" : "Red12Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 352,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
+	},
+	{
+		"spriteuid" : 114,
+		"spritename" : "Red13Floor",
+		"spritesheet" : "ss13-1l.png",
+		"spritepos" : {
+			"x" : 384,
+			"y" : 256
+		},
+		"spritewidthheight" : {
+			"x" : 32,
+			"y" : 32
+		},
+		"flags" : [
+			"World"
+		]
 	}
 	]
 }

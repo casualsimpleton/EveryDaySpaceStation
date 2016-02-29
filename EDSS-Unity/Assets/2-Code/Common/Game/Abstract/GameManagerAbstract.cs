@@ -21,37 +21,37 @@ using EveryDaySpaceStation.DataTypes;
 using EveryDaySpaceStation.Utils;
 using EveryDaySpaceStation.Network;
 
-public abstract class GameManagerAbstract : MonoBehaviour
-{
-    #region Enums
+//public abstract class GameManagerAbstract : MonoBehaviour
+//{
+//    #region Enums
 
-    #endregion
+//    #endregion
 
-    #region Vars
-    [SerializeField]
-    protected GameData _gameData;
-    [SerializeField]
-    protected MapData _mapData;
+//    #region Vars
+//    [SerializeField]
+//    protected GameData _gameData;
+//    [SerializeField]
+//    protected MapData _mapData;
 
-    protected System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
+//    protected System.Diagnostics.Stopwatch _timer = new System.Diagnostics.Stopwatch();
 
-    protected EntityBuildManager _entitybuildManager;
+//    protected EntityBuildManager _entitybuildManager;
 
-    #endregion
+//    #endregion
 
-    #region Gets/Sets
-    public EntityBuildManager EntityBuildManager
-    {
-        get { return _entitybuildManager; }
-    }
-    #endregion
+//    #region Gets/Sets
+//    public EntityBuildManager EntityBuildManager
+//    {
+//        get { return _entitybuildManager; }
+//    }
+//    #endregion
 
-    public virtual void Init()
-    {
-    }
+//    public virtual void Init()
+//    {
+//    }
 
-    protected virtual void Start()
-    {
-        _entitybuildManager = this.gameObject.AddComponent<EntityBuildManager>();
-    }
-}
+//    protected virtual void Start()
+//    {
+//        _entitybuildManager = this.gameObject.AddComponent<EntityBuildManager>();
+//    }
+//}

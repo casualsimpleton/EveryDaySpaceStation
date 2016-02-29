@@ -47,9 +47,9 @@ namespace EveryDaySpaceStation.DataTypes
 
         public Vec3Int(Vec3Int vec3)
         {
-            x = vec3.x;
-            y = vec3.y;
-            z = vec3.z;
+            x = (int)vec3.x;
+            y = (int)vec3.y;
+            z = (int)vec3.z;
         }
         
         public static bool operator ==(Vec3Int m, Vec3Int n)

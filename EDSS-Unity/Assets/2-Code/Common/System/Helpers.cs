@@ -113,6 +113,37 @@ namespace EveryDaySpaceStation.Utils
 
             return pos;
         }
+
+        //http://stackoverflow.com/questions/10903149/how-do-i-compute-the-linear-index-of-a-3d-coordinate-and-vice-versa
+        public static int IndexFromVec3Int(Vec3Int pos, int maxX, int maxY)
+        {
+            int a = 1;
+            int b = maxX + 1;
+            int c = (maxX + 1) * (maxY + 1);
+            int d = 0;
+            return (a * pos.x) + (b * pos.y) + (c * pos.z) + d;
+        }
+
+        public static int IndexFromVec3Int(int x, int y, int z, int maxX, int maxY)
+        {
+            int a = 1;
+            int b = maxX + 1;
+            int c = (maxX + 1) * (maxY + 1);
+            int d = 0;
+            return (a * x) + (b * y) + (c * z) + d;
+        }
+
+        public static Vec3Int Vec3IntFromIndex(int index, int maxX, int maxY)
+        {
+            Vec3Int xyz = new Vec3Int();
+            xyz.x = index % (maxX + 1);
+            index /= (maxX + 1);
+            xyz.y = index % (maxY + 1);
+            index /= (maxY + 1);
+            xyz.z = index;
+
+            return xyz;
+        }
         #endregion
 
         #region Text and Strings
@@ -172,85 +203,85 @@ namespace EveryDaySpaceStation.Utils
         #endregion
 
         #region Lights
-        public static void FillLineWithLight(int startX, int endX, int y, Color32 centerColor, ref MapData mapData, int centerX, int centerY, float fallOff = 0.2f)
-        {
-            for (int i = startX; i < endX; i++)
-            {
-                //Check for bounds
-                if (i < 0 || i > mapData._mapSize.x - 1 || y < 0 || y > mapData._mapSize.y - 1)
-                {
-                    continue;
-                }
+        //public static void FillLineWithLight(int startX, int endX, int y, Color32 centerColor, ref MapData mapData, int centerX, int centerY, float fallOff = 0.2f)
+        //{
+        //    for (int i = startX; i < endX; i++)
+        //    {
+        //        //Check for bounds
+        //        if (i < 0 || i > mapData._mapSize.x - 1 || y < 0 || y > mapData._mapSize.y - 1)
+        //        {
+        //            continue;
+        //        }
 
-                int index = IndexFromVec2Int(i, y, mapData._mapSize.x);
-                Color32 newColor = new Color32(centerColor.r, centerColor.g, centerColor.b, centerColor.a);
-                Color32 curColor = mapData._mapTiles[index].LightColor;
-                int xDiff = centerX - i;
-                int yDiff = centerY - y;
-                float dist = Mathf.Sqrt((xDiff * xDiff) + (yDiff * yDiff));
-                //newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
-                //newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
-                //newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
+        //        int index = IndexFromVec2Int(i, y, mapData._mapSize.x);
+        //        Color32 newColor = new Color32(centerColor.r, centerColor.g, centerColor.b, centerColor.a);
+        //        Color32 curColor = mapData._mapTiles[index].LightColor;
+        //        int xDiff = centerX - i;
+        //        int yDiff = centerY - y;
+        //        float dist = Mathf.Sqrt((xDiff * xDiff) + (yDiff * yDiff));
+        //        //newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
+        //        //newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
+        //        //newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
 
-                newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
-                newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
-                newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
+        //        newColor.r = (byte)Mathf.Clamp(centerColor.r * (1f - (fallOff * dist)), 0, 255);
+        //        newColor.g = (byte)Mathf.Clamp(centerColor.g * (1f - (fallOff * dist)), 0, 255);
+        //        newColor.b = (byte)Mathf.Clamp(centerColor.b * (1f - (fallOff * dist)), 0, 255);
 
-                newColor.r = (curColor.r > newColor.r ? curColor.r : newColor.r);
-                newColor.g = (curColor.g > newColor.g ? curColor.g : newColor.g);
-                newColor.b = (curColor.b > newColor.b ? curColor.b : newColor.b);
+        //        newColor.r = (curColor.r > newColor.r ? curColor.r : newColor.r);
+        //        newColor.g = (curColor.g > newColor.g ? curColor.g : newColor.g);
+        //        newColor.b = (curColor.b > newColor.b ? curColor.b : newColor.b);
 
-                mapData._mapTiles[index].LightColor = newColor;
-            }
-        }
+        //        mapData._mapTiles[index].LightColor = newColor;
+        //    }
+        //}
 
-        //http://stackoverflow.com/questions/10878209/midpoint-circle-algorithm-for-filled-circles
-        public static void FillCircleAreaWithLight(int centerX, int centerY, int radius, Color32 centerColor, ref MapData mapData)
-        {
-            radius = (int)(255f / 50f);
-            int x = radius;
-            int y = 0;
-            int radiusError = 1 - x;
+        ////http://stackoverflow.com/questions/10878209/midpoint-circle-algorithm-for-filled-circles
+        //public static void FillCircleAreaWithLight(int centerX, int centerY, int radius, Color32 centerColor, ref MapData mapData)
+        //{
+        //    radius = (int)(255f / 50f);
+        //    int x = radius;
+        //    int y = 0;
+        //    int radiusError = 1 - x;
 
-            while (x > y)
-            {
-                //Use symmetry to draw the two horizontal lines at this Y with a special case to draw
-                // only one line at the centerY where y == 0;
-                int startX = -x + centerX;
-                int endX = x + centerX;
-                FillLineWithLight(startX, endX, y + centerY, centerColor, ref mapData, centerX, centerY);
+        //    while (x > y)
+        //    {
+        //        //Use symmetry to draw the two horizontal lines at this Y with a special case to draw
+        //        // only one line at the centerY where y == 0;
+        //        int startX = -x + centerX;
+        //        int endX = x + centerX;
+        //        FillLineWithLight(startX, endX, y + centerY, centerColor, ref mapData, centerX, centerY);
 
-                if (y != 0)
-                {
-                    FillLineWithLight(startX, endX, -y + centerY, centerColor, ref mapData, centerX, centerY);
-                }
+        //        if (y != 0)
+        //        {
+        //            FillLineWithLight(startX, endX, -y + centerY, centerColor, ref mapData, centerX, centerY);
+        //        }
 
-                //move Y one line
-                y++;
+        //        //move Y one line
+        //        y++;
 
-                //calculate or maintain new x
-                if (radiusError < 0)
-                {
-                    radiusError += 2 * y + 1;
-                }
-                else
-                {
-                    // we're about to move x over one, this means we completed a column of X values, use
-                    // symmetry to draw those complete columns as horizontal lines at the top and bottom of the circle
-                    // beyond the diagonal of the main loop
-                    if (x >= y)
-                    {
-                        startX = -y + 1 + centerX;
-                        endX = y - 1 + centerX;
-                        FillLineWithLight(startX, endX, x + centerY, centerColor, ref mapData, centerX, centerY);
-                        FillLineWithLight(startX, endX, -x + centerY, centerColor, ref mapData, centerX, centerY);
-                    }
-                    x--;
-                    radiusError += 2 * (y - x + 1);
-                }
-            }
+        //        //calculate or maintain new x
+        //        if (radiusError < 0)
+        //        {
+        //            radiusError += 2 * y + 1;
+        //        }
+        //        else
+        //        {
+        //            // we're about to move x over one, this means we completed a column of X values, use
+        //            // symmetry to draw those complete columns as horizontal lines at the top and bottom of the circle
+        //            // beyond the diagonal of the main loop
+        //            if (x >= y)
+        //            {
+        //                startX = -y + 1 + centerX;
+        //                endX = y - 1 + centerX;
+        //                FillLineWithLight(startX, endX, x + centerY, centerColor, ref mapData, centerX, centerY);
+        //                FillLineWithLight(startX, endX, -x + centerY, centerColor, ref mapData, centerX, centerY);
+        //            }
+        //            x--;
+        //            radiusError += 2 * (y - x + 1);
+        //        }
+        //    }
 
-        }
+        //}
         #endregion
 
         #region Color Comparison

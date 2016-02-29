@@ -44,10 +44,11 @@ namespace EveryDaySpaceStation
         #endregion
 
         protected VoxelChunkOrganizer[,,] _voxelChunks;
+        protected Queue<MapDataV2.MapBlock> _blocksWithModifiedLights;
         public static MapDataV2.MapBlock[, ,] TempMap;
         public Transform myTransform { get; private set; }
         System.Diagnostics.Stopwatch _timer;
-
+        
         public static Vec3Int ChunkSize = new Vec3Int(16, 16, 16);
 
         public static VoxelChunkOrganizer GetVoxelChunk(int x, int z)
@@ -62,6 +63,11 @@ namespace EveryDaySpaceStation
         public void Start()
         {
             myTransform = this.transform;
+
+            if (_blocksWithModifiedLights == null)
+            {
+                _blocksWithModifiedLights = new Queue<MapDataV2.MapBlock>();
+            }
         }
 
         public void CreateWorld(MapDataV2.MapBlock[, ,] blockData, bool useBlockDefaults = true)
@@ -73,6 +79,11 @@ namespace EveryDaySpaceStation
 
             _timer = new System.Diagnostics.Stopwatch();
             _timer.Start();
+
+            if (_blocksWithModifiedLights == null)
+            {
+                _blocksWithModifiedLights = new Queue<MapDataV2.MapBlock>();
+            }
 
             //TempMap = VoxelTempWorldData.GetMapFromFile();
             TempMap = blockData;
@@ -161,6 +172,52 @@ namespace EveryDaySpaceStation
             Vec3Int localPos = new Vec3Int(position.x % ChunkSize.x, position.y % ChunkSize.y, position.z % ChunkSize.z);
 
             _voxelChunks[chunkX, chunkY, chunkZ].ChangeDataFace(localPos, faceSide, newBlockFaceUID);
+        }
+
+        float m_lightTimer = 0f;
+        float m_lightTimerDelta = 1f / 4f;
+        void Update()
+        {
+            if (m_lightTimer < Time.time)
+            {
+                //for (int y = 0; y < _voxelChunks.GetLength(1); y++)
+                //{
+                //    for (int x = 0; x < _voxelChunks.GetLength(0); x++)
+                //    {
+                //        for (int z = 0; z < _voxelChunks.GetLength(2); z++)
+                //        {
+                //            _voxelChunks[x, y, z].UpdateLights();
+                //        }
+                //    }
+                //}
+
+                //Use light around camera
+                Vector3 cameraPos = Camera.main.transform.position;
+                
+                VoxelLight cameraLight = new VoxelLight();
+                cameraLight.ColorLight = new Color32(128, 128, 128, 255);
+                cameraLight.BlockPosition = new Vec3Int(cameraPos);
+
+                if (cameraLight.BlockPosition.x < 0 || cameraLight.BlockPosition.y < 0 || cameraLight.BlockPosition.z < 0 ||
+                    cameraLight.BlockPosition.x > TempMap.GetLength(0) - 1 || cameraLight.BlockPosition.y > TempMap.GetLength(1) - 1 || cameraLight.BlockPosition.z > TempMap.GetLength(2) - 1)
+                {
+                    m_lightTimer = Time.time + m_lightTimerDelta;
+                    return;
+                }
+
+                VoxelLighting.CalculateMapLights(ref TempMap, ref _blocksWithModifiedLights, cameraLight);
+
+                Debug.Log("Number of modified blocks " + _blocksWithModifiedLights.Count);
+
+                while (_blocksWithModifiedLights.Count > 0)
+                {
+                    MapDataV2.MapBlock block = _blocksWithModifiedLights.Dequeue();
+
+                    block.BlockLight.CalculateColor();
+                }
+
+                m_lightTimer = Time.time + m_lightTimerDelta;
+            }
         }
     }
 }

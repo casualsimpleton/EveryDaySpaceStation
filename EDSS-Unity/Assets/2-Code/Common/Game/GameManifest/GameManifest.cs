@@ -76,11 +76,11 @@ namespace EveryDaySpaceStation
             {
                 if (_uvCoords == Vector4.zero)
                 {
-                    float xPos = (float)TopLeft.x / (float)SpriteSheetTemplate.Texture.width;
+                    float xPos = ((float)TopLeft.x / (float)SpriteSheetTemplate.Texture.width) + SpriteUVOffset.x;
                     //float yPos = (float)(TopLeft.y + WidthHeight.y) / (float)SpriteSheetTemplate.Texture.height;
-                    float yPos = (float)(TopLeft.y) / (float)SpriteSheetTemplate.Texture.height;
-                    float width = (float)(WidthHeight.x) / (float)SpriteSheetTemplate.Texture.width;
-                    float height = (float)WidthHeight.y / (float)SpriteSheetTemplate.Texture.height;
+                    float yPos = ((float)(TopLeft.y) / (float)SpriteSheetTemplate.Texture.height) + SpriteUVOffset.y;
+                    float width = ((float)(WidthHeight.x) / (float)SpriteSheetTemplate.Texture.width) - (SpriteUVOffset.x * 2);
+                    float height = ((float)WidthHeight.y / (float)SpriteSheetTemplate.Texture.height) - (SpriteUVOffset.y * 2);
 
                     _uvCoords = new Vector4(xPos, yPos, width, height);
                 }
@@ -97,7 +97,7 @@ namespace EveryDaySpaceStation
                 SpriteSheetTemplate = spriteSheet;
                 SpriteFlags = flags;
 
-                SpriteUVOffset = new Vector2(1f / SpriteSheetTemplate.Texture.width * 1.0f, 1f / SpriteSheetTemplate.Texture.height * 0.1f);
+                SpriteUVOffset = new Vector2(1f / SpriteSheetTemplate.Texture.width * 0.25f, 1f / SpriteSheetTemplate.Texture.height * 0.25f);
             }
         }
 

@@ -51,7 +51,7 @@ namespace EveryDaySpaceStation
 
             MapBlock = mapBlock;
 
-            LightValue = MapBlock.BlockLight;
+            LightValue = MapBlock.DoesBlockLight;
 
             GameManifestV2.BlockDataTemplate blockTemplate = null;
             GameManifestV2.Singleton.GetBlockTemplate(MapBlock.BlockType, out blockTemplate);
